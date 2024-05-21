@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Button } from "./ui/button";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { FcSettings } from "react-icons/fc";
 import { FcDocument } from "react-icons/fc";
 import { FcRatings } from "react-icons/fc";
@@ -27,7 +27,7 @@ const sidenavItems = [
 
 export default function Sidenav() {
   const pathname = usePathname();
-
+  const router = useRouter();
   return (
     <>
       <div className="hidden md:block fixed md:flex p-4 flex-col justify-between items-center w-[200px] h-screen top-0 pt-[78px] lg:w-[300px]">
@@ -44,7 +44,7 @@ export default function Sidenav() {
             </Link>
           ))}
         </div>
-        <Button className="mt-4 w-full">Upload Resume</Button>
+        <Button onClick={() => router.push('/app/resumes/new')} className="mt-4 w-full">Upload Resume</Button>
       </div>
       <div className="p-4 flex md:hidden justify-between w-full h-14 ">
         {sidenavItems.map((item, index) => (

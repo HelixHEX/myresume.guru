@@ -26,7 +26,7 @@ export default function RootLayout({
         )}
       >
         <Header />
-        <div className="flex flex-col h-screen pt-14">{children}</div>
+        <div className="flex flex-col h-screen pt-14 ">{children}</div>
         {/* <Footer /> */}
       </body>
     </html>
