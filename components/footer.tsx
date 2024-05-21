@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <div className='flex flex-row p-4 justify-between'>
+    <div className='flex flex-row p-4  justify-between'>
       <div className="flex flex-row">
         <Link href='/' className="text-gray-400 hover:text-gray-500">myresume.guru</Link>
       </div>

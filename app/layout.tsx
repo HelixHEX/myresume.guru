@@ -21,13 +21,13 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={cn(
-          "min-h-secreen bg-background font-sans antialiased",
+          " min-h-svh h-screen bg-white font-sans antialiased",
           manrope.variable
         )}
       >
         <Header />
-        {children}
-        <Footer />
+        <div className="flex flex-col h-screen pt-14">{children}</div>
+        {/* <Footer /> */}
       </body>
     </html>
   );
