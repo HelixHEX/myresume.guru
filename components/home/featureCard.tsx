@@ -8,7 +8,7 @@ type Props = {
 
 export default function FeatureCard({title, description, Icon}: Props) {
   return (
-    <Card className="w-[200px] p-2">
+    <Card className="w-full lg:w-[200px] p-2">
       <CardHeader>
         <Icon />
         <h1 className="text-lg font-bold">{title}</h1>
