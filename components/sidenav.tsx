@@ -18,11 +18,11 @@ const sidenavItems = [
     href: "/app/jobs/applications",
     Icon: FcRatings,
   },
-  {
-    title: "Settings",
-    href: "/app/settings",
-    Icon: FcSettings,
-  },
+  // {
+  //   title: "Settings",
+  //   href: "/app/settings",
+  //   Icon: FcSettings,
+  // },
 ];
 
 export default function Sidenav() {
