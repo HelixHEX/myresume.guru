@@ -9,13 +9,13 @@ import { FcRatings } from "react-icons/fc";
 
 const sidenavItems = [
   {
-    title: "Resumes",
+    title: "My Resumes",
     href: "/app/resumes",
     Icon: FcDocument,
   },
   {
-    title: "Job score",
-    href: "/app/job-score",
+    title: "Job Applications",
+    href: "/app/jobs/applications",
     Icon: FcRatings,
   },
   {
@@ -37,7 +37,7 @@ export default function Sidenav() {
               key={index}
               href={item.href}
               className={`mb-6 pl-4 rounded-lg flex items-center ${
-                pathname.includes(item.href) && "bg-gray-100"
+                pathname === item.href && "bg-gray-100"
               } hover:bg-gray-100 w-full h-10`}
             >
               {item.title}
@@ -52,7 +52,7 @@ export default function Sidenav() {
             key={index}
             href={item.href}
             className={`flex items-center justify-center hover:bg-gray-100 w-10 rounded-lg h-8 ${
-              pathname.includes(item.href) && "bg-gray-100"
+              pathname === item.href && "bg-gray-100"
             }`}
           >
             {item.Icon && <item.Icon size={26} />}

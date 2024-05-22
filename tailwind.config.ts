@@ -22,6 +22,9 @@ const config = {
       backgroundImage: {
         'hero1': "url('/images/hero1-bg.png')"
       },
+      backdropBlur: {
+        xs: '2px',
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
