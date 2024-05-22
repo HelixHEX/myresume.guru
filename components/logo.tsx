@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useUser } from "@clerk/clerk-react";
 
 export default function Logo({size}: {size?: number | string}) {
-  const { isSignedIn, user, isLoaded } = useUser();
+  const { user } = useUser();
 
   return (
     <div className="flex flex-row">
