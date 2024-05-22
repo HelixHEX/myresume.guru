@@ -3,7 +3,7 @@ import { Manrope } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import Header from "@/components/header";
-import Footer from "@/components/footer";
+import Providers from "@/lib/providers";
 
 const manrope = Manrope({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -18,17 +18,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={cn(
-          " min-h-svh h-screen bg-white font-sans antialiased",
-          manrope.variable
-        )}
-      >
-        <Header />
-        <div className="flex flex-col h-screen pt-14 ">{children}</div>
-        {/* <Footer /> */}
-      </body>
-    </html>
+    <Providers>
+      <html lang="en">
+        <body
+          className={cn(
+            " min-h-svh h-screen bg-white font-sans antialiased",
+            manrope.variable
+          )}
+        >
+          <Header />
+          <div className="flex flex-col h-screen pt-14 ">{children}</div>
+        </body>
+      </html>
+    </Providers>
   );
 }
