@@ -17,7 +17,7 @@ model Resume {
   id           Int           @id @default(autoincrement())
   name         String
   userId       String
-  fileKey      String?
+  fileKey      String        @unique
   applications Application[]
 }
 
