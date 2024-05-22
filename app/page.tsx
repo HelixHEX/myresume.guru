@@ -1,10 +1,13 @@
+'use client';
 import FeatureCard from "@/components/home/featureCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { CircleCheck, Megaphone, Search, WandSparkles } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const router = useRouter();
   return (
     <div className="p-4  mb-44 w-full flex flex-col">
       <div className="flex flex-col lg:w-[928px] w-full self-center">
@@ -17,13 +20,14 @@ export default function Home() {
             powered by AI. Our gurus will help you craft a resume that stands
             out.
           </p>
-          <div className="mt-8 rounded-md flex flex-row bg-white md:w-96 p-4">
+          {/* <div className="mt-8 rounded-md flex flex-row bg-white md:w-96 p-4">
             <Input
               className="bg-none border-none text-black rounded-sm  h-8 self-center"
               placeholder="Enter your email"
             />
             <Button className=" ml-2">Coming soon...!</Button>
-          </div>
+          </div> */}
+          <Button onClick={() => router.push('/sign-up')} className="w-44 mt-8">Try now!</Button>
         </div>
        <div className="flex flex-col md:w-full sm:self-center sm:w-[500px]">
        <h1 className="text-4xl mt-44 font-bold">Why use myresume.guru?</h1>
@@ -82,9 +86,9 @@ export default function Home() {
             {/* <Button className="mt-4">Upload your resume</Button> */}
           </div>
         </div>
-        <h1 className="mt-44 font-bold text-4xl text-center">
+        {/* <h1 className="mt-44 font-bold text-4xl text-center">
           Coming Soon...!
-        </h1>
+        </h1> */}
       </div>
     </div>
   );
