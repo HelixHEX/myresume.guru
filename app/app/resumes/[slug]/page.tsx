@@ -13,7 +13,7 @@ export default function Page({ params }: { params: { slug: string } }) {
         to help you make your resume stand out for your next job application.
       </p>
 
-      <div className="mt-8 flex justify-betwee">
+      <div className="mt-8 flex flex-col md:flex-row justify-betwee">
         <div className="w-full self-center">
           <p className="hover:cursor-pointer hover:text-gray-500 underline text-gray-400">
             EliasWambuguResume.pdf
