@@ -9,7 +9,7 @@ export default function Page({ params }: { params: { slug: string } }) {
         {params.slug.replaceAll("%20", " ")}
         
       </h1>
-      <Badge className="ml-2 bg-black self-center">Active</Badge>
+      <Badge className="ml-2  self-center">Active</Badge>
       </div>
       <h2 className="mt-4 font-semibold text-xl">Job Description</h2>
       <p className="text-gray-400 text-sm md:text-md ">
