@@ -1,7 +1,6 @@
 "use client";
 import ResumeCard from "@/components/resumes/cards";
 import { api } from "@/lib/api";
-import { useEffect } from "react";
 
 export default function Page() {
   const {
@@ -40,7 +39,6 @@ export default function Page() {
       {resumes.map((resume, i) => (
         <>
           <ResumeCard key={i} {...resume} />
-          {/* <ResumeCard key={i} {...resume} /> */}
         </>
       ))}
     </div>
