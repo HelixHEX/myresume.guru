@@ -3,6 +3,7 @@ import { UploadThingError } from "uploadthing/server";
 import prisma from "@/lib/prisma";
 import { currentUser } from "@clerk/nextjs/server";
 import axios from "axios";
+import { waitUntil } from "@vercel/functions";
 
 const f = createUploadthing();
 
@@ -39,11 +40,9 @@ export const ourFileRouter = {
       }
 
       try {
-        await axios
-        .post("http://localhost:3000/api/resume/analyze")
-        .then((res) => console.log(res.data))
+        waitUntil(axios.post("http://localhost:3000/api/resume/analyze"));
       } catch (e) {
-        console.log(e); 
+        console.log(e);
       }
 
       // !!! Whatever is returned here is sent to the clientside `onClientUploadComplete` callback

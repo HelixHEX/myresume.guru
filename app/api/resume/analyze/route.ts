@@ -12,7 +12,7 @@ function sleep(time: number) {
 export const POST = async () => {
   console.log("hit");
 
-  sleep(20000);
+  await sleep(20000);
 
   return NextResponse.json({ url: "http://locahost:3000/app" });
 };
