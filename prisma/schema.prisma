@@ -14,26 +14,35 @@ datasource db {
 }
 
 model Resume {
-  id           Int           @id @default(autoincrement())
-  name         String
-  userId       String
-  fileKey      String        @unique
-  applications Application[]
+  id                 Int           @id @default(autoincrement())
+  createdAt          DateTime      @default(now()) @map("created_at")
+  updatedAt          DateTime      @updatedAt @map("updated_at")
+  name               String
+  userId             String
+  fileKey            String        @unique
+  applications       Application[] @relation("ApplicationToResume")
+  activeApplications Application[] @relation("CurrentResume")
 }
 
 model Company {
   id           Int           @id @default(autoincrement())
+  createdAt    DateTime      @default(now()) @map("created_at")
+  updatedAt    DateTime      @updatedAt @map("updated_at")
   name         String
   userId       String?
   applications Application[]
 }
 
 model Application {
-  id        Int      @id @default(autoincrement())
-  userId    String
-  status    String   @default("active")
-  companyId Int?
-  resumeId  Int?
-  resume    Resume?  @relation(fields: [resumeId], references: [id])
-  company   Company? @relation(fields: [companyId], references: [id])
+  id            Int      @id @default(autoincrement())
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+  userId        String
+  name          String
+  status        String   @default("active")
+  companyId     Int?
+  resumeId      Int?
+  resumes       Resume[] @relation("ApplicationToResume")
+  currentResume Resume?  @relation("CurrentResume", fields: [resumeId], references: [id])
+  company       Company? @relation(fields: [companyId], references: [id])
 }
