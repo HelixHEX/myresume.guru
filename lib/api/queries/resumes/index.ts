@@ -2,12 +2,12 @@ import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 
 const getResumes = async () => {
-  const res = await axios.get("http://localhost:3000/api/resumes");
+  const res = await axios.get("/api/resume");
   return res.data;
 };
 
-const useGetResumes = () => {
-  return useQuery({
+export const useGetResumes = () => {
+  return useQuery<GetAllResumesResponse>({
     queryKey: ["resumes"],
     queryFn: getResumes,
   });

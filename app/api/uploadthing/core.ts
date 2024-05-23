@@ -25,28 +25,30 @@ export const ourFileRouter = {
     .onUploadComplete(async ({ metadata, file }) => {
       // This code RUNS ON YOUR SERVER after upload
 
-      const resume = await prisma.resume.create({
-        data: {
-          name: file.name,
-          fileKey: file.key,
-          userId: metadata.userId,
-        },
-      });
+      try {
+        const resume = await prisma.resume.create({
+          data: {
+            userId: metadata.userId,
+            name: file.name,
+            fileKey: file.key,
+          },
+        });
+        if (!resume) {
+          throw new UploadThingError(
+            "There was an error uploading the file. Please try again."
+          );
+        }
 
-      if (!resume) {
+        waitUntil(axios.post("http://localhost:3000/api/resume/analyze"));
+
+        // !!! Whatever is returned here is sent to the clientside `onClientUploadComplete` callback
+        return { uploadedBy: metadata, id: resume.id };
+      } catch (e) {
+        console.log(e);
         throw new UploadThingError(
           "There was an error uploading the file. Please try again."
         );
       }
-
-      try {
-        waitUntil(axios.post("http://localhost:3000/api/resume/analyze"));
-      } catch (e) {
-        console.log(e);
-      }
-
-      // !!! Whatever is returned here is sent to the clientside `onClientUploadComplete` callback
-      return { uploadedBy: metadata, resume };
     }),
 } satisfies FileRouter;
 

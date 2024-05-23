@@ -1,0 +1,1 @@
+type GetAllResumesResponse = Resume[]
