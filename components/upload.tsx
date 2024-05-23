@@ -27,7 +27,7 @@ export default function UploadButton({
       }}
       onUploadError={(error: Error) => {
         // Do something with the error.
-        alert(`ERROR! ${error.message}`);
+        toast(error.message);
       }}
     />
   );

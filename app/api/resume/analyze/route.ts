@@ -1,6 +1,18 @@
 import { NextResponse } from "next/server";
-export default function GET() {
-  setTimeout(() => {
-    return NextResponse.redirect("/app");
-  }, 5000);
+
+function sleep(time: number) {
+  return new Promise((resolve) =>
+    setTimeout(() => {
+      console.log('done');
+      resolve;
+    }, time)
+  );
 }
+
+export const POST = async () => {
+  console.log("hit");
+
+  sleep(20000);
+
+  return NextResponse.json({ url: "http://locahost:3000/app" });
+};
