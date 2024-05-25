@@ -2,7 +2,9 @@
 const nextConfig = {
   experimental: {
     reactCompiler: true,
+
   },
+  serverExternalPackages: ['pdf2json', 'pdf-parse']
 };
 
-export default nextConfig;
+module.exports  = nextConfig
