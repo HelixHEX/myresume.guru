@@ -14,35 +14,56 @@ datasource db {
 }
 
 model Resume {
-  id                 Int           @id @default(autoincrement())
-  createdAt          DateTime      @default(now()) @map("created_at")
-  updatedAt          DateTime      @updatedAt @map("updated_at")
-  name               String
-  userId             String
-  fileKey            String        @unique
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  name      String
+  userId    String
+  fileKey   String   @unique
+  status    String   @default("generating")
+
   applications       Application[] @relation("ApplicationToResume")
   activeApplications Application[] @relation("CurrentResume")
+  feedbacks          Feedback[]
 }
 
 model Company {
-  id           Int           @id @default(autoincrement())
-  createdAt    DateTime      @default(now()) @map("created_at")
-  updatedAt    DateTime      @updatedAt @map("updated_at")
-  name         String
-  userId       String?
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  name      String
+  userId    String?
+
   applications Application[]
 }
 
 model Application {
-  id            Int      @id @default(autoincrement())
-  createdAt     DateTime @default(now()) @map("created_at")
-  updatedAt     DateTime @updatedAt @map("updated_at")
-  userId        String
-  name          String
-  status        String   @default("active")
-  companyId     Int?
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  userId    String
+  name      String
+  status    String   @default("active")
+
+  currentResume Resume?    @relation("CurrentResume", fields: [resumeId], references: [id])
   resumeId      Int?
-  resumes       Resume[] @relation("ApplicationToResume")
-  currentResume Resume?  @relation("CurrentResume", fields: [resumeId], references: [id])
-  company       Company? @relation(fields: [companyId], references: [id])
+  resumes       Resume[]   @relation("ApplicationToResume")
+  company       Company?   @relation(fields: [companyId], references: [id])
+  companyId     Int?
+  feedbacks     Feedback[]
+}
+
+model Feedback {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  userId    String
+  title     String
+  text      String
+  status    String   @default("active")
+
+  application   Application? @relation(fields: [applicationId], references: [id])
+  applicationId Int?
+  resume        Resume?     @relation(fields: [resumeId], references: [id])
+  resumeId      Int?
 }
