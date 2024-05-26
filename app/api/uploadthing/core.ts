@@ -39,10 +39,10 @@ export const ourFileRouter = {
           );
         }
 
-        waitUntil(axios.post("http://localhost:3000/api/resume/analyze"));
+        // waitUntil(axios.post("http://localhost:3000/api/resume/analyze"));
 
         // !!! Whatever is returned here is sent to the clientside `onClientUploadComplete` callback
-        return { uploadedBy: metadata, id: resume.id };
+        return { uploadedBy: metadata, fileKey: file.key };
       } catch (e) {
         console.log(e);
         throw new UploadThingError(

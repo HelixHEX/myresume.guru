@@ -1,11 +1,10 @@
-"use client";
-import RenderStreamData from "@/components/RenderStreamData";
-import ImprovementCard from "@/components/resumes/cards/improvement";
+import Feedback from "@/components/resumes/feedback";
 import { context } from "@/lib/context";
 import Image from "next/image";
-import { useContext, useEffect } from "react";
 
 export default function Page({ params }: { params: { slug: string } }) {
+  const { slug } = params;
+  
   return (
     <>
       <context.resume.ChangeTitle title="Improve your resume" />
@@ -36,7 +35,8 @@ export default function Page({ params }: { params: { slug: string } }) {
         <p className="mt-4">
           {"We've used AI to help you improve your resume!"}
         </p>
-        <RenderStreamData
+        <Feedback slug={slug} />
+        {/* <RenderStreamData
           render={(data) => (
             <div className="flex flex-col mt-8">
               {data.map((item) => (
@@ -48,7 +48,7 @@ export default function Page({ params }: { params: { slug: string } }) {
               ))}
             </div>
           )}
-        />
+        /> */}
       </div>
     </>
   );

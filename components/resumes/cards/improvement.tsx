@@ -1,8 +1,8 @@
 import { MoveRight } from "lucide-react";
 
 type Props = {
-  title: string;
-  text: string;
+  title?: string;
+  text?: string;
 }
 
 export default function ImprovementCard({ title, text }: Props) {

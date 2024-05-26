@@ -29,3 +29,8 @@ type Application = {
   resumes?: Resume[];
   currentResume?: Resume;
 };
+
+type FeedbackSchema = {
+  title: string;
+  text: string;
+}
