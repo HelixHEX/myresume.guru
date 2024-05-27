@@ -1,29 +1,42 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import {
-  streamObject,
-} from "ai";
-import {
-  createAI,
-  createStreamableUI,
-} from "ai/rsc";
+import { streamObject } from "ai";
+import { createAI, createStreamableValue, StreamableValue } from "ai/rsc";
 import { openai } from "@ai-sdk/openai";
 import { z } from "zod";
-import ImprovementCard from "@/components/resumes/cards/improvement";
-import pdf from "pdf-parse";
 
-export async function generateFeedback(fileKey: string) {
+export async function generateFeedback(
+  fileKey: string
+): Promise<StreamableValue<{ error?: string; feedbacks: Feedback[] }>> {
   try {
-    const streamableFeedback = createStreamableUI();
-
-    const resume = await prisma.resume.findUnique({ where: { fileKey } });
+    let error = "";
+    const resume = await prisma.resume.findUnique({
+      where: { fileKey },
+      include: { feedbacks: true },
+    });
+    
     if (!resume) {
       console.log("Resume not found");
-      return streamableFeedback.value;
+      error = "Resume not found";
+      const streamValue = createStreamableValue();
+      streamValue.update({ error, feedbacks: [] });
+      streamValue.done();
+      return streamValue.value;
     }
 
-    const resumeText = await convertPDFToText(fileKey);
+    if (!resume.text) {
+      console.log("Resume text not found");
+      error = "Unable to convert pdf.";
+      
+      return createStreamableValue({ error, feedbacks: [] }).value;
+    }
+
+    if (resume.status === "Analyzed") {
+      return createStreamableValue({
+        feedbacks: resume.feedbacks,
+      }).value;
+    }
 
     await prisma.resume.update({
       where: {
@@ -40,43 +53,36 @@ export async function generateFeedback(fileKey: string) {
         {
           role: "user",
           content:
-            "Your job is to act as a resume guru and analyze the following resume and provide at least 4 ways the user can improve their resume. If the text does not include information that would be on a resume, do not provide any feedback at all and return an error message.",
+            "Your job is to act as a resume guru and analyze the following resume and provide at least 4 ways the user can improve their resume. ",
         },
-        { role: "system", content: resumeText.text },
+        { role: "system", content: resume.text },
       ],
       schema: FeedbackSchema,
     });
 
-    for await (const partialObject of result.partialObjectStream) {
-      if (partialObject.feedback && partialObject.feedback.length > 0) {
-        console.log(partialObject.feedback);
-        streamableFeedback.update(
-          partialObject.feedback.map((feedback, index) => (
-            <ImprovementCard
-              key={index}
-              title={feedback?.title}
-              text={feedback?.content}
-            />
-          ))
-        );
-      }
-    }
-
-    streamableFeedback.done();
-
-    return streamableFeedback.value;
-  } catch (e: any) {}
+    await prisma.resume.update({
+      where: {
+        fileKey,
+      },
+      data: {
+        status: "Analyzed",
+      },
+    });
+    return createStreamableValue(result.partialObjectStream).value;
+  } catch (e: any) {
+    let error = e.message;
+    return createStreamableValue({ error, feedbacks: [] }).value;
+  }
 }
 
 const FeedbackSchema = z.object({
-  feedback: z
+  feedbacks: z
     .array(
       z.object({
         title: z.string(),
-        content: z.string(),
+        text: z.string(),
       })
     )
-    .optional()
     .describe("The feedback on the resume"),
   error: z
     .string()
@@ -88,19 +94,32 @@ export const AI = createAI({
   actions: {
     generateFeedback,
   },
+  onSetAIState: ({ state, done }) => {
+    "use server";
+
+    if (done) {
+      saveToDb(state);
+    }
+  },
   initialAIState: [],
   initialUIState: [],
 });
 
-export const convertPDFToText = async (fileKey: string) => {
-  try {
-    const url = process.env.UPLOADTHING_URL + fileKey;
-    const res = await fetch(url);
-    const blob = await res.blob();
-    const arrayBuffer = await blob.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
-    return await pdf(buffer);
-  } catch (e: any) {
-    throw new Error(e.message);
-  }
+export const runThread = async () => {
+  const streamableStatus = createStreamableValue("thread.init");
+
+  setTimeout(() => {
+    streamableStatus.update("thread.run.create");
+    streamableStatus.update("thread.run.update");
+    streamableStatus.update("thread.run.end");
+    streamableStatus.done("thread.end");
+  }, 1000);
+
+  return {
+    status: streamableStatus.value,
+  };
+};
+
+const saveToDb = (state: any) => {
+  console.log(state);
 };

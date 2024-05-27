@@ -4,6 +4,7 @@ import prisma from "@/lib/prisma";
 import { currentUser } from "@clerk/nextjs/server";
 import axios from "axios";
 import { waitUntil } from "@vercel/functions";
+import { convertPDFToText } from "@/lib";
 
 const f = createUploadthing();
 
@@ -17,7 +18,6 @@ export const ourFileRouter = {
   })
     .middleware(async () => {
       const user = await currentUser();
-
       if (!user) throw new UploadThingError("Unauthorized");
 
       return { userId: user.id };
@@ -38,7 +38,7 @@ export const ourFileRouter = {
             "There was an error uploading the file. Please try again."
           );
         }
-
+        waitUntil(convertPDFToText(file.key));
         // waitUntil(axios.post("http://localhost:3000/api/resume/analyze"));
 
         // !!! Whatever is returned here is sent to the clientside `onClientUploadComplete` callback

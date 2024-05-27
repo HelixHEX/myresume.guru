@@ -27,8 +27,8 @@ const ChangeTitle = ({title}: {title: string}) => {
   const {setTitle} = useContext(context.resume.LayoutContext)
   
   useEffect(() => {
-    setTitle("Improve your resume")
-  }, [setTitle]);
+    setTitle(title)
+  }, [title, setTitle]);
 
   return null;
 }

@@ -1,10 +1,15 @@
+"use client";
+
 import Feedback from "@/components/resumes/feedback";
 import { context } from "@/lib/context";
 import Image from "next/image";
+import { useState } from "react";
 
 export default function Page({ params }: { params: { slug: string } }) {
   const { slug } = params;
-  
+  const [status, setStatus] = useState<"Loading" | "Analyzing" | "Analyzed">(
+    "Loading"
+  );
   return (
     <>
       <context.resume.ChangeTitle title="Improve your resume" />
@@ -21,7 +26,9 @@ export default function Page({ params }: { params: { slug: string } }) {
             <p className="hover:cursor-pointer hover:text-gray-500 underline text-gray-400">
               EliasWambuguResume.pdf
             </p>
-            <p className="font-bold">Your resume is ready for review!</p>
+            <p className="font-bold">
+              {status === "Analyzed" ? "Your feedback is ready!" : status + "..."}
+            </p>
           </div>
           <Image
             className="bg-none"
@@ -32,23 +39,10 @@ export default function Page({ params }: { params: { slug: string } }) {
           />
         </div>
         <h2 className="mt-44 font-bold text-2xl">Suggested Improvements</h2>
-        <p className="mt-4">
+        <p className="mt-4 mb-8">
           {"We've used AI to help you improve your resume!"}
         </p>
-        <Feedback slug={slug} />
-        {/* <RenderStreamData
-          render={(data) => (
-            <div className="flex flex-col mt-8">
-              {data.map((item) => (
-                <ImprovementCard
-                  key={item.key}
-                  title={item.value.title}
-                  text={item.value.text}
-                />
-              ))}
-            </div>
-          )}
-        /> */}
+        <Feedback setStatus={setStatus} slug={slug} />
       </div>
     </>
   );

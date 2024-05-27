@@ -37,9 +37,7 @@ export default function Page() {
   return (
     <div className="h-full w-full mt-4 gap-4 md:20 lg:gap-8 grid grid-cols-1 md:grid-cols-2 self-center ">
       {resumes.map((resume, i) => (
-        <>
-          <ResumeCard key={i} {...resume} />
-        </>
+        <ResumeCard key={i} {...resume} />
       ))}
     </div>
   );

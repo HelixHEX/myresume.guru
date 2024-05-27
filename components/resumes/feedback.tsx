@@ -1,19 +1,39 @@
 "use client";
 
-import { generateFeedback } from "@/actions";
-import { useEffect, useState } from "react";
+import { generateFeedback, runThread } from "@/actions";
+import { readStreamableValue } from "ai/rsc";
+import React, { useEffect, useState } from "react";
+import ImprovementCard from "./cards/improvement";
+import { useGenerateFeedback } from "@/lib/hooks";
 
-export default function Feedback({ slug }: { slug: string }) {
-  const [feedback, setFeedback] = useState<any>(null);
+export default function Feedback({
+  slug,
+  setStatus,
+}: {
+  slug: string;
+  setStatus: React.Dispatch<
+    React.SetStateAction<"Loading" | "Analyzing" | "Analyzed">
+  >;
+}) {
+  const { feedbacks, fetchFeedbacks } = useGenerateFeedback({ slug, setStatus });
 
+  // NEEDS WORK
   useEffect(() => {
-    const asyncFetch = async () => {
-      const feedbacks = await generateFeedback(slug);
-      console.log(feedbacks)
-      setFeedback(feedbacks);
-    };
+    fetchFeedbacks();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-    asyncFetch();
-  }, [slug]);
-  return <>{feedback}</>;
+  return (
+    <>
+      {feedbacks ? (
+        feedbacks.map((feedback: Feedback, index: number) => (
+          <ImprovementCard key={index} {...feedback} />
+        ))
+      ) : (
+        <h2 className="text-gray-400 text-center mt-8">
+          Generating resume feedback...
+        </h2>
+      )}
+    </>
+  );
 }
