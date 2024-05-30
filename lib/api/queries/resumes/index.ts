@@ -12,3 +12,16 @@ export const useGetResumes = () => {
     queryFn: getResumes,
   });
 }
+
+const getResumeFeedback = async (id: string) => {
+  const res = await axios.get(`/api/resume/${id}/feedback`);
+  return res.data
+}
+
+export const useGetResumeFeedback = (id: string) => {
+  return useQuery<GetResumeFeedbackResponse>({
+    queryKey: ["resume_feedback", id],
+    queryFn: () => getResumeFeedback(id),
+    
+  });
+}

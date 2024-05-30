@@ -7,7 +7,7 @@ import { useState } from "react";
 
 export default function Page({ params }: { params: { slug: string } }) {
   const { slug } = params;
-  const [status, setStatus] = useState<"Loading" | "Analyzing" | "Analyzed">(
+  const [status, setStatus] = useState<"Done" | "Loading" | "Analyzing" | "Analyzed" | "Saving to database">(
     "Loading"
   );
   return (
@@ -27,7 +27,7 @@ export default function Page({ params }: { params: { slug: string } }) {
               EliasWambuguResume.pdf
             </p>
             <p className="font-bold">
-              {status === "Analyzed" ? "Your feedback is ready!" : status + "..."}
+              {status === "Done" ? "Your feedback is ready!" : status + "..."}
             </p>
           </div>
           <Image
@@ -42,7 +42,7 @@ export default function Page({ params }: { params: { slug: string } }) {
         <p className="mt-4 mb-8">
           {"We've used AI to help you improve your resume!"}
         </p>
-        <Feedback setStatus={setStatus} slug={slug} />
+        <Feedback status={status} setStatus={setStatus} slug={slug} />
       </div>
     </>
   );
