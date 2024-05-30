@@ -4,6 +4,10 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import Header from "@/components/header";
 import Providers from "@/lib/providers";
+import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
+import { extractRouterConfig } from "uploadthing/server";
+import { ourFileRouter } from "./api/uploadthing/core";
+import { Toaster } from "@/components/ui/sonner";
 
 const manrope = Manrope({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -26,8 +30,10 @@ export default function RootLayout({
             manrope.variable
           )}
         >
+          <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
           <Header />
           <div className="flex flex-col h-screen pt-14 ">{children}</div>
+          <Toaster />
         </body>
       </html>
     </Providers>

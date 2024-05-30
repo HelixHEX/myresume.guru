@@ -1,14 +1,16 @@
-import type { Config } from "tailwindcss"
-const { fontFamily } = require("tailwindcss/defaultTheme")
+import type { Config } from "tailwindcss";
+import { withUt } from "uploadthing/tw";
+const { fontFamily } = require("tailwindcss/defaultTheme");
 
 const config = {
+  // experimental: { ser: ["pdf2json"] },
   darkMode: ["class"],
   content: [
-    './pages/**/*.{ts,tsx}',
-    './components/**/*.{ts,tsx}',
-    './app/**/*.{ts,tsx}',
-    './src/**/*.{ts,tsx}',
-	],
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
+  ],
   prefix: "",
   theme: {
     container: {
@@ -20,10 +22,10 @@ const config = {
     },
     extend: {
       backgroundImage: {
-        'hero1': "url('/images/hero1-bg.png')"
+        hero1: "url('/images/hero1-bg.png')",
       },
       backdropBlur: {
-        xs: '2px',
+        xs: "2px",
       },
       colors: {
         border: "hsl(var(--border))",
@@ -80,11 +82,11 @@ const config = {
         "accordion-up": "accordion-up 0.2s ease-out",
       },
       fontFamily: {
-        sans: ['var(--font-sans)', ...fontFamily.sans]
-      }
+        sans: ["var(--font-sans)", ...fontFamily.sans],
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],
-} satisfies Config
+} satisfies Config;
 
-export default config
+export default withUt(config);

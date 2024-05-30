@@ -1,0 +1,70 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Resume {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  name      String
+  userId    String
+  fileKey   String   @unique
+  status    String   @default("generating")
+  text      String?
+
+  applications       Application[] @relation("ApplicationToResume")
+  activeApplications Application[] @relation("CurrentResume")
+  feedbacks          Feedback[]
+}
+
+model Company {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  name      String
+  userId    String?
+
+  applications Application[]
+}
+
+model Application {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  userId    String
+  name      String
+  status    String   @default("active")
+
+  currentResume Resume?    @relation("CurrentResume", fields: [resumeId], references: [id])
+  resumeId      Int?
+  resumes       Resume[]   @relation("ApplicationToResume")
+  company       Company?   @relation(fields: [companyId], references: [id])
+  companyId     Int?
+  feedbacks     Feedback[]
+}
+
+model Feedback {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  userId    String
+  title     String
+  text      String
+  status    String   @default("active")
+
+  application   Application? @relation(fields: [applicationId], references: [id])
+  applicationId Int?
+  resume        Resume?     @relation(fields: [resumeId], references: [id])
+  resumeId      Int?
+}

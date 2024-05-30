@@ -7,7 +7,7 @@ export default function Page() {
       <h1 className="mt-[-6px] text-4xl text-black">Job Applications</h1>
       <p className="text-gray-400">{"See how well your resume matches to job applications and keep track of the status for each application "}</p>
       <h2 className="mt-12 text-xl">Companies</h2>
-      <div className="h-full w-full  mt-5 gap-4 md:20 lg:gap-8 m-auto grid grid-cols-1 md:grid-cols-2 self-center ">
+      <div className="h-full w-full  mt-4 gap-4 md:20 lg:gap-8 m-auto grid grid-cols-1 md:grid-cols-2 self-center ">
         {[...Array(3)].map((_, i) => (
           <CompanyCard
             key={i}
@@ -18,7 +18,7 @@ export default function Page() {
         ))}
       </div>
       <h2 className="mt-12 text-xl">Applications</h2>
-      <div className="h-full w-full  mt-5 gap-4 md:20 lg:gap-8 m-auto grid grid-cols-1 md:grid-cols-2 self-center ">
+      <div className="h-full w-full  mt-4 gap-4 md:20 lg:gap-8 m-auto grid grid-cols-1 md:grid-cols-2 self-center ">
         {[...Array(10)].map((_, i) => (
           <ApplicationCard
             key={i}
