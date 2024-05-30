@@ -46,7 +46,7 @@ export default function Page({ params }: { params: { slug: string } }) {
           <ImprovementCard
             key={i}
             title="Add a summary section"
-            description="A summary section can also help you tailor your resume to specific jobs by highlighting the most relevant experience and skills.
+            text="A summary section can also help you tailor your resume to specific jobs by highlighting the most relevant experience and skills.
           Add a summary section at the top of your resume. This should be a concise paragraph that summarizes your career history, skills, and accomplishments. It's a great way to grab the reader's attention and give them a quick overview of who you are and what you're looking for."
           />
         ))}
