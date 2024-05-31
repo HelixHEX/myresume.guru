@@ -1,5 +1,5 @@
-import ApplicationCard from "@/components/jobs/cards/application";
-import CompanyCard from "@/components/jobs/cards/company";
+import ApplicationCard from "@/components/companies/cards/application";
+import CompanyCard from "@/components/companies/cards";
 
 export default function Page() {
   return (

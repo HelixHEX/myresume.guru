@@ -1,4 +1,4 @@
-import ApplicationCard from "@/components/jobs/cards/application";
+import ApplicationCard from "@/components/companies/cards/application";
 
 export default function Page({ params }: { params: { slug: string } }) {
   return (
