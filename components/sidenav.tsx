@@ -3,9 +3,8 @@
 import Link from "next/link";
 import { Button } from "./ui/button";
 import { usePathname, useRouter } from "next/navigation";
-import { FcSettings } from "react-icons/fc";
-import { FcDocument } from "react-icons/fc";
-import { FcRatings } from "react-icons/fc";
+// import { FcSettings } from "react-icons/fc";
+import { FcDocument, FcOrganization, FcRatings } from "react-icons/fc";
 
 const sidenavItems = [
   {
@@ -14,9 +13,14 @@ const sidenavItems = [
     Icon: FcDocument,
   },
   {
-    title: "Job Applications",
-    href: "/app/jobs/applications",
+    title: "Applications",
+    href: "/app/applications",
     Icon: FcRatings,
+  },
+  {
+    title: "Companies",
+    href: "/app/companies",
+    Icon: FcOrganization,
   },
   // {
   //   title: "Settings",
@@ -30,7 +34,7 @@ export default function Sidenav() {
   const router = useRouter();
   return (
     <>
-      <div className="hidden md:block fixed md:flex p-4 flex-col justify-between items-center w-[200px] h-screen top-0 pt-[78px] lg:w-[300px]">
+      <div className="hidden fixed md:flex p-4 flex-col justify-between items-center w-[200px] h-screen top-0 pt-[78px] lg:w-[300px]">
         <div className="w-full ">
           {sidenavItems.map((item, index) => (
             <Link
