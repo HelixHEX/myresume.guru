@@ -6,7 +6,7 @@ export async function GET() {
   const companies = await prisma.company.findMany({
     include: { applications: true },
   });
-  return NextResponse.json(companies);
+  return NextResponse.json({companies});
 }
 
 export async function POST(req: NextRequest) {
