@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { openai } from "@ai-sdk/openai";
-import { generateObject, streamObject } from "ai";
+import { streamObject } from "ai";
 import { z } from "zod";
-import PDFParser from "pdf2json"; // To parse the pdf
 import prisma from "@/lib/prisma";
 import pdf from "pdf-parse";
 import { waitUntil } from "@vercel/functions";
@@ -48,8 +47,6 @@ export const POST = async (req: NextRequest) => {
       data: { status: "Analyzing" },
     });
 
-    // console.log(resume)
-
     waitUntil(Promise.resolve(wait(fileKey)));
 
     const result = await streamObject({
@@ -79,11 +76,6 @@ export const POST = async (req: NextRequest) => {
       }),
     });
 
-    // for await (const partialObject of result.partialObjectStream) {
-    //   console.clear();
-    //   console.log(partialObject);
-    // }
-
     let accumlatedStr = "";
     for await (const partialObject of result.partialObjectStream) {
       if (partialObject.feedback) {
@@ -91,12 +83,7 @@ export const POST = async (req: NextRequest) => {
         console.log(partialObject.feedback);
         while (isCompleteObject(accumlatedStr)) {
           const compeleteObject = accumlatedStr;
-          console.log(compeleteObject)
-          // const feedbackObject = JSON.parse(compeleteObject);
-
-          // console.log(feedbackObject);
-
-          // accumlatedStr = removeProcessedString(accumlatedStr);
+          console.log(compeleteObject);
         }
       }
     }
