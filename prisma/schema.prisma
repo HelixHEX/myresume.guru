@@ -34,6 +34,7 @@ model Company {
   updatedAt DateTime @updatedAt @map("updated_at")
   name      String
   userId    String?
+  website   String?
 
   applications Application[]
 }
