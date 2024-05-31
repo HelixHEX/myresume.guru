@@ -15,15 +15,13 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
 import { api } from "@/lib/api";
 import { useState } from "react";
+import { DialogClose } from "@radix-ui/react-dialog";
 
 export default function CreateCompanyCard() {
   const [name, setName] = useState<string>("");
   const [website, setWebsite] = useState<string>("");
 
-  const { mutate } = api.mutations.companies.useAddCompany(
-    setName,
-    setWebsite
-  );
+  const { mutate } = api.mutations.companies.useAddCompany(setName, setWebsite);
 
   return (
     <Dialog>
@@ -69,14 +67,16 @@ export default function CreateCompanyCard() {
           </div>
         </div>
         <DialogFooter>
-          <Button
-            onClick={() => {
-              mutate({ name, website: website ?? "" });
-            }}
-            type="submit"
-          >
-            Add Company
-          </Button>
+          <DialogClose asChild>
+            <Button
+              onClick={() => {
+                mutate({ name, website: website ?? "" });
+              }}
+              type="submit"
+            >
+              Add Company
+            </Button>
+          </DialogClose>
         </DialogFooter>
       </DialogContent>
     </Dialog>
