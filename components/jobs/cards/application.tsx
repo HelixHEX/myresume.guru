@@ -12,7 +12,7 @@ type Props = {
   company?: string;
 }
 
-export default function AplicationCard({ id, name, company='Google', score }: Props) {
+export default function ApplicationCard({ id, name, company='Google', score }: Props) {
   const router = useRouter()
   return (
     <Card className="w-full md:w-[270px] lg:w-[320px] h-[180px]">
@@ -23,7 +23,7 @@ export default function AplicationCard({ id, name, company='Google', score }: Pr
       </CardHeader>
       <CardContent>
         <div className="flex flex-row justify-end">
-          <Button onClick={() => router.push(`/app/jobs/applications/${name}`)} className="bg-white rounded-full text-black text-xl hover:bg-gray-800 hover:border-gray-800 hover:text-white w-12 h-12 border-2 border-black">
+          <Button onClick={() => router.push(`/app/applications/${name}`)} className="bg-white rounded-full text-black text-xl hover:bg-gray-800 hover:border-gray-800 hover:text-white w-12 h-12 border-2 border-black">
             <MoveRight />
           </Button>
         </div>
