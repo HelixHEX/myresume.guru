@@ -3,7 +3,13 @@ import axios from "axios";
 import React from "react";
 import { toast } from "sonner";
 
-const addCompany = async (name: string) => {
+const addCompany = async ({
+  name,
+  website,
+}: {
+  name: string;
+  website: string;
+}) => {
   // const res = await axios.post("/api/companies", { name });
   // return res.data;
   // alert(name);
@@ -12,7 +18,8 @@ const addCompany = async (name: string) => {
 };
 
 export const useAddCompany = (
-  setName: React.Dispatch<React.SetStateAction<string>>
+  setName: React.Dispatch<React.SetStateAction<string>>,
+  setWebsite: React.Dispatch<React.SetStateAction<string>>
 ) => {
   return useMutation({
     mutationKey: ["add_company"],
@@ -22,6 +29,7 @@ export const useAddCompany = (
     },
     onSuccess: () => {
       setName("");
+      setWebsite("");
     },
   });
 };
