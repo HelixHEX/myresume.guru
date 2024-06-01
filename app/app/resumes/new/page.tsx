@@ -1,23 +1,26 @@
-
 import UploadButton from "@/components/upload";
+import { context } from "@/lib/context";
 
 export default function Page() {
   return (
-    <div className="w-full p-4">
-      <div className="flex flex-col w-full md:w-[500px] self-center">
-        <h1 className="font-bold text-4xl">
-          Get instant feedback on your resume
-        </h1>
-        <p className="mt-8 text-gray-400">
-          {
-            "Upload your resume and we'll provide AI-generated suggestions to help you land your dream job."
-          }
-        </p>
-        <p className="font-bold text-xl mt-8">Upload your resume</p>
-        
-        <UploadButton endpoint="resumeUpload" />
-        <p className="mt-2">We support .pdf files.</p>
+    <>
+      <context.resume.ChangeTitle title="" />
+      <div className="w-full p-4">
+        <div className="flex flex-col w-full md:w-[500px] self-center">
+          <h1 className="font-bold text-4xl">
+            Get instant feedback on your resume
+          </h1>
+          <p className="mt-8 text-gray-400">
+            {
+              "Upload your resume and we'll provide AI-generated suggestions to help you land your dream job."
+            }
+          </p>
+          <p className="font-bold text-xl mt-8">Upload your resume</p>
+
+          <UploadButton endpoint="resumeUpload" />
+          <p className="mt-2">We support .pdf files.</p>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
