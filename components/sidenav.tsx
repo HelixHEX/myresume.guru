@@ -12,16 +12,16 @@ const sidenavItems = [
     href: "/app/resumes",
     Icon: FcDocument,
   },
-  {
-    title: "Applications",
-    href: "/app/applications",
-    Icon: FcRatings,
-  },
-  {
-    title: "Companies",
-    href: "/app/companies",
-    Icon: FcOrganization,
-  },
+  // {
+  //   title: "Applications",
+  //   href: "/app/applications",
+  //   Icon: FcRatings,
+  // },
+  // {
+  //   title: "Companies",
+  //   href: "/app/companies",
+  //   Icon: FcOrganization,
+  // },
   // {
   //   title: "Settings",
   //   href: "/app/settings",
