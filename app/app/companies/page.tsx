@@ -18,8 +18,8 @@ export default function Page({ params }: { params: { slug: string } }) {
     return <div>No companies found</div>;
   }
   return (
-    <div className="mt-4 flex flex-col w-full h-full ">
-      <h1 className=" text-4xl text-black">Companies</h1>
+    <div className="flex flex-col w-full h-full ">
+      <h1 className="mt-[-6px] text-4xl text-black">Companies</h1>
       <p className="md:w-10/12 text-gray-400">
         Organize your job applications by company and see how many applications
         you have for each company
