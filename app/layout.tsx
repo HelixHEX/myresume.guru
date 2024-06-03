@@ -32,7 +32,7 @@ export default function RootLayout({
         >
           <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
           <Header />
-          <div className="flex flex-col h-screen pt-20">{children}</div>
+          <div className=" flex flex-col h-auto min-h-screen pt-20">{children}</div>
           <Toaster />
         </body>
       </html>

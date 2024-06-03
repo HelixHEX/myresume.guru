@@ -9,7 +9,7 @@ import Zoom from "react-reveal/Zoom";
 export default function Home() {
   const router = useRouter();
   return (
-    <div className="p-6 mb-44 w-full flex flex-col">
+    <div className="p-6 mb-44 w-full h-auto flex flex-col">
       <div className="flex flex-col lg:w-[1000px] w-full self-center">
         <div className="p-4 lg:p-8  self-center bg-cover bg-[url('/images/hero1-bg.png')] bg-center   bg-no-repeat rounded-lg w-full h-[480px] text-white flex flex-col justify-end">
           <h1 className="text-2xl lg:text-4xl font-bold lg:w-96">
@@ -33,7 +33,7 @@ export default function Home() {
         </div>
         <div className="flex mt-44 flex-col w-full sm:self-center ">
           <h1 className="text-4xl  font-bold">Why use myresume.guru?</h1>
-          <div className="flex w-full items-center h-[900px] lg:h-auto justify-between flex-col lg:flex-row mt-8">
+          <div className="flex w-full items-center h-auto justify-between flex-col lg:flex-row mt-8">
             <FeatureCard
               title="AI-powered suggestions"
               description="Our AI powered resume scanner will help you identify areas of improvement."
