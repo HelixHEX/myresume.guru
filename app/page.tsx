@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import FeatureCard from "@/components/home/featureCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -27,33 +27,35 @@ export default function Home() {
             />
             <Button className=" ml-2">Coming soon...!</Button>
           </div> */}
-          <Button onClick={() => router.push('/sign-up')} className="w-44 mt-8">Try now!</Button>
+          <Button onClick={() => router.push("/sign-up")} className="w-44 mt-8">
+            Try now!
+          </Button>
         </div>
-       <div className="flex mt-44 flex-col w-full sm:self-center ">
-       <h1 className="text-4xl  font-bold">Why use myresume.guru?</h1>
-        <div className="flex w-full items-center h-[900px] lg:h-auto justify-between flex-col lg:flex-row mt-8">
-          <FeatureCard
-            title="AI-powered suggestions"
-            description="Our AI powered resume scanner will help you identify areas of improvement."
-            Icon={() => <WandSparkles />}
-          />
-          <FeatureCard
-            title="Instant feedback"
-            description="Get instant feedback on your resume and improve it in real-time."
-            Icon={() => <Search />}
-          />
-          <FeatureCard
-            title="Resume score"
-            description="Get a score for your resume and see how it compares to others."
-            Icon={() => <CircleCheck />}
-          />
-          <FeatureCard
-            title="Job application tips"
-            description="Get tips on how to apply for jobs and stand out from the crowd."
-            Icon={() => <Megaphone />}
-          />
+        <div className="flex mt-44 flex-col w-full sm:self-center ">
+          <h1 className="text-4xl  font-bold">Why use myresume.guru?</h1>
+          <div className="flex w-full items-center h-[900px] lg:h-auto justify-between flex-col lg:flex-row mt-8">
+            <FeatureCard
+              title="AI-powered suggestions"
+              description="Our AI powered resume scanner will help you identify areas of improvement."
+              Icon={() => <WandSparkles />}
+            />
+            <FeatureCard
+              title="Instant feedback"
+              description="Get instant feedback on your resume and improve it in real-time."
+              Icon={() => <Search />}
+            />
+            <FeatureCard
+              title="Resume score"
+              description="Get a score for your resume and see how it compares to others."
+              Icon={() => <CircleCheck />}
+            />
+            <FeatureCard
+              title="Job application tips"
+              description="Get tips on how to apply for jobs and stand out from the crowd."
+              Icon={() => <Megaphone />}
+            />
+          </div>
         </div>
-       </div>
         <div className="mt-44 flex flex-col w-full self-center">
           <h1 className="text-4xl  font-bold">
             The easiest way to get your resume reviewed

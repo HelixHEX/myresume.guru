@@ -1,20 +1,23 @@
-'use client'
+"use client";
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import Logo from "./logo";
 import { Button } from "./ui/button";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function Header() {
-  const router = useRouter()
+  const router = useRouter();
+  const pathname = usePathname();
   return (
-    <div className=" z-10 w-full backdrop-blur-xs fixed flex flex-row p-4 text-black justify-between">
+    <div className=" z-10 w-full sm:backdrop-blur-xs sm:bg-transparent bg-white fixed flex flex-row p-6 text-black justify-between">
       <Logo />
       <SignedOut>
         <div className="flex flex-row">
-          <Button onClick={() => router.push('/sign-up')} className="mr-2 hover:bg-white" variant={"ghost"}>
-            Sign up
+          {pathname !== "/" && <Link href="/" className='hover:underline mr-8 self-center'>Home</Link>}
+          <Link href="/sign-in" className='hover:underline mr-8 self-center'>Signup</Link>
+          <Button onClick={() => router.push("/sign-in")}>
+            Signin
           </Button>
-          <Button onClick={() => router.push('/sign-in')} variant={"secondary"}>Signin</Button>
         </div>
       </SignedOut>
       <SignedIn>
