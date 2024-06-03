@@ -13,7 +13,7 @@ export default function ResumeCard({ name, fileKey }: Resume) {
       <CardHeader className="flex  flex-row justify-between">
         <h2 className="text-md font-bold">{name}</h2>
         <div className="flex ">
-          <FcCalendar className="self-center mr-2" />
+          {/* <FcCalendar className="self-center mr-2" /> */}
           {/* <p className="text-sm text-gray-400">{createdAt}</p> */}
         </div>
       </CardHeader>
