@@ -10,8 +10,8 @@ export default function Home() {
   const router = useRouter();
   return (
     <div className="p-6  mb-44 w-full flex flex-col">
-      <div className="flex flex-col lg:w-[928px] w-full self-center">
-        <div className="p-4 lg:p-8  self-center bg-[url('/images/hero1-bg.png')] bg-center   bg-no-repeat rounded-lg w-full h-[480px] text-white flex flex-col justify-end">
+      <div className="flex flex-col lg:w-[1000px] w-full self-center">
+        <div className="p-4 lg:p-8  self-center bg-cover bg-[url('/images/hero1-bg.png')] bg-center   bg-no-repeat rounded-lg w-full h-[480px] text-white flex flex-col justify-end">
           <h1 className="text-2xl lg:text-4xl font-bold lg:w-96">
             Land your dream job with myresume.guru
           </h1>
