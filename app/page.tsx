@@ -1,10 +1,10 @@
 "use client";
 import FeatureCard from "@/components/home/featureCard";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { CircleCheck, Megaphone, Search, WandSparkles } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import Zoom from "react-reveal/Zoom";
 
 export default function Home() {
   const router = useRouter();
@@ -60,11 +60,13 @@ export default function Home() {
           <h1 className="text-4xl  font-bold">
             The easiest way to get your resume reviewed
           </h1>
-          <p className="mt-8 ">
-            {
-              "Your resume is often the first thing a potential employer sees, so it's important to make a good impression. MyResume Guru makes it easy to get expert feedback on your resume, so you can feel  confident that you're putting your best foot forward."
-            }
-          </p>
+          <Zoom>
+            <p className="mt-8 ">
+              {
+                "Your resume is often the first thing a potential employer sees, so it's important to make a good impression. MyResume Guru makes it easy to get expert feedback on your resume, so you can feel  confident that you're putting your best foot forward."
+              }
+            </p>
+          </Zoom>
         </div>
         <div className="items-center md:itesm-start mt-44  h-[400] w-full flex flex-col md:flex-row justify-between">
           <div className="md:w-[400px] self-center flex flex-col items-center md:h-[300px] h-[400px] w-full">
@@ -80,12 +82,14 @@ export default function Home() {
             <h1 className="font-bold text-4xl">
               {"Get resume feedback that's actually meaningful"}
             </h1>
-            <p className="mt-8">
-              {
-                "Upload your resume and in seconds we'll assess your skills, experiences, and more. Then we'll give you feedback from our team of experts."
-              }
-            </p>
-            {/* <Button className="mt-4">Upload your resume</Button> */}
+            <Zoom>
+              <p className="mt-8">
+                {
+                  "Upload your resume and in seconds we'll assess your skills, experiences, and more. Then we'll give you feedback from our team of experts."
+                }
+              </p>
+              <Button onClick={() => router.push('/sign-up?redirect_url=http://localhost:3000/app/resumes/')} className="mt-4">Upload your resume</Button>
+            </Zoom>
           </div>
         </div>
         {/* <h1 className="mt-44 font-bold text-4xl text-center">
