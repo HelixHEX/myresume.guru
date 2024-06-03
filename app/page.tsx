@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 export default function Home() {
   const router = useRouter();
   return (
-    <div className="p-4  mb-44 w-full flex flex-col">
+    <div className="p-6  mb-44 w-full flex flex-col">
       <div className="flex flex-col lg:w-[928px] w-full self-center">
         <div className="p-4 lg:p-8  self-center bg-[url('/images/hero1-bg.png')] bg-center   bg-no-repeat rounded-lg w-full h-[480px] text-white flex flex-col justify-end">
           <h1 className="text-2xl lg:text-4xl font-bold lg:w-96">
@@ -29,8 +29,8 @@ export default function Home() {
           </div> */}
           <Button onClick={() => router.push('/sign-up')} className="w-44 mt-8">Try now!</Button>
         </div>
-       <div className="flex flex-col md:w-full sm:self-center sm:w-[500px]">
-       <h1 className="text-4xl mt-44 font-bold">Why use myresume.guru?</h1>
+       <div className="flex mt-44 flex-col w-full sm:self-center ">
+       <h1 className="text-4xl  font-bold">Why use myresume.guru?</h1>
         <div className="flex w-full items-center h-[900px] lg:h-auto justify-between flex-col lg:flex-row mt-8">
           <FeatureCard
             title="AI-powered suggestions"
@@ -54,8 +54,8 @@ export default function Home() {
           />
         </div>
        </div>
-        <div className="flex flex-col sm:w-[500px] md:w-full self-center">
-          <h1 className="text-4xl mt-44 font-bold">
+        <div className="mt-44 flex flex-col w-full self-center">
+          <h1 className="text-4xl  font-bold">
             The easiest way to get your resume reviewed
           </h1>
           <p className="mt-8 ">
@@ -65,16 +65,16 @@ export default function Home() {
           </p>
         </div>
         <div className="items-center md:itesm-start mt-44  h-[400] w-full flex flex-col md:flex-row justify-between">
-          <div className="">
+          <div className="md:w-[400px] self-center flex flex-col items-center md:h-[300px] h-[400px] w-full">
             <Image
               src="/images/hero2.png"
-              className="md:w-[400px] md:h-[400px] h-[500px] w-[500px]"
+              className="w-full h-full"
               alt="Hero 2"
-              width={500}
-              height={500}
+              width={400}
+              height={400}
             />
           </div>
-          <div className="h-[400] mt-8 md:mt-0 md:w-full sm:w-[500px] lg:w-96 flex flex-col">
+          <div className=" h-[400] mt-24 md:mt-0 w-full md:w-96 flex flex-col">
             <h1 className="font-bold text-4xl">
               {"Get resume feedback that's actually meaningful"}
             </h1>
