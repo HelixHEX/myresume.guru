@@ -13,9 +13,9 @@ export default function Header() {
       <Logo />
       <SignedOut>
         <div className="flex flex-row">
-          {pathname !== "/" && <Link href="/" className='hover:underline mr-8 self-center'>Home</Link>}
-          <Link href="/sign-in" className='hover:underline mr-8 self-center'>Signup</Link>
-          <Button onClick={() => router.push("/sign-in")}>
+          {pathname !== "/" && <Link href="/" className='hover:underline text-sm md:text-md mr-2 md:mr-8 self-center'>Home</Link>}
+          <Link href="/sign-in" className='hover:underline mr-2 md:mr-8 text-sm md:text-md self-center'>Signup</Link>
+          <Button className=" w-14 sm:w-full" onClick={() => router.push("/sign-in")}>
             Signin
           </Button>
         </div>
