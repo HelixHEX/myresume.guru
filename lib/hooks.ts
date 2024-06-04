@@ -23,11 +23,11 @@ export const useGenerateFeedback = ({
 
   useEffect(() => {
     const fetchFeedbacks = async () => {
-      setStatus("Analyzing");
       const feedbacksData = await generateFeedback(slug);
-
+      
       setType(feedbacksData.type);
       if (feedbacksData.type === "stream") {
+        setStatus("Analyzing");
         for await (const value of readStreamableValue(feedbacksData.response)) {
           if (value?.error) {
             throw new Error(value.error);
@@ -37,6 +37,7 @@ export const useGenerateFeedback = ({
         }
         setStatus("Analyzed");
       } else {
+        setStatus('Loading')
         setFeedbacks(feedbacksData.response.feedbacks);
         setResume(feedbacksData.response.feedbacks[0].resume);
         setStatus("Done");

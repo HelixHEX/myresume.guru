@@ -18,7 +18,7 @@ export default function Page({ params }: { params: { slug: string } }) {
   return (
     <>
       <context.resume.ChangeTitle title="Improve your resume" />
-      <div className="p-4 md:p-0 w-full flex flex-col">
+      <div className="mt-8 md:mt-0 w-full flex flex-col">
         <p className="text-gray-400">
           Get specific, actionable feedback on how to improve your resume. The
           Al will highlight areas for improvement and provide clear
@@ -26,9 +26,9 @@ export default function Page({ params }: { params: { slug: string } }) {
           job application.
         </p>
 
-        <div className="mt-8 flex flex-col md:flex-row justify-betwee">
-          <div className="w-full self-center">
-            <p className="hover:cursor-pointer hover:text-gray-500 underline text-gray-400">
+        <div className="mt-8 flex w-full flex-col md:flex-row justify-between">
+          <div className="self-start md:self-center">
+            <p className="hover:cursor-pointer w-auto hover:text-gray-500 underline text-gray-400">
               {resume ? resume.name : ""}
             </p>
             <p className="font-bold">
@@ -36,7 +36,7 @@ export default function Page({ params }: { params: { slug: string } }) {
             </p>
           </div>
           <Image
-            className="bg-none"
+            className="bg-none mt-8 md:mt-0 ml-[-40px]"
             height={100}
             width={300}
             src="/images/resume.jpg"
