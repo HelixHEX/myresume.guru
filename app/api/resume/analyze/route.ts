@@ -54,10 +54,27 @@ export const POST = async (req: NextRequest) => {
       messages: [
         {
           role: "user",
-          content:
-            "Your job is to act as a resume guru and analyze the following resume and provide at least 4 ways the user can improve their resume. If the text does not include information that would be on a resume, do not provide any feedback at all and return an error message.",
+          content: `This is a resume analysis tool. You will be analyzing a user-uploaded resume that has been converted to plain text.",
+          
+          Analysis:
+            1. Identify key sections like "Summary," "Experience," "Skills," and "Education." Extract relevant information from each section (e.g., job titles, companies, skills, degrees).
+            2. Provide Comprehensive Feedback:
+                * Strengths: Identify at least two strengths of the resume based on clarity, structure, keyword usage, and action verbs. 
+                * Actionable Improvements: Generate at least four specific, actionable suggestions for improvement across various aspects. You must also quote the text you are referring to.:
+                    * Clarity and Concision: Recommend ways to improve sentence structure, tighten wording, or remove unnecessary information. 
+                    * Formatting and Readability: Suggest improvements to formatting, including bullet points, white space, and font choice (if mentioned in the text).
+                    * Keywords and Action Verbs: Identify relevant keywords for the target job (if provided) and suggest ways to incorporate them naturally. Suggest stronger action verbs to highlight achievements.
+                    * Tailoring: Recommend ways to tailor the resume to a specific job description (if provided) by highlighting relevant skills and experiences. 
+                    * Quantifiable Achievements:  Suggest ways to quantify achievements using numbers, percentages, or metrics.
+                * Overall Tone and Style:  Evaluate the overall tone and style of the resume and suggest ways to make it more professional, confident, or achievement-oriented.
+            3. Error Handling:
+            If the text does not include information that would be on a resume, do not provide any feedback at all and return an error message.
+            
+          Resume:
+          ${test.text}
+            `,
         },
-        { role: "system", content: test.text },
+        { role: "user", content: test.text },
       ],
       schema: z.object({
         feedback: z
