@@ -1,12 +1,16 @@
 type Resume = {
   id: number;
-  createdAt: string;
-  updatedAt: string;
+  createdAt: Date;
+  updatedAt: Date;
   name: string;
   userId: string;
   fileKey: string;
+  status: string;
+  text: string | null;
+
   applications?: Application[];
   activeApplication?: Application[];
+  feedbacks?: Feedback[];
 };
 
 type Company = {

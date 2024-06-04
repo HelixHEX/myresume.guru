@@ -20,7 +20,7 @@ export async function generateFeedback(fileKey: string): Promise<
     let error = "";
     const resume = await prisma.resume.findUnique({
       where: { fileKey },
-      include: { feedbacks: true },
+      include: { feedbacks: {include: { resume: true }} },
     });
 
     if (!resume) {
@@ -43,9 +43,11 @@ export async function generateFeedback(fileKey: string): Promise<
     }
 
     if (resume.status === "Analyzed" && resume.feedbacks.length > 0) {
+      const feedbacks = resume.feedbacks;
       return {
-        response: { feedbacks: resume.feedbacks },
+        // response: { feedbacks: resume.feedbacks },
         type: "http",
+        response: {feedbacks}
         // message: "Analyzed",
       };
     }
@@ -145,7 +147,7 @@ export const runThread = async () => {
 export const saveToDb = async (fileKey: string, feedback: Feedback[]) => {
   const resume = await prisma.resume.findUnique({ where: { fileKey } });
   if (!resume) {
-    console.log("error");
+    throw new Error("Unable to find resume");
   } else {
     await prisma.feedback.createMany({
       data: feedback.map((f) => ({
@@ -154,20 +156,6 @@ export const saveToDb = async (fileKey: string, feedback: Feedback[]) => {
         userId: resume.userId,
       })),
     });
-    // await prisma.resume.update({
-    //   where: {
-    //     fileKey,
-    //   },
-    //   data: {
-    //     feedbacks: {
-    //       create: feedback.map((f) => ({
-    //         ...f,
-    //         userId: resume.userId,
-    //       })),
-    //     },
-    //   },
-    // });
-
-    return true;
   }
+  return resume;
 };

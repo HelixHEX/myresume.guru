@@ -11,4 +11,9 @@ type Feedback = {
   title: string;
   text: string;
   status: string;
+
+  application?: Application | null;
+  applicationId?: number | null;
+  resume?: Resume | null;
+  resumeId?: number | null;
 }

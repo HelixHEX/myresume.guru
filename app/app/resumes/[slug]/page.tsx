@@ -3,13 +3,18 @@
 import Feedback from "@/components/resumes/feedback";
 import { context } from "@/lib/context";
 import Image from "next/image";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 export default function Page({ params }: { params: { slug: string } }) {
   const { slug } = params;
-  const [status, setStatus] = useState<"Done" | "Loading" | "Analyzing" | "Analyzed" | "Saving to database">(
-    "Loading"
-  );
+  const [status, setStatus] = useState<
+    "Done" | "Loading" | "Analyzing" | "Analyzed" | "Saving to database"
+  >("Loading");
+  const { resume } = useContext(context.resume.LayoutContext);
+
+  // useEffect(() => {
+  //   console.log(resume);
+  // }, [resume]);
   return (
     <>
       <context.resume.ChangeTitle title="Improve your resume" />
@@ -24,7 +29,7 @@ export default function Page({ params }: { params: { slug: string } }) {
         <div className="mt-8 flex flex-col md:flex-row justify-betwee">
           <div className="w-full self-center">
             <p className="hover:cursor-pointer hover:text-gray-500 underline text-gray-400">
-              EliasWambuguResume.pdf
+              {resume ? resume.name : ""}
             </p>
             <p className="font-bold">
               {status === "Done" ? "Your feedback is ready!" : status + "..."}

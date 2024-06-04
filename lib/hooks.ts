@@ -1,6 +1,8 @@
 import { generateFeedback, saveToDb } from "@/actions";
 import { readStreamableValue } from "ai/rsc";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { context } from "./context";
+import { set } from "zod";
 
 export const useGenerateFeedback = ({
   slug,
@@ -15,12 +17,12 @@ export const useGenerateFeedback = ({
     >
   >;
 }) => {
+  const { setResume, resume } = useContext(context.resume.LayoutContext);
   const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
   const [type, setType] = useState<"http" | "stream" | null>(null);
 
   useEffect(() => {
     const fetchFeedbacks = async () => {
-      
       setStatus("Analyzing");
       const feedbacksData = await generateFeedback(slug);
 
@@ -34,20 +36,29 @@ export const useGenerateFeedback = ({
           setFeedbacks(value?.feedbacks || []);
         }
         setStatus("Analyzed");
-        // save();
       } else {
         setFeedbacks(feedbacksData.response.feedbacks);
+        setResume(feedbacksData.response.feedbacks[0].resume);
         setStatus("Done");
       }
     };
     fetchFeedbacks();
-  }, [setStatus, slug]);
+  }, [setStatus, setResume, slug]);
+
+  useEffect(() => {
+    if (!resume) {
+      if (feedbacks.length > 0) {
+        setResume(feedbacks[0].resume);
+      }
+    }
+  }, [resume, setResume, feedbacks]);
 
   useEffect(() => {
     if (status === "Analyzed" && type === "stream" && feedbacks.length > 0) {
       setStatus("Saving to database");
       setTimeout(async () => {
-        await saveToDb(slug, feedbacks);
+        const newResume = await saveToDb(slug, feedbacks);
+        setResume(newResume);
         setStatus("Done");
       }, 1000);
     }
