@@ -1,13 +1,13 @@
+import { AI } from "@/actions";
 import Feedback from "@/components/resumes/feedback";
 import ResumeName from "@/components/resumes/resumeName";
-import { context } from "@/lib/context";
 import Image from "next/image";
 
 export default function Page({ params }: { params: { slug: string } }) {
   const { slug } = params;
 
   return (
-    <>
+    <AI>
       <h1 className=" text-4xl text-black">Improve your resume</h1>
       <div className="mt-8 md:mt-0 w-full flex flex-col">
         <p className="text-gray-400">
@@ -32,6 +32,6 @@ export default function Page({ params }: { params: { slug: string } }) {
         {"We've used AI to help you improve your resume!"}
       </p>
       <Feedback slug={slug} />
-    </>
+    </AI>
   );
 }
