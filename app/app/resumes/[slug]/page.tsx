@@ -1,23 +1,14 @@
-"use client";
-
 import Feedback from "@/components/resumes/feedback";
+import ResumeName from "@/components/resumes/resumeName";
 import { context } from "@/lib/context";
 import Image from "next/image";
-import { useContext, useEffect, useState } from "react";
 
 export default function Page({ params }: { params: { slug: string } }) {
   const { slug } = params;
-  const [status, setStatus] = useState<
-    "Done" | "Loading" | "Analyzing" | "Analyzed" | "Saving to database"
-  >("Loading");
-  const { resume } = useContext(context.resume.LayoutContext);
 
-  // useEffect(() => {
-  //   console.log(resume);
-  // }, [resume]);
   return (
     <>
-      <context.resume.ChangeTitle title="Improve your resume" />
+      <h1 className=" text-4xl text-black">Improve your resume</h1>
       <div className="mt-8 md:mt-0 w-full flex flex-col">
         <p className="text-gray-400">
           Get specific, actionable feedback on how to improve your resume. The
@@ -25,30 +16,22 @@ export default function Page({ params }: { params: { slug: string } }) {
           recommendations to help you make your resume stand out for your next
           job application.
         </p>
-
-        <div className="mt-8 flex w-full flex-col md:flex-row justify-between">
-          <div className="self-start md:self-center">
-            <p className="hover:cursor-pointer w-auto hover:text-gray-500 underline text-gray-400">
-              {resume ? resume.name : ""}
-            </p>
-            <p className="font-bold">
-              {status === "Done" ? "Your feedback is ready!" : status + "..."}
-            </p>
-          </div>
-          <Image
-            className="bg-none mt-8 md:mt-0 ml-[-40px]"
-            height={100}
-            width={300}
-            src="/images/resume.jpg"
-            alt=""
-          />
-        </div>
-        <h2 className="mt-44 font-bold text-2xl">Suggested Improvements</h2>
-        <p className="mt-4 mb-8">
-          {"We've used AI to help you improve your resume!"}
-        </p>
-        <Feedback status={status} setStatus={setStatus} slug={slug} />
       </div>
+      <div className="mt-8 flex w-full flex-col md:flex-row justify-between">
+        <ResumeName slug={slug} />
+        <Image
+          className="bg-none mt-8 md:mt-0 ml-[-40px]"
+          height={100}
+          width={300}
+          src="/images/resume.jpg"
+          alt=""
+        />
+      </div>
+      <h2 className="mt-44 font-bold text-2xl">Suggested Improvements</h2>
+      <p className="mt-4 mb-8">
+        {"We've used AI to help you improve your resume!"}
+      </p>
+      <Feedback slug={slug} />
     </>
   );
 }

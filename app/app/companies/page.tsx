@@ -7,19 +7,20 @@ export default function Page({ params }: { params: { slug: string } }) {
   const { data, status, error } = api.queries.companies.useGetCompanies();
 
   if (status === "pending") {
-    return <div>Loading...</div>;
+    return <div className="text-gray-400 text-center">Loading...</div>;
   }
 
   if (status === "error") {
-    return <div>Error: {error.message}</div>;
+    return (
+      <div className="text-red-400 text-center">Error: {error.message}</div>
+    );
   }
 
   if (status === "success" && !data) {
-    return <div>No companies found</div>;
+    return <div className="text-gray-400 text-center">No companies found</div>;
   }
   return (
-    <div className="flex flex-col w-full h-full ">
-      <h1 className="mt-[-6px] text-4xl text-black">Companies</h1>
+    <>
       <p className="md:w-10/12 text-gray-400">
         Organize your job applications by company and see how many applications
         you have for each company
@@ -45,6 +46,6 @@ export default function Page({ params }: { params: { slug: string } }) {
           </h1>
         </div>
       )}
-    </div>
+    </>
   );
 }
