@@ -89,7 +89,7 @@ export default function Sidenav({
               key={index}
               href={item.href}
               className={`flex items-center justify-center hover:bg-gray-100 w-10 rounded-lg h-8 ${
-                pathname === item.href && "bg-gray-100"
+                pathname === item.href && "bg-gray-200"
               }`}
             >
               {item.Icon && <item.Icon size={26} />}
