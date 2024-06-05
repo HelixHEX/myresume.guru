@@ -1,4 +1,3 @@
-import Title from "@/components/resumes/layoutTitle";
 import { context } from "@/lib/context";
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
