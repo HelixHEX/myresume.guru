@@ -4,6 +4,7 @@ import { currentUser } from "@clerk/nextjs/server";
 
 export async function GET() {
   const companies = await prisma.company.findMany({
+    orderBy: { createdAt: "desc" },
     include: { applications: {orderBy: {createdAt: "desc"}} },
   });
   return NextResponse.json({companies});
@@ -11,14 +12,13 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   const user = await currentUser();
-
   const { name, website } = await req.json();
 
   await prisma.company.create({
     data: {
       name,
       website,
-      userId: user!.id,
+      userId:' user!.id',
     },
   });
 
