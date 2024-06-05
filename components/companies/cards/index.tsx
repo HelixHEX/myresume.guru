@@ -21,7 +21,7 @@ export default function CompanyCard({ id, name, applications }: Props) {
       </CardHeader>
       <CardContent>
         <div className="flex flex-row justify-end">
-          <Button onClick={() => router.push(`/app/companies/${id}`)} className="bg-white rounded-full text-black text-xl hover:bg-gray-800 hover:border-gray-800 hover:text-white w-12 h-12 border-2 border-black">
+          <Button onClick={() => router.push(`/app/companies/${id}/applications`)} className="bg-white rounded-full text-black text-xl hover:bg-gray-800 hover:border-gray-800 hover:text-white w-12 h-12 border-2 border-black">
             <MoveRight />
           </Button>
         </div>
