@@ -22,5 +22,6 @@ export const useGetApplication = (id: string) => {
   return useQuery<GetApplicationResponse>({
     queryKey: ["application", id],
     queryFn: () => getApplication(id),
+    enabled: !!id,
   });
 };

@@ -6,12 +6,11 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   const id = params.id;
-  const applications = await prisma.application.findMany({
+  const application = await prisma.application.findUnique({
     where: {
       id: id ? parseInt(id) : undefined,
     },
-    orderBy: { createdAt: "desc" },
   });
 
-  return NextResponse.json({ applications });
+  return NextResponse.json({ application });
 }
