@@ -44,7 +44,8 @@ model Application {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
   userId    String
-  name      String
+  title     String
+  url       String
   status    String   @default("active")
 
   currentResume Resume?    @relation("CurrentResume", fields: [resumeId], references: [id])
@@ -66,6 +67,6 @@ model Feedback {
 
   application   Application? @relation(fields: [applicationId], references: [id])
   applicationId Int?
-  resume        Resume?     @relation(fields: [resumeId], references: [id])
+  resume        Resume?      @relation(fields: [resumeId], references: [id])
   resumeId      Int?
 }
