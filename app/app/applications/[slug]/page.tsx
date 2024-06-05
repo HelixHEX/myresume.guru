@@ -38,7 +38,7 @@ export default function Page({ params }: { params: { slug: string } }) {
           <p className=" text-green-400">95%</p>
         </div>
       </div>
-      <h2 className="mt-28 font-bold text-2xl">Suggested Improvements</h2>
+      {/* <h2 className="mt-28 font-bold text-2xl">Suggested Improvements</h2>
       <p className="mt-4">{"We've used AI to help you improve your resume!"}</p>
       <div className="flex flex-col mt-8">
         {[...Array(3)].map((_, i) => (
@@ -49,7 +49,7 @@ export default function Page({ params }: { params: { slug: string } }) {
           Add a summary section at the top of your resume. This should be a concise paragraph that summarizes your career history, skills, and accomplishments. It's a great way to grab the reader's attention and give them a quick overview of who you are and what you're looking for."
           />
         ))}
-      </div>
+      </div> */}
     </div>
   );
 }
