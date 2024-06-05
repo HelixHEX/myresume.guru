@@ -16,8 +16,8 @@ export default function CompanyCard({ id, name, applications }: Props) {
   return (
     <Card className="w-full md:w-[270px] lg:w-[320px] h-[180px]">
       <CardHeader className="flex  flex-col">
-        <h2 className="text-md mb-[-10px] font-bold">{name}</h2>
-        <p className="text-sm text-gray-400">Applications: {applications}</p>
+      <h2 className="text-lg font-medium">{name}</h2>
+        <p className="text-sm ">Applications: {applications}</p>
       </CardHeader>
       <CardContent>
         <div className="flex flex-row justify-end">

@@ -22,7 +22,7 @@ export default function ApplicationCard({
   return (
     <Card className="w-full md:w-[270px] lg:w-[320px] h-[180px]">
       <CardHeader className="flex  flex-col">
-        <h2 className="text-md font-medium">{title}</h2>
+        <h2 className="text-lg font-medium">{title}</h2>
         {company && (
           <p className="text-sm  text-gray-800">Company: {company}</p>
         )}
