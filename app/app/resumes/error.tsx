@@ -2,7 +2,6 @@
 
 import { Button } from "@/components/ui/button";
 import { useEffect } from "react";
-import { context } from "@/lib/context";
 
 export default function Error({
   error,
@@ -17,7 +16,6 @@ export default function Error({
 
   return (
     <>
-      <context.resume.ChangeTitle title="" />
       <div className="flex flex-col items-center justify-center h-full">
         <h2 className="text-2xl font-semibold">An error occurred</h2>
         {error.digest && (
