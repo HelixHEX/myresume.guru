@@ -4,7 +4,7 @@ import { currentUser } from "@clerk/nextjs/server";
 
 export async function GET() {
   const companies = await prisma.company.findMany({
-    include: { applications: true },
+    include: { applications: {orderBy: {createdAt: "desc"}} },
   });
   return NextResponse.json({companies});
 }

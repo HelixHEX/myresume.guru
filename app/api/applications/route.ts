@@ -11,6 +11,7 @@ export async function GET(
     where: {
       companyId: id ? parseInt(id) : null,
     },
+    orderBy: { createdAt: "desc" },
   });
 
   return NextResponse.json({ applications });
