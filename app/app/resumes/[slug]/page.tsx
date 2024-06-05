@@ -8,7 +8,7 @@ export default function Page({ params }: { params: { slug: string } }) {
 
   return (
     <AI>
-      <h1 className=" text-4xl text-black">Improve your resume</h1>
+      <h1 className=" text-4xl font-light text-black">Improve your resume</h1>
       <div className="mt-8 md:mt-0 w-full flex flex-col">
         <p className="text-gray-400">
           Get specific, actionable feedback on how to improve your resume. The

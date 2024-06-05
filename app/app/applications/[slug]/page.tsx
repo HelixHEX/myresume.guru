@@ -5,7 +5,7 @@ export default function Page({ params }: { params: { slug: string } }) {
   return (
     <div className=" flex flex-col w-full h-full ">
       <div className="flex">
-        <h1 className="mt-[-6px]  text-4xl text-black">
+        <h1 className="mt-[-6px] font-light  text-4xl text-black">
           {params.slug.replaceAll("%20", " ")}
         </h1>
         <Badge className="ml-2  self-center">Active</Badge>

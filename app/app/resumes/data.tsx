@@ -2,7 +2,6 @@
 
 import ResumeCard from "@/components/resumes/cards";
 import { api } from "@/lib/api";
-import { context } from "@/lib/context";
 export default function Resumes() {
   const {
     data: resumes,
@@ -13,7 +12,7 @@ export default function Resumes() {
   if (isLoading) {
     return (
       <>
-        <context.resume.ChangeTitle title="" />
+        {/* <context.resume.ChangeTitle title="" /> */}
         <div className="text-center mt-4 text-gray-400">
           Loading your resumes...
         </div>
@@ -24,7 +23,7 @@ export default function Resumes() {
   if (isError) {
     return (
       <div className="text-center mt-4 text-red-400">
-        <context.resume.ChangeTitle title="" />
+        {/* <context.resume.ChangeTitle title="" /> */}
         An error occurred while loading your resumes
       </div>
     );
@@ -33,7 +32,6 @@ export default function Resumes() {
   if (!resumes || resumes.length <= 0) {
     return (
       <div className="text-center mt-4 text-gray-400">
-        <context.resume.ChangeTitle title="" />
         {
           "You don't have any resumes yet. Click the button above to upload your first resume."
         }

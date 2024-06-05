@@ -34,6 +34,26 @@ type Application = {
   currentResume?: Resume;
 };
 
+type Item = {
+  key: string;
+  value: Feedback;
+}
+
+type Feedback = {
+  id: number;
+  createdAt: Date;
+  updatedAt: Date;
+  userId: string;
+  title: string;
+  text: string;
+  status: string;
+
+  application?: Application | null;
+  applicationId?: number | null;
+  resume?: Resume | null;
+  resumeId?: number | null;
+}
+
 type FeedbackSchema = {
   title: string;
   text: string;

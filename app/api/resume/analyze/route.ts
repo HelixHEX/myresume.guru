@@ -1,3 +1,9 @@
+export const GET = async (req: Request) => {}
+
+/*
+ 
+LEGACY CODE
+
 import { NextRequest, NextResponse } from "next/server";
 import { openai } from "@ai-sdk/openai";
 import { streamObject } from "ai";
@@ -47,7 +53,7 @@ export const POST = async (req: NextRequest) => {
       data: { status: "Analyzing" },
     });
 
-    waitUntil(Promise.resolve(wait(fileKey)));
+    // waitUntil(Promise.resolve(wait(fileKey)));
 
     const result = await streamObject({
       model: openai("gpt-3.5-turbo"),
@@ -74,7 +80,7 @@ export const POST = async (req: NextRequest) => {
           ${test.text}
             `,
         },
-        { role: "user", content: test.text },
+        // { role: "user", content: test.text },
       ],
       schema: z.object({
         feedback: z
@@ -128,3 +134,4 @@ const removeProcessedString = (str: string) => {
   const index = str.indexOf("}") + 1;
   return str.substring(index);
 };
+*/
