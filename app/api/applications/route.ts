@@ -1,22 +1,25 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { currentUser } from "@clerk/nextjs/server";
 
-export async function GET(req: NextRequest) {
-  const companyId = req.nextUrl.searchParams.get("companyId") ?? "";
+export async function GET(
+  _request: Request,
+  { params }: { params: { id: string } }
+) {
+  const id = params.id;
   const applications = await prisma.application.findMany({
     where: {
-      companyId: companyId ? parseInt(companyId) : null,
+      companyId: id ? parseInt(id) : null,
     },
   });
 
   return NextResponse.json({ applications });
 }
 
-export async function POST(req: NextRequest, res: NextResponse) {
+export async function POST(req: Request) {
   const user = await currentUser();
 
-  const { title, url, resumeId, jobDescription } = await req.json();
+  const { title, url, resumeId, jobDescription, companyId } = await req.json();
 
   const application = await prisma.application.create({
     data: {
@@ -26,6 +29,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
       description: jobDescription,
       currentResume: resumeId ? { connect: { id: resumeId } } : undefined,
       resumes: resumeId ? { connect: { id: resumeId } } : undefined,
+      company: companyId ? { connect: { id: companyId } } : undefined,
     },
   });
 

@@ -27,7 +27,10 @@ export const useAddCompany = (
       toast.error("Error adding company");
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["companies"] });
+      queryClient.invalidateQueries({
+        queryKey: ["companies"],
+        type: "active",
+      });
       setName("");
       setWebsite("");
     },

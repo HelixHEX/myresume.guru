@@ -16,7 +16,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
-export default function CreateApplicationCard() {
+export default function CreateApplicationCard({companyId}: {companyId: number}) {
   const [title, setTitle] = useState<string>("");
   const [url, setUrl] = useState<string>("");
   const [resumeId, setResumeId] = useState<number | null>(null);
@@ -30,6 +30,7 @@ export default function CreateApplicationCard() {
       setUrl,
       setResumeId,
       setJobDescription,
+      companyId
     });
 
   if (status === "pending") return null;
@@ -45,6 +46,7 @@ export default function CreateApplicationCard() {
         url,
         resumeId,
         jobDescription,
+        companyId,
       })
     } else {
       toast.error("Please fill in all the required fields");

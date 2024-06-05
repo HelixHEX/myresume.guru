@@ -6,7 +6,7 @@ import { api } from "@/lib/api";
 
 export default function CompanyApplications({ slug }: { slug: string }) {
   const { data, status, error } =
-    api.queries.applications.useGetApplications(slug);
+    api.queries.companies.useGetCompany(slug);
 
   if (status === "pending") {
     return <div className="text-gray-400 text-center">Loading...</div>;
@@ -28,9 +28,9 @@ export default function CompanyApplications({ slug }: { slug: string }) {
 
   return (
     <>
-      {data.applications && (
+      {data.company.applications && (
         <>
-          {data.applications.map((application, i) => (
+          {data.company.applications.map((application, i) => (
             <ApplicationCard
               key={i}
               title={application.title}

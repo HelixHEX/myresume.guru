@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
 const getApplications = async (companyId?: string) => {
-  const res = await axios.get(`/api/applications?compnayId=${companyId}`);
+  const res = await axios.get(`/api/applications?companyId=${companyId}`);
   return res.data;
 };
 

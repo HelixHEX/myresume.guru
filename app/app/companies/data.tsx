@@ -31,7 +31,7 @@ export default function Companies() {
               key={index}
               name={company.name}
               id={company.id.toString()}
-              applications={Math.floor(Math.random() * 15)}
+              applications={company.applications!.length}
             />
           ))}
         </div>

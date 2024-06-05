@@ -5,6 +5,7 @@ import { toast } from "sonner";
 const addApplication = async ({
   title,
   url,
+  companyId,
   resumeId,
   jobDescription,
 }: CreateApplication): Promise<CreateApplicationResponse> => {
@@ -12,21 +13,19 @@ const addApplication = async ({
     title,
     url,
     resumeId,
+    companyId,
     jobDescription,
   });
 
   return response.data;
 };
 
-type CreateApplicationResponse = {
-  application?: Application;
-  message?: string;
-};
 export const useAddApplication = ({
   setTitle,
   setUrl,
   setResumeId,
   setJobDescription,
+  companyId,
 }: UseAddApplication) => {
   const queryClient = useQueryClient();
   return useMutation<CreateApplicationResponse, Error, CreateApplication>({
@@ -40,7 +39,10 @@ export const useAddApplication = ({
       setUrl("");
       setResumeId(null);
       setJobDescription("");
-      queryClient.invalidateQueries({ queryKey: ["applications"] });
+      queryClient.invalidateQueries({
+        queryKey: ["company"],
+       
+      });
     },
   });
 };
