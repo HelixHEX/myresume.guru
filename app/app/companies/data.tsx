@@ -23,7 +23,8 @@ export default function Companies() {
   return (
     <>
       {data.companies.length > 0 ? (
-        <div className="h-full w-full  mt-4 gap-4 md:20 lg:gap-8 m-auto grid grid-cols-1 md:grid-cols-2 self-center ">
+      <div className="h-full w-full  mt-4 gap-4 md:20 lg:gap-8 m-auto grid grid-cols-1 md:grid-cols-2 self-center ">
+        
           <CreateCompanyCard />
           {data.companies.map((company, index) => (
             <CompanyCard

@@ -25,3 +25,15 @@ export const useGetResumeFeedback = (id: string) => {
     
   });
 }
+
+const getResume = async (id: string) => {
+  const res = await axios.get(`/api/resume/${id}`);
+  return res.data;
+}
+
+export const useGetResume = (id: string) => {
+  return useQuery<GetResumeResponse>({
+    queryKey: ["resume", id],
+    queryFn: () => getResume(id),
+  });
+}

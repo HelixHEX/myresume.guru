@@ -1,4 +1,4 @@
-import ApplicationCard from "@/components/companies/cards/application";
+import ApplicationCard from "@/components/applications/cards/create";
 import CompanyCard from "@/components/companies/cards";
 
 export default function Page() {

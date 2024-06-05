@@ -1,10 +1,8 @@
 import UploadButton from "@/components/upload";
-import { context } from "@/lib/context";
 
 export default function Page() {
   return (
     <>
-      <context.resume.ChangeTitle title="" />
       <div className="w-full p-4">
         <div className="flex flex-col w-full md:w-[500px] self-center">
           <h1 className="font-bold text-4xl">
