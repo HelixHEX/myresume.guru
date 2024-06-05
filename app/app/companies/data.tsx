@@ -17,14 +17,12 @@ export default function Companies() {
     );
   }
 
-  if (status === "success" && !data) {
-    return <div className="text-gray-400 text-center">No companies found</div>;
-  }
+  if (status === "success" && !data.companies) return null;
+
   return (
     <>
       {data.companies.length > 0 ? (
-      <div className="h-full w-full  mt-4 gap-4 md:20 lg:gap-8 m-auto grid grid-cols-1 md:grid-cols-2 self-center ">
-        
+        <div className="h-full w-full  mt-4 gap-4 md:20 lg:gap-8 m-auto grid grid-cols-1 md:grid-cols-2 self-center ">
           <CreateCompanyCard />
           {data.companies.map((company, index) => (
             <CompanyCard
@@ -36,11 +34,8 @@ export default function Companies() {
           ))}
         </div>
       ) : (
-        <div>
+        <div className="mt-4">
           <CreateCompanyCard />
-          <h1 className="text-center text-gray-400">
-            Add a company to get started
-          </h1>
         </div>
       )}
     </>

@@ -18,11 +18,7 @@ export default function CompanyApplications({ slug }: { slug: string }) {
     );
   }
 
-  if (status === "success" && !data) {
-    return (
-      <div className="text-gray-400 text-center">No applications found</div>
-    );
-  }
+  if (status === "success" && !data.company) return null;
 
   if (!slug) return null;
 
