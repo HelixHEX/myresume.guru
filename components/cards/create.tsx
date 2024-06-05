@@ -10,13 +10,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
-import { api } from "@/lib/api";
-import { useState } from "react";
 import { DialogClose } from "@radix-ui/react-dialog";
-import { title } from "process";
 
 export default function CreateCard({
   children,
@@ -24,14 +19,20 @@ export default function CreateCard({
   modalTitle,
   modalDescription,
   actionText,
-  action
+  action,
+  styles,
+  loading,
+  close
 }: {
+  loading?: boolean;
+  close?: boolean;
+  styles?: string;
   title: string;
   modalTitle: string;
   modalDescription: string;
   children?: React.ReactNode;
-  actionText: string
-  action: () => void
+  actionText: string;
+  action: () => void;
 }) {
   return (
     <Dialog>
@@ -45,31 +46,19 @@ export default function CreateCard({
         </Card>
       </DialogTrigger>
 
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className={`${styles ? styles : "sm:max-w-[425px]"}`}>
         <DialogHeader>
           <DialogTitle>{modalTitle}</DialogTitle>
-          <DialogDescription>
-            {modalDescription}
-          </DialogDescription>
+          <DialogDescription>{modalDescription}</DialogDescription>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            {children}
-            {/* <Input
-              value={website}
-              onChange={(e) => setWebsite(e.target.value)}
-              id="name"
-              placeholder="Company url (ex: careers.google.com)"
-              className="col-span-3"
-            /> */}
-          </div>
+        <div className="grid self-start gap-4 py-4">
+          {children}
         </div>
         <DialogFooter>
-          <DialogClose asChild>
+          <DialogClose asChild={close}>
             <Button
-              // onClick={() => {
-              //   mutate({ name, website: website ?? "" });
-              // }}
+              disabled={loading}
+              onClick={action}
               type="submit"
             >
               {actionText}

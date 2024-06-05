@@ -40,13 +40,14 @@ model Company {
 }
 
 model Application {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-  userId    String
-  title     String
-  url       String
-  status    String   @default("active")
+  id          Int      @id @default(autoincrement())
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  userId      String
+  title       String
+  url         String
+  status      String   @default("active")
+  description String
 
   currentResume Resume?    @relation("CurrentResume", fields: [resumeId], references: [id])
   resumeId      Int?

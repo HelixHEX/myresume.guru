@@ -1,14 +1,14 @@
-import { useQuery } from "@tanstack/react-query"
-import axios from "axios"
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 
-const getApplications = async () => {
-  const res = await axios.get("/api/applications")
-  return res.data
-}
+const getApplications = async (companyId?: string) => {
+  const res = await axios.get(`/api/applications?compnayId=${companyId}`);
+  return res.data;
+};
 
-export const useGetApplications = (filter?: string) => {
+export const useGetApplications = (companyId?: string) => {
   return useQuery<GetApplicationsResponse>({
-    queryKey: ["applications"],
-    queryFn: getApplications,
-  })
-}
+    queryKey: ["applications", companyId],
+    queryFn: () => getApplications(companyId),
+  });
+};

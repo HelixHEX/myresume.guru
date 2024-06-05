@@ -24,30 +24,21 @@ export default function CompanyApplications({ slug }: { slug: string }) {
     );
   }
 
-  if (!slug) return null
+  if (!slug) return null;
 
   return (
     <>
-      {data?.applications.length > 0 ? (
-        <div className="h-full bg-red-400 w-full  mt-4 gap-4 md:20 lg:gap-8 m-auto grid grid-cols-1 md:grid-cols-2 self-center ">
-          {/* <h2 className="mt-12 text-xl">Applications</h2> */}
-          <CreateApplicationCard  />
+      {data.applications && (
+        <>
           {data.applications.map((application, i) => (
             <ApplicationCard
               key={i}
-              name="Full Stack Engineer"
-              id={i.toString()} 
+              title={application.title}
+              id={application.id}
               score={Math.floor(Math.random() * 100)}
             />
           ))}
-        </div>
-      ) : (
-        <div>
-          <h1 className="text-center text-gray-400">
-            Add an application to get started
-          </h1>
-          <CreateApplicationCard  />
-        </div>
+        </>
       )}
     </>
   );

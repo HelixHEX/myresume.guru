@@ -1,3 +1,3 @@
 import * as companies from './companies'
-
-export { companies };
+import * as applications from './applications'
+export { companies, applications }
