@@ -12,3 +12,15 @@ export const useGetApplications = (companyId?: string) => {
     queryFn: () => getApplications(companyId),
   });
 };
+
+const getApplication = async (id: string) => {
+  const res = await axios.get(`/api/applications/${id}`);
+  return res.data;
+};
+
+export const useGetApplication = (id: string) => {
+  return useQuery<GetApplicationResponse>({
+    queryKey: ["application", id],
+    queryFn: () => getApplication(id),
+  });
+};
