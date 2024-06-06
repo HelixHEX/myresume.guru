@@ -1,0 +1,3 @@
+type GetApplicationsResponse = {
+  applications: Application[]
+}
