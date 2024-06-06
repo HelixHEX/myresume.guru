@@ -10,12 +10,14 @@ export default function ApplicationTitle({ id }: { id: string }) {
   );
   return (
     <>
-      {status === "Loading" ? (
+      {application ? (
         <>
           <h1 className="mt-[-6px] font-light  text-2xl text-black">
-            {status === "Loading" && !application ? "Loading..." : application?.title}
+            {status === "Loading" && !application
+              ? "Loading..."
+              : application?.title}
           </h1>
-          {/* <Badge className="ml-2  self-center">Active</Badge> */}
+          <Badge className="ml-2  self-center">Active</Badge>
         </>
       ) : (
         <>
@@ -24,6 +26,20 @@ export default function ApplicationTitle({ id }: { id: string }) {
           </h1>
         </>
       )}
+      {/* {status === "Loading" ? (
+        <>
+          <h1 className="mt-[-6px] font-light  text-2xl text-black">
+            {status === "Loading" && !application ? "Loading..." : application?.title}
+          </h1>
+          <Badge className="ml-2  self-center">Active</Badge>
+        </>
+      ) : (
+        <>
+          <h1 className="mt-[-6px] font-light  text-2xl text-black">
+            Loading...
+          </h1>
+        </>
+      )} */}
     </>
   );
 }
