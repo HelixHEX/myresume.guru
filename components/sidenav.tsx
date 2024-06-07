@@ -10,6 +10,7 @@ import {
   FcRatings,
   FcSettings,
 } from "react-icons/fc";
+import UploadResumeBtn from "./uploadResumeBtn";
 
 type SidenavItem = {
   title: string;
@@ -74,12 +75,7 @@ export default function Sidenav({
             </Link>
           ))}
         </div>
-        <Button
-          onClick={() => router.push("/app/resumes/new")}
-          className="mt-4 w-full hidden md:block"
-        >
-          Upload Resume
-        </Button>
+       <UploadResumeBtn sideNav={true} />
       </div>
       {/* <div className="p-4 mb-[72px] flex md:hidden justify-between w-full h-14 ">
         {sidenavItems
