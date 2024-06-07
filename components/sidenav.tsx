@@ -20,7 +20,7 @@ type SidenavItem = {
 
 const sidenavItems: SidenavItem[] = [
   {
-    title: "My Resumes",
+    title: "Resumes",
     href: "/app/resumes",
     Icon: FcDocument,
     flag: "production",
@@ -52,36 +52,36 @@ export default function Sidenav({
 }) {
   const pathname = usePathname();
   const router = useRouter();
-
+  const filteredItems = sidenavItems.filter((item) =>
+    env === "development" ? true : item.flag === env
+  );
   // if (!process.env.APP_ENV) return null;
   return (
     <>
-      <div className="hidden fixed md:flex p-4 flex-col justify-between items-center w-[200px] h-screen top-0 pt-[78px] lg:w-[300px]">
-        <div className="w-full ">
-          {sidenavItems
-            .filter((item) =>
-              env === "development" ? true : item.flag === env
-            )
-            .map((item, index) => (
-              <Link
-                key={index}
-                href={item.href}
-                className={`mb-6 pl-4 rounded-lg flex items-center ${
-                  pathname === item.href && "bg-gray-100"
-                } hover:bg-gray-100 w-full h-10`}
-              >
-                {item.title}
-              </Link>
-            ))}
+      <div className="md:fixed flex flex-col p-4 justify-between items-center w-full md:w-[200px] md:h-screen top-0 md:mt-0 md:pt-[78px]  lg:w-[300px]">
+        <div className="w-full flex flex-row md:flex-col justify-around">
+          {filteredItems.map((item, index) => (
+            <Link
+              key={index}
+              href={item.href}
+              className={`text-sm mb-4 p-2 ${
+                index < filteredItems.length - 1 ? "mr-2" : ""
+              }  rounded-lg flex flex-col md:items-start items-center ${
+                pathname === item.href && "bg-gray-100"
+              } hover:bg-gray-100 w-full h-10`}
+            >
+              {item.title}
+            </Link>
+          ))}
         </div>
         <Button
           onClick={() => router.push("/app/resumes/new")}
-          className="mt-4 w-full"
+          className="mt-4 w-full hidden md:block"
         >
           Upload Resume
         </Button>
       </div>
-      <div className="p-4 mb-[72px] flex md:hidden justify-between w-full h-14 ">
+      {/* <div className="p-4 mb-[72px] flex md:hidden justify-between w-full h-14 ">
         {sidenavItems
           .filter((item) => (env === "development" ? true : item.flag === env))
           .map((item, index) => (
@@ -95,7 +95,7 @@ export default function Sidenav({
               {item.Icon && <item.Icon size={26} />}
             </Link>
           ))}
-      </div>
+      </div> */}
     </>
   );
 }
