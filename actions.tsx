@@ -79,8 +79,8 @@ export async function generateFeedback(fileKey: string): Promise<
                     * Tailoring: Recommend ways to tailor the resume to a specific job description (if provided) by highlighting relevant skills and experiences. 
                     * Quantifiable Achievements:  Suggest ways to quantify achievements using numbers, percentages, or metrics.
                 * Overall Tone and Style:  Evaluate the overall tone and style of the resume and suggest ways to make it more professional, confident, or achievement-oriented.
-            3. Error Handling:
-            If the text does not include information that would be on a resume, do not provide any feedback at all and return an error message.
+          Error Handling:
+            1. If the text does not include information that would be on a resume, do not provide any feedback at all and return an error message.
             
           Resume:
           ${resume.text}

@@ -27,7 +27,7 @@ export async function* streamingFetch(
 
 export const convertPDFToText = async (fileKey: string) => {
   try {
-    const url = process.env.UPLOADTHING_API_URL + fileKey;
+    const url = process.env.UPLOADTHING_APIURL + fileKey;
     const res = await fetch(url);
     const blob = await res.blob();
     const arrayBuffer = await blob.arrayBuffer();
