@@ -78,7 +78,6 @@ export async function generateFeedback(fileKey: string): Promise<
                     * Keywords and Action Verbs: Identify relevant keywords for the target job (if provided) and suggest ways to incorporate them naturally. Suggest stronger action verbs to highlight achievements.
                     * Tailoring: Recommend ways to tailor the resume to a specific job description (if provided) by highlighting relevant skills and experiences. 
                     * Quantifiable Achievements:  Suggest ways to quantify achievements using numbers, percentages, or metrics.
-                * Overall Tone and Style:  Evaluate the overall tone and style of the resume and suggest ways to make it more professional, confident, or achievement-oriented.
           Error Handling:
             1. If the text does not include information that would be on a resume, do not provide any feedback at all and return an error message.
             
