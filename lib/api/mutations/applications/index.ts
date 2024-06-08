@@ -41,7 +41,9 @@ export const useAddApplication = ({
       setJobDescription("");
       queryClient.invalidateQueries({
         queryKey: ["company", companyId],
-       
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["applications"],
       });
     },
   });

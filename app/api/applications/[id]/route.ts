@@ -10,7 +10,7 @@ export async function GET(
 ) {
   const id = params.id;
 
-  const application = await prisma.application.findUnique({
+  let application = await prisma.application.findUnique({
     where: {
       id: id ? parseInt(id) : undefined,
     },
@@ -74,13 +74,23 @@ export async function GET(
       data: result.object.scores.map((score) => ({
         title: score.title,
         score: score.score,
-        userId: application.userId,
-        applicationId: application.id,
-        resumeId: application.currentResume!.id,
+        userId: application!.userId,
+        applicationId: application!.id,
+        resumeId: application!.currentResume!.id,
       })),
     });
 
-    console.log(result.object);
+  // MOVE TO IF STATEMENT WHEN GENERATING THE RESULT
+  application = await prisma.application.findUnique({
+    where: {
+      id: id ? parseInt(id) : undefined,
+    },
+    include: {
+      applicationScores: true,
+      currentResume: true,
+      feedbacks: { include: { resume: true } },
+    },
+  });
   } else {
     await prisma.application.update({
       where: {
@@ -93,12 +103,16 @@ export async function GET(
   }
   await prisma.application.update({
     where: {
-      id: application.id,
+      id: application!.id,
     },
     data: {
       aiStatus: "done",
     },
   });
+
+
+  console.log(application);
+
 
   return NextResponse.json({ application });
 }

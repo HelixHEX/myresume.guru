@@ -12,7 +12,7 @@ export async function GET(
       id: parseInt(companyId),
     },
     include: {
-      applications: { orderBy: { createdAt: "desc" } },
+      applications: {include: {applicationScores: true}, orderBy: { createdAt: "desc" } },
     },
   });
 

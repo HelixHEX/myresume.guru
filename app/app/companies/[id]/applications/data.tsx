@@ -22,6 +22,24 @@ export default function CompanyApplications({ slug }: { slug: string }) {
 
   if (!slug) return null;
 
+
+  const calcScore = ({ scores }: { scores: ApplicationScore[] }) => {
+    let total = 0;
+    if (scores.length > 0) {
+      scores.forEach((score) => {
+        if (!isNaN(score.score)) {
+          total += score.score;
+        }
+  
+        console.log(isNaN(score.score));
+      });
+      // console.log()
+      return Math.round(total / scores.length);
+    }
+    return 0;
+    // return total;
+  };
+
   return (
     <>
       {data.company.applications && (
@@ -31,7 +49,7 @@ export default function CompanyApplications({ slug }: { slug: string }) {
               key={i}
               title={application.title}
               id={application.id}
-              score={Math.floor(Math.random() * 100)}
+              score={calcScore({ scores: application.applicationScores! })}
             />
           ))}
         </>
