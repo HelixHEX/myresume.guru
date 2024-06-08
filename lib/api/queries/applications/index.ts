@@ -1,4 +1,4 @@
-import { generateApplicationFeedback } from "@/actions";
+// import { generateApplicationFeedback } from "@/actions";
 import { context } from "@/lib/context";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
@@ -35,12 +35,12 @@ export const useGetApplication = (id: string) => {
   return { data, status };
 };
 
-export const useGenerateApplicationFeedback = (id: string) => {
-  const { status } = useContext(context.application.ApplicationContext);
-  console.log(status);
-  return useQuery<GenerateApplicationFeedbackResponse>({
-    queryKey: ["application", id],
-    queryFn: async () => await generateApplicationFeedback(parseInt(id)),
-    enabled: !!id && status === "Analyzing",
-  });
-};
+// export const useGenerateApplicationFeedback = (id: string) => {
+//   const { status } = useContext(context.application.ApplicationContext);
+//   console.log(status);
+//   return useQuery<GenerateApplicationFeedbackResponse>({
+//     queryKey: ["application", id],
+//     queryFn: async () => await generateApplicationFeedback(parseInt(id)),
+//     enabled: !!id && status === "Analyzing",
+//   });
+// };
