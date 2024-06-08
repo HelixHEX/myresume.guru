@@ -47,6 +47,7 @@ model Application {
   title       String
   url         String
   status      String   @default("active")
+  aiStatus    String   @default("not-started")
   description String
 
   currentResume Resume?    @relation("CurrentResume", fields: [resumeId], references: [id])
