@@ -32,6 +32,7 @@ type Application = {
   aiStatus: String;
   description: string;
   company?: Company;
+  companyId?: number;
   resumes?: Resume[];
   currentResume?: Resume;
   feedbacks?: Feedback[];

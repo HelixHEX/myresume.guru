@@ -1,5 +1,6 @@
 type GetApplicationsResponse = {
   applications: Application[];
+  message?: string;
 };
 
 type GetApplicationResponse = {

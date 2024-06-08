@@ -16,7 +16,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
-export default function CreateApplicationCard({companyId}: {companyId: number}) {
+export default function CreateApplicationCard({companyId}: {companyId?: number | undefined | null}) {
   const [title, setTitle] = useState<string>("");
   const [url, setUrl] = useState<string>("");
   const [resumeId, setResumeId] = useState<number | null>(null);
