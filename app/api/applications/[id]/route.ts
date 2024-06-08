@@ -90,6 +90,7 @@ export async function GET(
     },
   });
 
+  // MOVE TO IF STATEMENT WHEN GENERATING THE RESULT
   application = await prisma.application.findUnique({
     where: {
       id: id ? parseInt(id) : undefined,
@@ -100,6 +101,9 @@ export async function GET(
       feedbacks: { include: { resume: true } },
     },
   });
+
+  console.log(application);
+
 
   return NextResponse.json({ application });
 }
