@@ -70,25 +70,15 @@ export async function GET(
       schema: ApplicationScoreSchema,
     });
 
-    console.log(result.object);
-  } else {
-    await prisma.application.update({
-      where: {
-        id: application.id,
-      },
-      data: {
-        aiStatus: "done",
-      },
+    await prisma.applicationScore.createMany({
+      data: result.object.scores.map((score) => ({
+        title: score.title,
+        score: score.score,
+        userId: application!.userId,
+        applicationId: application!.id,
+        resumeId: application!.currentResume!.id,
+      })),
     });
-  }
-  await prisma.application.update({
-    where: {
-      id: application.id,
-    },
-    data: {
-      aiStatus: "done",
-    },
-  });
 
   // MOVE TO IF STATEMENT WHEN GENERATING THE RESULT
   application = await prisma.application.findUnique({
@@ -101,6 +91,25 @@ export async function GET(
       feedbacks: { include: { resume: true } },
     },
   });
+  } else {
+    await prisma.application.update({
+      where: {
+        id: application.id,
+      },
+      data: {
+        aiStatus: "done",
+      },
+    });
+  }
+  await prisma.application.update({
+    where: {
+      id: application!.id,
+    },
+    data: {
+      aiStatus: "done",
+    },
+  });
+
 
   console.log(application);
 
