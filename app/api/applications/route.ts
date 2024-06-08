@@ -6,11 +6,8 @@ export async function GET(
   _request: Request,
   { params }: { params: { id: string } }
 ) {
-  const id = params.id;
   const applications = await prisma.application.findMany({
-    where: {
-      companyId: id ? parseInt(id) : null,
-    },
+    include: {applicationScores: true},
     orderBy: { createdAt: "desc" },
   });
 
