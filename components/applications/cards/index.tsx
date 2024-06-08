@@ -20,7 +20,7 @@ export default function ApplicationCard({
 }: Props) {
   const router = useRouter();
   return (
-    <Card className="w-full md:w-[270px] lg:w-[320px] h-[180px]">
+    <Card className="w-full md:w-[270px] lg:w-[320px] h-full">
       <CardHeader className="flex  flex-col">
         <h2 className="text-lg font-medium">{title}</h2>
         {company && (

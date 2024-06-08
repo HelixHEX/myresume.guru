@@ -55,7 +55,7 @@ export default function CreateApplicationCard({companyId}: {companyId?: number |
   return (
     <>
       <CreateCard
-        styles=" min-w-[800px] self-start"
+        styles=" min-w-[800px] h-full self-start"
         title="+ Add Application"
         modalTitle="Add Application"
         modalDescription="Add an application to see how well your resume matches to the job description"
