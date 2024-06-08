@@ -10,7 +10,7 @@ export async function GET(
 ) {
   const id = params.id;
 
-  const application = await prisma.application.findUnique({
+  let application = await prisma.application.findUnique({
     where: {
       id: id ? parseInt(id) : undefined,
     },
@@ -70,16 +70,6 @@ export async function GET(
       schema: ApplicationScoreSchema,
     });
 
-    await prisma.applicationScore.createMany({
-      data: result.object.scores.map((score) => ({
-        title: score.title,
-        score: score.score,
-        userId: application.userId,
-        applicationId: application.id,
-        resumeId: application.currentResume!.id,
-      })),
-    });
-
     console.log(result.object);
   } else {
     await prisma.application.update({
@@ -97,6 +87,17 @@ export async function GET(
     },
     data: {
       aiStatus: "done",
+    },
+  });
+
+  application = await prisma.application.findUnique({
+    where: {
+      id: id ? parseInt(id) : undefined,
+    },
+    include: {
+      applicationScores: true,
+      currentResume: true,
+      feedbacks: { include: { resume: true } },
     },
   });
 
