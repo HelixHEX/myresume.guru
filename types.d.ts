@@ -29,10 +29,27 @@ type Application = {
   userId: string;
   title: string;
   status: String;
+  aiStatus: String;
+  description: string;
   company?: Company;
+  companyId?: number;
   resumes?: Resume[];
   currentResume?: Resume;
+  feedbacks?: Feedback[];
+  applicationScores?: ApplicationScore[];
 };
+
+type ApplicationScore = {
+  id: number;
+  createdAt: string;
+  updatedAt: string;
+  userId: string;
+  title: string;
+  score: number;
+  description?: string;
+  resumeId?: number;
+  resume?: Resume;
+}
 
 type Item = {
   key: string;
@@ -58,3 +75,9 @@ type FeedbackSchema = {
   title: string;
   text: string;
 }
+
+type ApplicationScore =  {
+  title: string;
+  score: number;
+}
+

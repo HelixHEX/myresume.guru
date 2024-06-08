@@ -1,7 +1,7 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { streamObject } from "ai";
+import { generateObject, streamObject } from "ai";
 import { createAI, createStreamableValue, StreamableValue } from "ai/rsc";
 import { openai } from "@ai-sdk/openai";
 import { z } from "zod";
@@ -66,7 +66,7 @@ export async function generateFeedback(fileKey: string): Promise<
       messages: [
         {
           role: "user",
-          content: `This is a resume analysis tool. You will be analyzing a user-uploaded resume that has been converted to plain text.",
+          content: `This is a resume analysis tool. You will be analyzing a user-uploaded resume that has been converted to plain text.
           
           Analysis:
             1. Identify key sections like "Summary," "Experience," "Skills," and "Education." Extract relevant information from each section (e.g., job titles, companies, skills, degrees).
@@ -114,6 +114,93 @@ export async function generateFeedback(fileKey: string): Promise<
   }
 }
 
+// export async function generateApplicationFeedback(applicationId: number): Promise<{error?: string, response: {scores: ApplicationScore[]}}> {
+//   const application = await prisma.application.findUnique({
+//     where: { id: applicationId },
+//     include: { feedbacks: {include: {resume: true }} },
+//   });
+
+//   if (!application) {
+//     console.log("Application not found");
+//     return {
+//       error: "Application not found",
+//       response: {scores: []},
+//     };
+//   }
+
+//   if (application.feedbacks.length > 0 ) {
+//     return {
+//       error: "Already analyzed",
+//       response: {scores: []},
+//     }
+//   }
+
+//   const currentResume = await prisma.resume.findUnique({
+//     where: { id: application.resumeId! },
+//   });
+
+//   if (!currentResume) {
+//     console.log("Current resume not found");
+//     return {
+//       error: "Resume not found",
+//       response: {scores: []},
+//     };
+//   }
+
+//   await prisma.application.update({
+//     where: {
+//       id: applicationId,
+//     },
+//     data: {
+//       aiStatus: "analyzing",
+//     },
+//   });
+
+//   const result = await generateObject({
+//     model: openai("gpt-3.5-turbo"),
+//     messages: [
+//       {
+//         role: "user",
+//         content: `This is a resume analysis tool. You will be analyzing a user-uploaded resume that has been converted to plain text and will see how well their resume matches the job description.
+        
+
+//         Analysis:
+//           1. Identify key sections like "Summary," "Experience," "Skills," and "Education." Extract relevant information from each section (e.g., job titles, companies, skills, degrees).
+//           2. Provide scores for 
+//             * Relevant Skills: percentage out of 100 that the resume has relevant skills to the job description.
+//             * Work Experience: percentage out of 100 that the resume has relevant work experience to the job description.
+//             * Education: percentage out of 100 that the resume has relevant education to the job description.
+//             * Relevant Keywords: percentage out of 100 that the resume has relevant keywords to the job description.
+
+//         Job Description:
+//         ${application.description}
+
+//         Resume:
+//         ${currentResume.text}
+//         `,
+//       },
+//       // { role: "user", content: test.text },
+//     ],
+//     schema: ApplicationScoreSchema,
+//   });
+
+//   console.log(result);
+
+//   await prisma.application.update({
+//     where: {
+//       id: applicationId,
+//     },
+//     data: {
+//       aiStatus: "done",
+//     },
+//   });
+
+//   return {
+//     error: result.object.error ?? undefined,
+//     response: {scores: result.object.scores},
+//   };
+// }
+
 const FeedbackSchema = z.object({
   feedbacks: z
     .array(
@@ -127,6 +214,21 @@ const FeedbackSchema = z.object({
     .string()
     .optional()
     .describe("An error message if the text does not look like a resume"),
+});
+
+const ApplicationScoreSchema = z.object({
+  scores: z
+    .array(
+      z.object({
+        title: z.string().describe("The title of the section"),
+        score: z.number().describe("The score of the skill"),
+      })
+    )
+    .describe("The scores on the resume"),
+  error: z
+    .string()
+    .optional()
+    .describe("An error message if the job description does not look like a  job description"),
 });
 
 export const AI = createAI({

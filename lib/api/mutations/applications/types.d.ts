@@ -3,7 +3,7 @@ type CreateApplication = {
   url: string;
   resumeId: number;
   jobDescription: string;
-  companyId: number;
+  companyId?: number | undefined | null;
 }
 
 type CreateApplicationResponse = {
@@ -21,5 +21,5 @@ type UseAddApplication = {
   setUrl: React.Dispatch<React.SetStateAction<string>>;
   setJobDescription: React.Dispatch<React.SetStateAction<string>>;
   setResumeId: React.Dispatch<React.SetStateAction<number | null>>;
-  companyId: number;
+  companyId?: number | undefined | null;
 }
