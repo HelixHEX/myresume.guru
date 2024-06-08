@@ -29,6 +29,7 @@ type Application = {
   userId: string;
   title: string;
   status: String;
+  description: string;
   company?: Company;
   resumes?: Resume[];
   currentResume?: Resume;
