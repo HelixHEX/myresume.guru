@@ -8,9 +8,6 @@ export default function ApplicationDescription({ id }: { id: string }) {
     context.application.ApplicationContext
   );
 
-  if (status === "Loading" && !application) return <p>Loading...</p>;
-
-
   if (!application) return <p>Loading...</p>;
   return (
     <p className="text-gray-400 text-sm md:text-md ">

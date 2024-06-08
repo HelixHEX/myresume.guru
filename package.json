@@ -28,6 +28,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "crawler-request": "^1.2.2",
+    "framer-motion": "^11.2.10",
     "fs": "^0.0.1-security",
     "lucide": "^0.378.0",
     "lucide-react": "^0.378.0",

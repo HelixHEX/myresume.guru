@@ -1,5 +1,8 @@
+import { generateApplicationFeedback } from "@/actions";
+import { context } from "@/lib/context";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { useContext, useEffect, useState } from "react";
 
 const getApplications = async (companyId?: string) => {
   const res = await axios.get(`/api/applications?companyId=${companyId}`);
@@ -19,9 +22,40 @@ const getApplication = async (id: string) => {
 };
 
 export const useGetApplication = (id: string) => {
-  return useQuery<GetApplicationResponse>({
+  const { status: aiStatus, setStatus: setAiStatus } = useContext(
+    context.application.ApplicationContext
+  );
+  // const [aiStatus, setAiStatus] = useState<string>("not-started");
+  let { data, status } = useQuery<GetApplicationResponse>({
     queryKey: ["application", id],
     queryFn: () => getApplication(id),
     enabled: !!id,
+  });
+
+  // const enabled = !!id && aiStatus === "Analyzing";
+  const { data: generateApplicationFeedbackData, error } =
+    useGenerateApplicationFeedback(id);
+
+  // console.log(
+  //   data?.application &&
+  //     data.application.feedbacks &&
+  //     data.application.feedbacks.length < 1 &&
+  //     data.application.aiStatus === "not-started"
+  // );
+
+  // useEffect(() => {
+  //   console.log(aiStatus);
+  // }, [aiStatus]);
+
+  return { data, status };
+};
+
+export const useGenerateApplicationFeedback = (id: string) => {
+  const { status } = useContext(context.application.ApplicationContext);
+  console.log(status);
+  return useQuery<GenerateApplicationFeedbackResponse>({
+    queryKey: ["application", id],
+    queryFn: async () => await generateApplicationFeedback(parseInt(id)),
+    enabled: !!id && status === "Analyzing",
   });
 };

@@ -29,10 +29,12 @@ type Application = {
   userId: string;
   title: string;
   status: String;
+  aiStatus: String;
   description: string;
   company?: Company;
   resumes?: Resume[];
   currentResume?: Resume;
+  feedbacks?: Feedback[];
 };
 
 type Item = {
@@ -59,3 +61,24 @@ type FeedbackSchema = {
   title: string;
   text: string;
 }
+
+type ApplicationScore =  {
+  title: string;
+  score: number;
+}
+
+
+const ApplicationScoreSchema = z.object({
+  scores: z
+    .array(
+      z.object({
+        title: z.string().describe("The title of the section"),
+        score: z.number().describe("The score of the skill"),
+      })
+    )
+    .describe("The scores on the resume"),
+  error: z
+    .string()
+    .optional()
+    .describe("An error message if the job description does not look like a  job description"),
+});
