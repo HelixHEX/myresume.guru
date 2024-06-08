@@ -42,7 +42,7 @@ const sidenavItems: SidenavItem[] = [
     title: "Settings",
     href: "/app/settings",
     Icon: FcSettings,
-    flag: "development",
+    flag: "production",
   },
 ];
 
