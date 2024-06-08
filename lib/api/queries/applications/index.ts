@@ -32,21 +32,6 @@ export const useGetApplication = (id: string) => {
     enabled: !!id,
   });
 
-  // const enabled = !!id && aiStatus === "Analyzing";
-  const { data: generateApplicationFeedbackData, error } =
-    useGenerateApplicationFeedback(id);
-
-  // console.log(
-  //   data?.application &&
-  //     data.application.feedbacks &&
-  //     data.application.feedbacks.length < 1 &&
-  //     data.application.aiStatus === "not-started"
-  // );
-
-  // useEffect(() => {
-  //   console.log(aiStatus);
-  // }, [aiStatus]);
-
   return { data, status };
 };
 

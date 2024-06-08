@@ -57,7 +57,7 @@ model Application {
   company          Company?           @relation(fields: [companyId], references: [id])
   companyId        Int?
   feedbacks        Feedback[]
-  applicationScore ApplicationScore[]
+  applicationScores ApplicationScore[]
 }
 
 model Feedback {

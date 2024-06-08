@@ -14,7 +14,7 @@ export async function GET(
       id: id ? parseInt(id) : undefined,
     },
     include: {
-      applicationScore: true,
+      applicationScores: true,
       currentResume: true,
       feedbacks: { include: { resume: true } },
     },
@@ -39,7 +39,7 @@ export async function GET(
 
   if (
     application.aiStatus !== "done" ||
-    application.applicationScore.length === 0
+    application.applicationScores.length === 0
   ) {
     const result = await generateObject({
       model: openai("gpt-3.5-turbo"),
@@ -75,7 +75,7 @@ export async function GET(
         score: score.score,
         userId: application.userId,
         applicationId: application.id,
-        resumeId: application.currentResume?.id,
+        resumeId: application.currentResume!.id,
       })),
     });
 
