@@ -30,13 +30,13 @@ const sidenavItems: SidenavItem[] = [
     title: "Applications",
     href: "/app/applications",
     Icon: FcRatings,
-    flag: "development",
+    flag: "production",
   },
   {
     title: "Companies",
     href: "/app/companies",
     Icon: FcOrganization,
-    flag: "development",
+    flag: "production",
   },
   {
     title: "Settings",
