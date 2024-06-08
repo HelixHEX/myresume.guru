@@ -4,7 +4,7 @@ import ResumeName from "@/components/resumes/resumeName";
 import Image from "next/image";
 
 export default function Page({ params }: { params: { slug: string } }) {
-  const { slug } = params;
+  const { slug } = params; 
 
   return (
     <AI>
