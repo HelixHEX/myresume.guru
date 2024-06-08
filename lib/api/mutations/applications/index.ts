@@ -40,7 +40,7 @@ export const useAddApplication = ({
       setResumeId(null);
       setJobDescription("");
       queryClient.invalidateQueries({
-        queryKey: ["company", companyId],
+        queryKey: ["company", "applications", companyId],
        
       });
     },
