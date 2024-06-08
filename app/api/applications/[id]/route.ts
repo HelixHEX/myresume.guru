@@ -9,6 +9,7 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   const id = params.id;
+
   const application = await prisma.application.findUnique({
     where: {
       id: id ? parseInt(id) : undefined,

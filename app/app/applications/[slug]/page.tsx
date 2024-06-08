@@ -1,5 +1,6 @@
 import ApplicationDescription from "@/components/applications/applicationDescription";
 import ApplicationTitle from "@/components/applications/applicationTitle";
+import ApplicationScores from "@/components/applications/scores";
 import ImprovementCard from "@/components/resumes/cards/improvement";
 import { Badge } from "@/components/ui/badge";
 import { context } from "@/lib/context";
@@ -17,7 +18,7 @@ export default function Page({ params }: { params: { slug: string } }) {
         <h2 className="mt-20 md:mt-28 font-semibold text-lg">
           Compare to Job Posting
         </h2>
-        <div className="mt-4 w-full flex flex-col">
+        {/* <div className="mt-4 w-full flex flex-col">
           <div className="w-full flex justify-between">
             <p className="font-semibold">Job Requirments</p>
             <p className=" font-semibold">Your Match</p>
@@ -35,7 +36,8 @@ export default function Page({ params }: { params: { slug: string } }) {
             <p>Education</p>
             <p className=" text-green-400">95%</p>
           </div>
-        </div>
+        </div> */}
+        <ApplicationScores />
         {/* <h2 className="mt-28 font-bold text-2xl">Suggested Improvements</h2>
       <p className="mt-4">{"We've used AI to help you improve your resume!"}</p>
       <div className="flex flex-col mt-8">
