@@ -12,15 +12,10 @@ type Props = {
   company?: string;
 };
 
-export default function ApplicationCard({
-  id,
-  title,
-  company,
-  score,
-}: Props) {
+export default function ApplicationCard({ id, title, company, score }: Props) {
   const router = useRouter();
   return (
-    <Card className="w-full md:w-[270px] lg:w-[320px] h-full">
+    <Card className="w-full md:w-[270px] lg:w-[320px] min-h-[180px] h-full">
       <CardHeader className="flex  flex-col">
         <h2 className="text-lg font-medium">{title}</h2>
         {company && (
