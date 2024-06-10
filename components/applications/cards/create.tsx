@@ -55,7 +55,7 @@ export default function CreateApplicationCard({companyId}: {companyId?: number |
   return (
     <>
       <CreateCard
-        styles=" min-w-[800px] self-start"
+        styles="w-full md:min-w-[800px] self-start"
         title="+ Add Application"
         modalTitle="Add Application"
         modalDescription="Add an application to see how well your resume matches to the job description"
@@ -63,8 +63,8 @@ export default function CreateApplicationCard({companyId}: {companyId?: number |
         action={handleSubmit}
         close={complete}
       >
-        <div className="w-full grid grid-cols-4 gap-4">
-          <Label htmlFor="name" className="text-left">
+        <div className="w-full">
+          <Label htmlFor="name" className="">
             Title
           </Label>
           <Input
@@ -72,9 +72,9 @@ export default function CreateApplicationCard({companyId}: {companyId?: number |
             onChange={(e) => setTitle(e.target.value)}
             id="name"
             placeholder="Software Engineeer - Frontend"
-            className="col-span-3"
+            className="w-full mb-4 "
           />
-          <Label htmlFor="name" className="text-left">
+          <Label htmlFor="name" className="mt-4 text-left">
             URL
           </Label>
           <Input
@@ -82,16 +82,16 @@ export default function CreateApplicationCard({companyId}: {companyId?: number |
             onChange={(e) => setUrl(e.target.value)}
             id="name"
             placeholder="https://careers.google.com/jobs/1"
-            className="col-span-3"
+            className="w-full mb-4"
           />
-          <Label htmlFor="name" className="text-left">
+          <Label htmlFor="name" className="mt-4 text-left">
             Resume
           </Label>
           <Select
             onValueChange={(value) => setResumeId(parseInt(value))}
             value={resumeId?.toString()}
           >
-            <SelectTrigger className="col-span-3">
+            <SelectTrigger className="w-full mb-4">
               <SelectValue placeholder="Select a resume" />
             </SelectTrigger>
             <SelectContent>
@@ -118,7 +118,7 @@ export default function CreateApplicationCard({companyId}: {companyId?: number |
             onChange={(e) => setJobDescription(e.target.value)}
             id="name"
             placeholder="Paste the job description here"
-            className="col-span-3 min-h-[200px]"
+            className="w-full mb-4 min-h-[200px]"
           />
         </div>
       </CreateCard>
