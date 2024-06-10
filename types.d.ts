@@ -11,6 +11,7 @@ type Resume = {
   applications?: Application[];
   activeApplication?: Application[];
   feedbacks?: Feedback[];
+  actionableFeedbacks?: ActionableFeedback[];
 };
 
 type Company = {
@@ -37,6 +38,7 @@ type Application = {
   currentResume?: Resume;
   feedbacks?: Feedback[];
   applicationScores?: ApplicationScore[];
+  actionableFeedbacks?: ActionableFeedback[];
 };
 
 type ApplicationScore = {
@@ -62,13 +64,15 @@ type Feedback = {
   updatedAt: Date;
   userId: string;
   title: string;
-  text: string;
+  text?: string | null;
+  error?: string;
   status: string;
 
   application?: Application | null;
   applicationId?: number | null;
   resume?: Resume | null;
   resumeId?: number | null;
+  actionableFeedbacks?: ActionableFeedback[];
 }
 
 type FeedbackSchema = {
@@ -81,3 +85,19 @@ type ApplicationScore =  {
   score: number;
 }
 
+
+type ActionableFeedback = {
+  id: number;
+  createdAt: Date;
+  updatedAt: Date;
+  userId: string;
+  title: string;
+  text: string;
+  status: string;
+
+  feedback?: Feedback | null;
+  application?: Application | null;
+  applicationId?: number | null;
+  resume?: Resume | null;
+  resumeId?: number | null;
+}

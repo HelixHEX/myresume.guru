@@ -33,6 +33,7 @@ export const useGenerateFeedback = ({
             throw new Error(value.error);
           }
 
+          console.log(value?.feedbacks)
           setFeedbacks(value?.feedbacks || []);
         }
         setStatus("Analyzed");
