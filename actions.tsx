@@ -5,6 +5,7 @@ import { generateObject, streamObject } from "ai";
 import { createAI, createStreamableValue, StreamableValue } from "ai/rsc";
 import { openai } from "@ai-sdk/openai";
 import { z } from "zod";
+import { connect } from "http2";
 
 export async function generateFeedback(fileKey: string): Promise<
   | {
@@ -20,7 +21,7 @@ export async function generateFeedback(fileKey: string): Promise<
     let error = "";
     const resume = await prisma.resume.findUnique({
       where: { fileKey },
-      include: { feedbacks: {include: { resume: true }} },
+      include: { feedbacks: { include: { resume: true, actionableFeedbacks: true } } },
     });
 
     if (!resume) {
@@ -43,11 +44,11 @@ export async function generateFeedback(fileKey: string): Promise<
     }
 
     if (resume.status === "Analyzed" && resume.feedbacks.length > 0) {
-      const feedbacks = resume.feedbacks;
+      const feedbackss = resume.feedbacks;
       return {
         // response: { feedbacks: resume.feedbacks },
         type: "http",
-        response: {feedbacks}
+        response: { feedbacks: feedbackss },
         // message: "Analyzed",
       };
     }
@@ -72,16 +73,60 @@ export async function generateFeedback(fileKey: string): Promise<
             1. Identify key sections like "Summary," "Experience," "Skills," and "Education." Extract relevant information from each section (e.g., job titles, companies, skills, degrees).
             2. Provide Comprehensive Feedback:
                 * Strengths: Identify at least two strengths of the resume based on clarity, structure, keyword usage, and action verbs. 
-                * Actionable Improvements: Generate at least four specific, actionable suggestions for improvement across various aspects. You must also quote the text you are referring to.:
+                * Actionable Feedback: Generate at least four specific, actionable suggestions for improvement across various aspects. You must also quote the text you are referring to.:
                     * Clarity and Concision: Recommend ways to improve sentence structure, tighten wording, or remove unnecessary information. 
                     * Readability: Suggest improvements to make the resume more engaging, easier to read, and more visually appealing.
                     * Keywords and Action Verbs: Identify relevant keywords for the target job (if provided) and suggest ways to incorporate them naturally. Suggest stronger action verbs to highlight achievements.
                     * Tailoring: Recommend ways to tailor the resume to a specific job description (if provided) by highlighting relevant skills and experiences. 
                     * Quantifiable Achievements:  Suggest ways to quantify achievements using numbers, percentages, or metrics.
           Error Handling:
-            1. If the text does not include information that would be on a resume, do not provide any feedback at all and return an error message.
+            1. If the text does not include information that would be on a resume, do not provide any feedback at all and return an error message. Also if there is not error, do not return an error message.
             
-          Resume:
+
+          Response Format:
+            1. You should return a JSON object with a feedbacks array and an error message. The error message should be a string that is optional.
+            2. Example JSON response (Keep in mind the writing used is for illustration purposes. The actual resposne should be related to the resume and remember uyou must also quote the text from the resume you are referring to.):
+            {
+              "feedbacks": [
+                {
+                  "title": "Strengths",
+                  "actionableFeedbacks": [
+                    {
+                      "title": "Readability",
+                      "text": "The reusme is well-written and easy to read. The sentences are clear and concise, and the formatting is consistent."
+                    },
+                    {
+                      "title": "Structure",
+                      "text": "The resume is well-structured and easy to follow. The sections are well-organized and the information is presented in a logical order."
+                    },
+                  ]
+                },
+                {
+                  "title": "Actionable Feedback",
+                  "actionableFeedbacks": [
+                    {
+                      "title": "Clarity and Concision",
+                      "text": "The resume could be more concise and clear. The sentences could be shortened and the information could be presented in a more concise manner."
+                    },
+                    {
+                      "title": "Readability",
+                      "text": "The resume could be more engaging and easier to read. The sentences could be rephrased and the formatting could be improved."
+                    },
+                    {
+                      "title": "Keywords and Action Verbs",
+                      "text": "The resume could be more tailored to the job description. The keywords could be used more effectively and the action verbs could be stronger."
+                    },
+                    {
+                      "title": "Tailoring",
+                      "text": "The resume could be more specific to the job description. The skills and experiences could be highlighted more effectively and the formatting could be improved."
+                    },
+                    {
+                      "title": "Quantifiable Achievements",
+                      "text": "The resume could be more quantifiable. The achievements could be presented in a more specific and measurable way."
+                    },
+                  ]
+            Resume:
+
           ${resume.text}
             `,
         },
@@ -89,6 +134,7 @@ export async function generateFeedback(fileKey: string): Promise<
       ],
       schema: FeedbackSchema,
     });
+    // console.log(result)
 
     // result.rawRes
 
@@ -162,11 +208,10 @@ export async function generateFeedback(fileKey: string): Promise<
 //       {
 //         role: "user",
 //         content: `This is a resume analysis tool. You will be analyzing a user-uploaded resume that has been converted to plain text and will see how well their resume matches the job description.
-        
 
 //         Analysis:
 //           1. Identify key sections like "Summary," "Experience," "Skills," and "Education." Extract relevant information from each section (e.g., job titles, companies, skills, degrees).
-//           2. Provide scores for 
+//           2. Provide scores for
 //             * Relevant Skills: percentage out of 100 that the resume has relevant skills to the job description.
 //             * Work Experience: percentage out of 100 that the resume has relevant work experience to the job description.
 //             * Education: percentage out of 100 that the resume has relevant education to the job description.
@@ -206,7 +251,15 @@ const FeedbackSchema = z.object({
     .array(
       z.object({
         title: z.string(),
-        text: z.string(),
+        // text:
+        actionableFeedbacks: z
+          .array(
+            z.object({
+              title: z.string(),
+              text: z.string(),
+            })
+          )
+          .optional(),
       })
     )
     .describe("The feedback on the resume"),
@@ -228,7 +281,9 @@ const ApplicationScoreSchema = z.object({
   error: z
     .string()
     .optional()
-    .describe("An error message if the job description does not look like a  job description"),
+    .describe(
+      "An error message if the job description does not look like a  job description. Only return this if there is an error"
+    ),
 });
 
 export const AI = createAI({
@@ -262,18 +317,38 @@ export const runThread = async () => {
   };
 };
 
-export const saveToDb = async (fileKey: string, feedback: Feedback[]) => {
+export const saveToDb = async (fileKey: string, feedbacks: Feedback[]) => {
   const resume = await prisma.resume.findUnique({ where: { fileKey } });
   if (!resume) {
     throw new Error("Unable to find resume");
   } else {
-    await prisma.feedback.createMany({
-      data: feedback.map((f) => ({
-        ...f,
-        resumeId: resume.id,
-        userId: resume.userId,
-      })),
-    });
+    for (var i = 0; i < feedbacks.length; i++) {
+      const feedback: Feedback = feedbacks[i];
+      console.log('feedback: ',feedback)
+      feedbacks.map((f) => {
+        console.log('aF:', f.actionableFeedbacks)
+      })
+
+      const feedbackDB = await prisma.feedback.create({
+        data: {
+          title: feedback.title,
+          resume: { connect: { id: resume.id } },
+          userId: resume.userId,
+        },
+      });
+
+      const actionableFeedbackDB = await prisma.actionableFeedback.createMany({
+        data: feedback.actionableFeedbacks!.map((f) => ({
+          ...f,
+          userId: resume.userId,
+          // resume: { connect: { id: resume.id } },
+          resumeId: resume.id,
+          feedbackId: feedbackDB.id,
+          // feedback: { connect: { id: feedbackDB.id } },
+        })),
+      });
+    }
+   
   }
   return resume;
 };

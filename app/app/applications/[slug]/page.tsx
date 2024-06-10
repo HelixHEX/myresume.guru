@@ -14,7 +14,7 @@ export default function Page({ params }: { params: { slug: string } }) {
           <ApplicationTitle id={"1"} />
         </div>
         <h2 className="mt-4 font-semibold text-lg">Job Description</h2>
-        <ApplicationDescription id={'1'} />
+        <ApplicationDescription id={"1"} />
         <h2 className="mt-20 md:mt-28 font-semibold text-lg">
           Compare to Job Posting
         </h2>
