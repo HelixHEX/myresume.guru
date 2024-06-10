@@ -68,7 +68,7 @@ model Feedback {
   updatedAt DateTime @updatedAt @map("updated_at")
   userId    String
   title     String
-  text      String
+  text      String?
   status    String   @default("active")
 
   application         Application?         @relation(fields: [applicationId], references: [id])
