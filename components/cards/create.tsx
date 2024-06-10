@@ -46,17 +46,18 @@ export default function CreateCard({
         </Card>
       </DialogTrigger>
 
-      <DialogContent className={`${styles ? styles : "sm:max-w-[425px]"}`}>
+      <DialogContent className={`${styles ? styles : ""}`}>
         <DialogHeader>
           <DialogTitle>{modalTitle}</DialogTitle>
           <DialogDescription>{modalDescription}</DialogDescription>
         </DialogHeader>
-        <div className="grid self-start gap-4 py-4">
+        <div className="">
           {children}
         </div>
         <DialogFooter>
           <DialogClose asChild={close}>
             <Button
+            className="md:w-auto w-full"
               disabled={loading}
               onClick={action}
               type="submit"
