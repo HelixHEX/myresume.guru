@@ -23,10 +23,11 @@ model Resume {
   status    String   @default("generating")
   text      String?
 
-  applications       Application[]      @relation("ApplicationToResume")
-  activeApplications Application[]      @relation("CurrentResume")
-  feedbacks          Feedback[]
-  applicationScores  ApplicationScore[]
+  applications        Application[]        @relation("ApplicationToResume")
+  activeApplications  Application[]        @relation("CurrentResume")
+  feedbacks           Feedback[]
+  applicationScores   ApplicationScore[]
+  actionableFeedbacks ActionableFeedback[]
 }
 
 model Company {
@@ -51,13 +52,14 @@ model Application {
   aiStatus    String   @default("not-started")
   description String
 
-  currentResume    Resume?            @relation("CurrentResume", fields: [resumeId], references: [id])
-  resumeId         Int?
-  resumes          Resume[]           @relation("ApplicationToResume")
-  company          Company?           @relation(fields: [companyId], references: [id])
-  companyId        Int?
-  feedbacks        Feedback[]
-  applicationScores ApplicationScore[]
+  currentResume       Resume?              @relation("CurrentResume", fields: [resumeId], references: [id])
+  resumeId            Int?
+  resumes             Resume[]             @relation("ApplicationToResume")
+  company             Company?             @relation(fields: [companyId], references: [id])
+  companyId           Int?
+  feedbacks           Feedback[]
+  applicationScores   ApplicationScore[]
+  actionableFeedbacks ActionableFeedback[]
 }
 
 model Feedback {
@@ -69,10 +71,11 @@ model Feedback {
   text      String
   status    String   @default("active")
 
-  application   Application? @relation(fields: [applicationId], references: [id])
-  applicationId Int?
-  resume        Resume?      @relation(fields: [resumeId], references: [id])
-  resumeId      Int?
+  application         Application?         @relation(fields: [applicationId], references: [id])
+  applicationId       Int?
+  resume              Resume?              @relation(fields: [resumeId], references: [id])
+  resumeId            Int?
+  actionableFeedbacks ActionableFeedback[]
 }
 
 model ApplicationScore {
@@ -84,6 +87,23 @@ model ApplicationScore {
   score       Int
   description String?
 
+  application   Application? @relation(fields: [applicationId], references: [id])
+  applicationId Int?
+  resume        Resume?      @relation(fields: [resumeId], references: [id])
+  resumeId      Int?
+}
+
+model ActionableFeedback {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  userId    String
+  title     String
+  text      String
+  status    String   @default("not-done")
+
+  feedback      Feedback?    @relation(fields: [feedbackId], references: [id])
+  feedbackId    Int?
   application   Application? @relation(fields: [applicationId], references: [id])
   applicationId Int?
   resume        Resume?      @relation(fields: [resumeId], references: [id])
