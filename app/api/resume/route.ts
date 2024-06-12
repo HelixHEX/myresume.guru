@@ -7,7 +7,10 @@ export async function GET({}: NextRequest) {
 
   if (!user) return;
 
-  const resumes = await prisma.resume.findMany({where: {userId: user.id}, orderBy: {createdAt: "desc"}});
-  
+  const resumes = await prisma.resume.findMany({
+    where: { userId: user.id },
+    orderBy: { createdAt: "desc" },
+  });
+
   return NextResponse.json(resumes);
 }
