@@ -333,7 +333,7 @@ export const AI = createAI({
   },
   onSetAIState: ({ state, done }) => {
     "use server";
-    console.log(state);
+    (state);
     if (done) {
       alert("hi");
       // saveToDb();
@@ -365,10 +365,6 @@ export const saveToDb = async (fileKey: string, feedbacks: Feedback[]) => {
   } else {
     for (var i = 0; i < feedbacks.length; i++) {
       const feedback: Feedback = feedbacks[i];
-      console.log("feedback: ", feedback);
-      feedbacks.map((f) => {
-        console.log("aF:", f.actionableFeedbacks);
-      });
 
       const feedbackDB = await prisma.feedback.create({
         data: {
