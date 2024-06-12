@@ -6,6 +6,7 @@ import { createAI, createStreamableValue, StreamableValue } from "ai/rsc";
 import { openai } from "@ai-sdk/openai";
 import { z } from "zod";
 import { connect } from "http2";
+import { toast } from "sonner";
 
 export async function generateFeedback(fileKey: string): Promise<
   | {
@@ -21,7 +22,9 @@ export async function generateFeedback(fileKey: string): Promise<
     let error = "";
     const resume = await prisma.resume.findUnique({
       where: { fileKey },
-      include: { feedbacks: { include: { resume: true, actionableFeedbacks: true } } },
+      include: {
+        feedbacks: { include: { resume: true, actionableFeedbacks: true } },
+      },
     });
 
     if (!resume) {
@@ -46,10 +49,8 @@ export async function generateFeedback(fileKey: string): Promise<
     if (resume.status === "Analyzed" && resume.feedbacks.length > 0) {
       const feedbackss = resume.feedbacks;
       return {
-        // response: { feedbacks: resume.feedbacks },
         type: "http",
         response: { feedbacks: feedbackss },
-        // message: "Analyzed",
       };
     }
 
@@ -158,6 +159,46 @@ export async function generateFeedback(fileKey: string): Promise<
         .value,
     };
   }
+}
+
+export async function saveMessageToDb({
+  message,
+  resumeId,
+  userId,
+  applicationId,
+}: {
+  message: MessageInput;
+  resumeId?: Resume["id"];
+  applicationId?: Application["id"];
+  userId: string;
+}) {
+  if (!message.content) {
+    toast.error("No message content provided");
+    return;
+  }
+
+  await prisma.message.create({
+    data: {
+      content: message.content,
+      role: message.role,
+      userId: userId,
+      createdAt: message.createdAt,
+      resumeId,
+      applicationId,
+    },
+  });
+}
+
+export async function getMessagesFromDb(resumeId: number) {
+  const messages = await prisma.message.findMany({
+    where: {
+      resumeId,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+  return messages;
 }
 
 // export async function generateApplicationFeedback(applicationId: number): Promise<{error?: string, response: {scores: ApplicationScore[]}}> {
@@ -292,7 +333,7 @@ export const AI = createAI({
   },
   onSetAIState: ({ state, done }) => {
     "use server";
-    console.log(state);
+    (state);
     if (done) {
       alert("hi");
       // saveToDb();
@@ -324,10 +365,6 @@ export const saveToDb = async (fileKey: string, feedbacks: Feedback[]) => {
   } else {
     for (var i = 0; i < feedbacks.length; i++) {
       const feedback: Feedback = feedbacks[i];
-      console.log('feedback: ',feedback)
-      feedbacks.map((f) => {
-        console.log('aF:', f.actionableFeedbacks)
-      })
 
       const feedbackDB = await prisma.feedback.create({
         data: {
@@ -348,7 +385,6 @@ export const saveToDb = async (fileKey: string, feedbacks: Feedback[]) => {
         })),
       });
     }
-   
   }
   return resume;
 };

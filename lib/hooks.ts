@@ -17,7 +17,7 @@ export const useGenerateFeedback = ({
     >
   >;
 }) => {
-  const { setResume, resume } = useContext(context.resume.LayoutContext);
+  const { setResume, resume, setFeedbacks: setFeedbacksContext } = useContext(context.resume.LayoutContext);
   const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
   const [type, setType] = useState<"http" | "stream" | null>(null);
 
@@ -35,17 +35,19 @@ export const useGenerateFeedback = ({
 
           console.log(value?.feedbacks)
           setFeedbacks(value?.feedbacks || []);
+          setFeedbacksContext(value?.feedbacks || []);
         }
         setStatus("Analyzed");
       } else {
         setStatus('Loading')
         setFeedbacks(feedbacksData.response.feedbacks);
+        setFeedbacksContext(feedbacksData.response.feedbacks);
         setResume(feedbacksData.response.feedbacks[0].resume);
         setStatus("Done");
       }
     };
     fetchFeedbacks();
-  }, [setStatus, setResume, slug]);
+  }, [setStatus, setResume, slug, setFeedbacksContext]);
 
   useEffect(() => {
     if (!resume) {

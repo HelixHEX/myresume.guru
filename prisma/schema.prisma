@@ -28,6 +28,7 @@ model Resume {
   feedbacks           Feedback[]
   applicationScores   ApplicationScore[]
   actionableFeedbacks ActionableFeedback[]
+  messages            Message[]
 }
 
 model Company {
@@ -60,6 +61,7 @@ model Application {
   feedbacks           Feedback[]
   applicationScores   ApplicationScore[]
   actionableFeedbacks ActionableFeedback[]
+  messages            Message[]
 }
 
 model Feedback {
@@ -104,6 +106,20 @@ model ActionableFeedback {
 
   feedback      Feedback?    @relation(fields: [feedbackId], references: [id])
   feedbackId    Int?
+  application   Application? @relation(fields: [applicationId], references: [id])
+  applicationId Int?
+  resume        Resume?      @relation(fields: [resumeId], references: [id])
+  resumeId      Int?
+}
+
+model Message {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  userId    String
+  content   String
+  role      String
+
   application   Application? @relation(fields: [applicationId], references: [id])
   applicationId Int?
   resume        Resume?      @relation(fields: [resumeId], references: [id])
