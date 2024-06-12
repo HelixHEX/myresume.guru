@@ -1,10 +1,11 @@
 import { AI } from "@/actions";
 import Feedback from "@/components/resumes/feedback";
 import ResumeName from "@/components/resumes/resumeName";
+import { AssistantModal } from "@/components/ui/assistant-ui/assistant-modal";
 import Image from "next/image";
 
 export default function Page({ params }: { params: { slug: string } }) {
-  const { slug } = params; 
+  const { slug } = params;
 
   return (
     <AI>
@@ -31,7 +32,8 @@ export default function Page({ params }: { params: { slug: string } }) {
       <p className="mt-4 mb-8">
         {"We've used AI to help you improve your resume!"}
       </p>
-      <Feedback slug={slug} />
+      <Feedback  slug={slug} />
+      <AssistantModal />
     </AI>
   );
 }

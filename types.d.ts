@@ -101,3 +101,24 @@ type ActionableFeedback = {
   resume?: Resume | null;
   resumeId?: number | null;
 }
+
+type MessageInput = {
+  content: string;
+  createdAt?: Date ;
+  id: string;
+  role: string;
+}
+
+type Message = {
+  id: number;
+  createdAt: Date;
+  updatedAt: Date;
+  userId: string;
+  content: string;
+  role: string;
+
+  application?: Application | null;
+  applicationId?: number | null;
+  resume?: Resume | null;
+  resumeId?: number | null;
+}

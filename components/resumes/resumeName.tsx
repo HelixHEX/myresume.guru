@@ -2,18 +2,32 @@
 
 import { context } from "@/lib/context";
 import { useContext, useState } from "react";
+import { Button } from "../ui/button";
+import { useModalOpen } from "../ui/assistant-ui/assistant-modal";
 
 export default function ResumeName({ slug }: { slug: string }) {
   const { resume, status } = useContext(context.resume.LayoutContext);
+  const setOpen = useModalOpen((s) => s.setOpen);
 
   return (
     <div className="self-start md:self-center">
-      <p className="hover:cursor-pointer w-auto hover:text-gray-500 underline text-gray-400">
+      {status === "Done" ? (
+        <>
+          <p className="w-auto  underline text-gray-400">{resume?.name}</p>
+          <p className="font-bold">Your feedback is ready!</p>
+          <Button onClick={() => setOpen(true)} className="mt-2 w-18 h-8">
+            Chat with AI
+          </Button>
+        </>
+      ) : (
+        <p className="font-bold">{status}...</p>
+      )}
+      {/* <p className="hover:cursor-pointer w-auto hover:text-gray-500 underline text-gray-400">
         {resume ? resume.name : ""}
       </p>
       <p className="font-bold">
         {status === "Done" ? "Your feedback is ready!" : status + "..."}
-      </p>
+      </p> */}
     </div>
   );
 }
