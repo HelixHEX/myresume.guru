@@ -198,6 +198,7 @@ export async function getMessagesFromDb(resumeId: number) {
       createdAt: "asc",
     },
   });
+  console.log(messages);
   return messages;
 }
 
