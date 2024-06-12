@@ -189,6 +189,18 @@ export async function saveMessageToDb({
   });
 }
 
+export async function getMessagesFromDb(resumeId: number) {
+  const messages = await prisma.message.findMany({
+    where: {
+      resumeId,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+  return messages;
+}
+
 // export async function generateApplicationFeedback(applicationId: number): Promise<{error?: string, response: {scores: ApplicationScore[]}}> {
 //   const application = await prisma.application.findUnique({
 //     where: { id: applicationId },

@@ -1,6 +1,6 @@
 "use client";
 
-import { useChat } from "ai/react";
+import { useChat, type Message } from "ai/react";
 import {
   AssistantRuntimeProvider,
   useVercelUseChatRuntime,
@@ -9,6 +9,7 @@ import { generateId } from "ai";
 import { useContext, useEffect } from "react";
 import { context } from "../context";
 import { saveMessageToDb } from "@/actions";
+import { api } from "../api";
 
 export default function AssistantProvider({
   children,
@@ -17,20 +18,21 @@ export default function AssistantProvider({
 }>) {
   const { resume, feedbacks } = useContext(context.resume.LayoutContext);
 
+  const { data } = api.queries.chat.useGetMessages({
+    resumeId: resume?.id,
+    enabled: resume?.id !== null,
+  });
+
   const chat = useChat({
     api: "/api/ai/chat",
     id: "chat",
-    onResponse: (response) => {
-      console.log('onresponse', response)
-      // saveMessageToDb({
-      //   message,
-      //   resumeId: resume?.id,
-      //   applicationId: resume?.applicationId,
-      //   userId: resume?.userId,
-      // });
-    },
-    onFinish: (message) => {
+    initialMessages: data?.map((m) => ({
+      id: m.id.toString(),
+      content: m.content,
+      role: m.role as "user" | "assistant" | "system",
+    } satisfies Message)),
 
+    onFinish: (message) => {
       saveMessageToDb({
         message,
         resumeId: resume?.id,
@@ -70,8 +72,6 @@ export default function AssistantProvider({
   });
 
   const runtime = useVercelUseChatRuntime(chat);
-
-  // if (!resume) return null;
 
   return (
     <AssistantRuntimeProvider runtime={runtime}>
