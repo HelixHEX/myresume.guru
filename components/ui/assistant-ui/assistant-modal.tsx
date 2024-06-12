@@ -39,7 +39,7 @@ export const AssistantModal = () => {
       <PopoverContent
         side="top"
         align="end"
-        className="h-[500px] w-[400px] rounded p-0"
+        className="h-[500px] w-screen md:w-[400px] rounded p-0"
       >
         <Thread />
       </PopoverContent>

@@ -6,6 +6,7 @@ import { createAI, createStreamableValue, StreamableValue } from "ai/rsc";
 import { openai } from "@ai-sdk/openai";
 import { z } from "zod";
 import { connect } from "http2";
+import { toast } from "sonner";
 
 export async function generateFeedback(fileKey: string): Promise<
   | {
@@ -21,7 +22,9 @@ export async function generateFeedback(fileKey: string): Promise<
     let error = "";
     const resume = await prisma.resume.findUnique({
       where: { fileKey },
-      include: { feedbacks: { include: { resume: true, actionableFeedbacks: true } } },
+      include: {
+        feedbacks: { include: { resume: true, actionableFeedbacks: true } },
+      },
     });
 
     if (!resume) {
@@ -156,6 +159,34 @@ export async function generateFeedback(fileKey: string): Promise<
         .value,
     };
   }
+}
+
+export async function saveMessageToDb({
+  message,
+  resumeId,
+  userId,
+  applicationId,
+}: {
+  message: MessageInput;
+  resumeId?: Resume["id"];
+  applicationId?: Application["id"];
+  userId: string;
+}) {
+  if (!message.content) {
+    toast.error("No message content provided");
+    return;
+  }
+
+  await prisma.message.create({
+    data: {
+      content: message.content,
+      role: message.role,
+      userId: userId,
+      createdAt: message.createdAt,
+      resumeId,
+      applicationId,
+    },
+  });
 }
 
 // export async function generateApplicationFeedback(applicationId: number): Promise<{error?: string, response: {scores: ApplicationScore[]}}> {
@@ -322,10 +353,10 @@ export const saveToDb = async (fileKey: string, feedbacks: Feedback[]) => {
   } else {
     for (var i = 0; i < feedbacks.length; i++) {
       const feedback: Feedback = feedbacks[i];
-      console.log('feedback: ',feedback)
+      console.log("feedback: ", feedback);
       feedbacks.map((f) => {
-        console.log('aF:', f.actionableFeedbacks)
-      })
+        console.log("aF:", f.actionableFeedbacks);
+      });
 
       const feedbackDB = await prisma.feedback.create({
         data: {
@@ -346,7 +377,6 @@ export const saveToDb = async (fileKey: string, feedbacks: Feedback[]) => {
         })),
       });
     }
-   
   }
   return resume;
 };

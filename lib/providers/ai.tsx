@@ -8,6 +8,7 @@ import {
 import { generateId } from "ai";
 import { useContext, useEffect } from "react";
 import { context } from "../context";
+import { saveMessageToDb } from "@/actions";
 
 export default function AssistantProvider({
   children,
@@ -19,7 +20,24 @@ export default function AssistantProvider({
   const chat = useChat({
     api: "/api/ai/chat",
     id: "chat",
+    onResponse: (response) => {
+      console.log('onresponse', response)
+      // saveMessageToDb({
+      //   message,
+      //   resumeId: resume?.id,
+      //   applicationId: resume?.applicationId,
+      //   userId: resume?.userId,
+      // });
+    },
+    onFinish: (message) => {
 
+      saveMessageToDb({
+        message,
+        resumeId: resume?.id,
+        applicationId: resume?.applicationId,
+        userId: resume?.userId,
+      });
+    },
     body: {
       context: [
         {
@@ -45,6 +63,9 @@ export default function AssistantProvider({
             .join("")}`,
         },
       ],
+      resumeId: resume?.id,
+      applicationId: resume?.applicationId,
+      userId: resume?.userId,
     },
   });
 
