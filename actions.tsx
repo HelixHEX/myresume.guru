@@ -46,10 +46,8 @@ export async function generateFeedback(fileKey: string): Promise<
     if (resume.status === "Analyzed" && resume.feedbacks.length > 0) {
       const feedbackss = resume.feedbacks;
       return {
-        // response: { feedbacks: resume.feedbacks },
         type: "http",
         response: { feedbacks: feedbackss },
-        // message: "Analyzed",
       };
     }
 

@@ -13,6 +13,8 @@ interface LayoutContextProps {
       "Done" | "Loading" | "Analyzing" | "Analyzed" | "Saving to database"
     >
   >;
+  feedbacks: Feedback[],
+  setFeedbacks: React.Dispatch<React.SetStateAction<Feedback[]>>;
 }
 
 const LayoutContext = createContext<LayoutContextProps>({
@@ -22,6 +24,8 @@ const LayoutContext = createContext<LayoutContextProps>({
   setResume: () => {},
   status: "Loading",
   setStatus: () => {},
+  feedbacks: [],
+  setFeedbacks: () => {},
 });
 
 const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
@@ -30,9 +34,10 @@ const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
     "Done" | "Loading" | "Analyzing" | "Analyzed" | "Saving to database"
   >("Loading");
   const [sortBy, setSortBy] = useState<string>("");
+  const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
   return (
     <LayoutContext.Provider
-      value={{ sortBy, setSortBy, status, setStatus, resume, setResume }}
+      value={{ sortBy, setSortBy, status, setStatus, resume, setResume, feedbacks, setFeedbacks }}
     >
       {children}
     </LayoutContext.Provider>

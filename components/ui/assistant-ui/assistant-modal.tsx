@@ -1,3 +1,5 @@
+"use client";
+
 import { BotIcon, ChevronDownIcon } from "lucide-react";
 
 import { Thread } from "@/components/ui/assistant-ui/thread";
@@ -15,10 +17,20 @@ import {
 import { cn } from "@/lib/utils";
 import { TooltipProvider } from "@radix-ui/react-tooltip";
 import { forwardRef, useState } from "react";
+import { create } from "zustand";
+
+type ModalOpen = {
+  open: boolean;
+  setOpen: (open: boolean) => void;
+};
+
+export const useModalOpen = create<ModalOpen>((set) => ({
+  open: false,
+  setOpen: (open: boolean) => set({ open }),
+}));
 
 export const AssistantModal = () => {
-  const [open, setOpen] = useState(false);
-
+  const { open, setOpen } = useModalOpen();
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -49,7 +61,7 @@ const FloatingAssistantButton = forwardRef<
           <Button
             variant="default"
             size="icon"
-            className="absolute right-4 bottom-4 size-12 rounded-full shadow hover:scale-70"
+            className="fixed right-4 bottom-4 size-12 rounded-full shadow hover:scale-70"
             {...rest}
             ref={forwardedRef}
           >
@@ -57,7 +69,7 @@ const FloatingAssistantButton = forwardRef<
               className={cn(
                 "absolute size-6 transition-all",
                 state === "open" && "rotate-90 scale-0",
-                state === "closed" && "rotate-0 scale-100",
+                state === "closed" && "rotate-0 scale-100"
               )}
             />
 
@@ -65,7 +77,7 @@ const FloatingAssistantButton = forwardRef<
               className={cn(
                 "absolute size-6 transition-all",
                 state === "open" && "rotate-0 scale-100",
-                state === "closed" && "-rotate-90 scale-0",
+                state === "closed" && "-rotate-90 scale-0"
               )}
             />
             <span className="sr-only">{tooltip}</span>
