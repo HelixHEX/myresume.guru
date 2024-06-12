@@ -35,5 +35,6 @@ export const useGetResume = (id: string) => {
   return useQuery<GetResumeResponse>({
     queryKey: ["resume", id],
     queryFn: () => getResume(id),
+    
   });
 }

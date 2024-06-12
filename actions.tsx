@@ -1,23 +1,17 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { generateObject, streamObject } from "ai";
-import { createAI, createStreamableValue, StreamableValue } from "ai/rsc";
+import { generateObject, streamObject, type StreamObjectResult } from "ai";
+import { createAI, createStreamableValue, type StreamableValue } from "ai/rsc";
 import { openai } from "@ai-sdk/openai";
 import { z } from "zod";
 import { connect } from "http2";
 import { toast } from "sonner";
+import { Stream } from "stream";
 
-export async function generateFeedback(fileKey: string): Promise<
-  | {
-      type: "http";
-      response: { feedbacks: Feedback[]; message?: string };
-    }
-  | {
-      type: "stream";
-      response: StreamableValue<{ error?: string; feedbacks: Feedback[] }>;
-    }
-> {
+export async function generateFeedback(
+  fileKey: string
+): Promise<ApiResponse | StreamableApiResponse> {
   try {
     let error = "";
     const resume = await prisma.resume.findUnique({
@@ -30,10 +24,14 @@ export async function generateFeedback(fileKey: string): Promise<
     if (!resume) {
       console.log("Resume not found");
       error = "Resume not found";
-      const streamValue = createStreamableValue();
-      streamValue.update({ error, feedbacks: [] });
-      streamValue.done();
-      return { type: "stream", response: streamValue.value };
+      // const streamValue = createStreamableValue();
+      // streamValue.update({ error, feedbacks: [] });
+      // streamValue.done();
+      // return { type: "stream", response: streamValue.value };
+      return {
+        type: "http",
+        response: { error },
+      };
     }
 
     if (!resume.text) {
@@ -41,8 +39,8 @@ export async function generateFeedback(fileKey: string): Promise<
       error = "Unable to convert pdf.";
 
       return {
-        type: "stream",
-        response: createStreamableValue({ error, feedbacks: [] }).value,
+        type: "http",
+        response: { error },
       };
     }
 
@@ -149,14 +147,14 @@ export async function generateFeedback(fileKey: string): Promise<
     });
     return {
       type: "stream",
-      response: createStreamableValue(result.partialObjectStream).value,
-    };
+      response: createStreamableValue({ feedbacks: result.partialObjectStream })
+        .value,
+    } satisfies StreamableApiResponse;
   } catch (e: any) {
     let error = e.message;
     return {
-      type: "stream",
-      response: createStreamableValue({ error, type: "stream", feedbacks: [] })
-        .value,
+      type: "http",
+      response: { error },
     };
   }
 }
@@ -202,92 +200,6 @@ export async function getMessagesFromDb(resumeId: number) {
   return messages;
 }
 
-// export async function generateApplicationFeedback(applicationId: number): Promise<{error?: string, response: {scores: ApplicationScore[]}}> {
-//   const application = await prisma.application.findUnique({
-//     where: { id: applicationId },
-//     include: { feedbacks: {include: {resume: true }} },
-//   });
-
-//   if (!application) {
-//     console.log("Application not found");
-//     return {
-//       error: "Application not found",
-//       response: {scores: []},
-//     };
-//   }
-
-//   if (application.feedbacks.length > 0 ) {
-//     return {
-//       error: "Already analyzed",
-//       response: {scores: []},
-//     }
-//   }
-
-//   const currentResume = await prisma.resume.findUnique({
-//     where: { id: application.resumeId! },
-//   });
-
-//   if (!currentResume) {
-//     console.log("Current resume not found");
-//     return {
-//       error: "Resume not found",
-//       response: {scores: []},
-//     };
-//   }
-
-//   await prisma.application.update({
-//     where: {
-//       id: applicationId,
-//     },
-//     data: {
-//       aiStatus: "analyzing",
-//     },
-//   });
-
-//   const result = await generateObject({
-//     model: openai("gpt-3.5-turbo"),
-//     messages: [
-//       {
-//         role: "user",
-//         content: `This is a resume analysis tool. You will be analyzing a user-uploaded resume that has been converted to plain text and will see how well their resume matches the job description.
-
-//         Analysis:
-//           1. Identify key sections like "Summary," "Experience," "Skills," and "Education." Extract relevant information from each section (e.g., job titles, companies, skills, degrees).
-//           2. Provide scores for
-//             * Relevant Skills: percentage out of 100 that the resume has relevant skills to the job description.
-//             * Work Experience: percentage out of 100 that the resume has relevant work experience to the job description.
-//             * Education: percentage out of 100 that the resume has relevant education to the job description.
-//             * Relevant Keywords: percentage out of 100 that the resume has relevant keywords to the job description.
-
-//         Job Description:
-//         ${application.description}
-
-//         Resume:
-//         ${currentResume.text}
-//         `,
-//       },
-//       // { role: "user", content: test.text },
-//     ],
-//     schema: ApplicationScoreSchema,
-//   });
-
-//   console.log(result);
-
-//   await prisma.application.update({
-//     where: {
-//       id: applicationId,
-//     },
-//     data: {
-//       aiStatus: "done",
-//     },
-//   });
-
-//   return {
-//     error: result.object.error ?? undefined,
-//     response: {scores: result.object.scores},
-//   };
-// }
-
 const FeedbackSchema = z.object({
   feedbacks: z
     .array(
@@ -311,30 +223,13 @@ const FeedbackSchema = z.object({
     .describe("An error message if the text does not look like a resume"),
 });
 
-const ApplicationScoreSchema = z.object({
-  scores: z
-    .array(
-      z.object({
-        title: z.string().describe("The title of the section"),
-        score: z.number().describe("The score of the skill"),
-      })
-    )
-    .describe("The scores on the resume"),
-  error: z
-    .string()
-    .optional()
-    .describe(
-      "An error message if the job description does not look like a  job description. Only return this if there is an error"
-    ),
-});
-
 export const AI = createAI({
   actions: {
     generateFeedback,
   },
   onSetAIState: ({ state, done }) => {
     "use server";
-    (state);
+    state;
     if (done) {
       alert("hi");
       // saveToDb();
@@ -389,3 +284,32 @@ export const saveToDb = async (fileKey: string, feedbacks: Feedback[]) => {
   }
   return resume;
 };
+
+type ApiResponse = {
+  type: "http";
+  response: { feedbacks?: Feedback[]; error?: string; message?: string };
+};
+type StreamableApiResponse = {
+  type: "stream";
+  // response: StreamableValue<
+  //   {
+  //     feedbacks?: StreamObjectResult<Feedback> | [];
+  //     error?: string;
+  //     message?: string;
+  //   },
+  //   any
+  // >;
+  response:StreamableValue<any, any>
+
+  error?: string | null | undefined;
+  message?: string | null | undefined;
+  // response: {
+  //   error?: string | null | undefined;
+  //   feedbacks?: Feedback[];
+  //   message?: string | null | undefined;
+  // }
+};
+
+type FeedbackStreamableValue =  | []
+
+type AsyncIterableStream<T> = AsyncIterable<T> & ReadableStream<T>;
