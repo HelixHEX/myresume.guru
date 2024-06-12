@@ -195,7 +195,7 @@ export async function getMessagesFromDb(resumeId: number) {
       resumeId,
     },
     orderBy: {
-      createdAt: "desc",
+      createdAt: "asc",
     },
   });
   return messages;
