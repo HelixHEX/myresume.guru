@@ -6,11 +6,9 @@ export async function GET(
   _request: Request,
   { params }: { params: { id: string } }
 ) {
-  const user = await currentUser();
   const applications = await prisma.application.findMany({
     include: {applicationScores: true},
     orderBy: { createdAt: "desc" },
-    where: { userId: user!.id },
   });
 
   return NextResponse.json({ applications });
