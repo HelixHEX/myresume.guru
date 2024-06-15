@@ -1,3 +1,4 @@
+
 type Resume = {
   id: number;
   createdAt: Date;
@@ -122,3 +123,19 @@ type Message = {
   resume?: Resume | null;
   resumeId?: number | null;
 }
+
+// type ApiResponse = {
+//   type: "http";
+//   response: { feedbacks?: Feedback[]; error?: string; message?: string };
+// };
+// type StreamableApiResponse = {
+//   type: "stream";
+//   response: StreamableValue<{
+//     error?: string | null | undefined;
+//     feedbacks?: FeedbackStreamableValue;
+//     message?: string | null | undefined;
+//   }>;
+// };
+
+type AsyncIterableStream<T> = AsyncIterable<T> & ReadableStream<T>
+

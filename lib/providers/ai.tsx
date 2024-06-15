@@ -51,25 +51,29 @@ export default function AssistantProvider({
           role: "system",
           content: `resume: ${resume?.text}`,
         },
-        {
-          role: "system",
-          content: `feedback you have already provided. Use it as context for responding to any questions users have: ${feedbacks
-            .map((f, index) => {
-              return `\n- ${f.title}: ${f.text ?? ""} \n${f.actionableFeedbacks
-                ?.map(
-                  (aF, aFIndex) =>
-                    `${aFIndex + 1}. ${aF.title}: ${aF.text ?? ""}`
-                )
-                .join("\n")}`;
-            })
-            .join("")}`,
-        },
+        // {
+        //   role: "system",
+        //   content: `feedback you have already provided. Use it as context for responding to any questions users have: ${feedbacks
+        //     .map((f: Feedback, index) => {
+        //       return `\n- ${f.title}: ${f.text ?? ""} \n${f.actionableFeedbacks
+        //         ?.map(
+        //           (aF, aFIndex) =>
+        //             `${aFIndex + 1}. ${aF.title}: ${aF.text ?? ""}`
+        //         )
+        //         .join("\n")}`;
+        //     })
+        //     .join("")}`,
+        // },
       ],
       resumeId: resume?.id,
       applicationId: resume?.applicationId,
       userId: resume?.userId,
     },
   });
+
+  useEffect(() => {
+    console.log(feedbacks)
+  }, [feedbacks])
 
   const runtime = useVercelUseChatRuntime(chat);
 

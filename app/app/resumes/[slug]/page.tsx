@@ -33,7 +33,7 @@ export default function Page({ params }: { params: { slug: string } }) {
         {"We've used AI to help you improve your resume!"}
       </p>
       <Feedback  slug={slug} />
-      {/* <AssistantModal /> */}
+      <AssistantModal />
     </AI>
   );
 }

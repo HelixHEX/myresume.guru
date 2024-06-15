@@ -16,8 +16,9 @@ import {
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { TooltipProvider } from "@radix-ui/react-tooltip";
-import { forwardRef, useState } from "react";
+import { forwardRef, useContext, useState } from "react";
 import { create } from "zustand";
+import { context } from "@/lib/context";
 
 type ModalOpen = {
   open: boolean;
@@ -30,7 +31,13 @@ export const useModalOpen = create<ModalOpen>((set) => ({
 }));
 
 export const AssistantModal = () => {
+  const {resume} = useContext(context.resume.LayoutContext)
+
+  
   const { open, setOpen } = useModalOpen();
+
+  if (!resume) return null
+  
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
