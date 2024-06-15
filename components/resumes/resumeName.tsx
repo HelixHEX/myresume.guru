@@ -15,9 +15,9 @@ export default function ResumeName({ slug }: { slug: string }) {
         <>
           <p className="w-auto  underline text-gray-400">{resume?.name}</p>
           <p className="font-bold">Your feedback is ready!</p>
-          <Button onClick={() => setOpen(true)} className="mt-2 w-18 h-8">
+          {/* <Button onClick={() => setOpen(true)} className="mt-2 w-18 h-8">
             Chat with AI
-          </Button>
+          </Button> */}
         </>
       ) : (
         <p className="font-bold">{status}...</p>
