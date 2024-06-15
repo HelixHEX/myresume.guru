@@ -10,7 +10,7 @@ export const useGetMessages = ({
   resumeId,
   enabled = false,
 }: {
-  resumeId: number;
+  resumeId: Resume['id'];
   enabled: boolean;
 }) => {
   return useQuery({
