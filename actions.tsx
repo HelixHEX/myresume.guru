@@ -161,43 +161,50 @@ export async function generateFeedback(
 
 export async function saveMessageToDb({
   message,
-  resumeId,
-  userId,
+  fileKey,
   applicationId,
 }: {
   message: MessageInput;
-  resumeId?: Resume["id"];
+  fileKey?: Resume["fileKey"];
   applicationId?: Application["id"];
-  userId: string;
 }) {
   if (!message.content) {
     toast.error("No message content provided");
     return;
   }
 
+  const resume = await prisma.resume.findUnique({ where: { fileKey } });
+  if (!resume) {
+    throw new Error("Unable to find resume");
+  }
   await prisma.message.create({
     data: {
       content: message.content,
       role: message.role,
-      userId: userId,
+      userId: resume.userId,
       createdAt: message.createdAt,
-      resumeId,
+      resumeId: resume.id,
       applicationId,
     },
   });
 }
 
-export async function getMessagesFromDb(resumeId: number) {
+export async function getMessagesFromDb(fileKey: Resume["fileKey"]) {
+  const resume = await prisma.resume.findUnique({ where: { fileKey } });
+  if (!resume) {
+    throw new Error("Unable to find resume");
+  }
+
   const messages = await prisma.message.findMany({
     where: {
-      resumeId,
+      id: resume.id,
     },
     orderBy: {
       createdAt: "asc",
     },
   });
-  console.log(messages);
-  return messages;
+  // console.log(messages);
+  return {messages, resume};
 }
 
 const FeedbackSchema = z.object({
@@ -299,7 +306,7 @@ type StreamableApiResponse = {
   //   },
   //   any
   // >;
-  response:StreamableValue<any, any>
+  response: StreamableValue<any, any>;
 
   error?: string | null | undefined;
   message?: string | null | undefined;
@@ -310,6 +317,6 @@ type StreamableApiResponse = {
   // }
 };
 
-type FeedbackStreamableValue =  | []
+type FeedbackStreamableValue = [];
 
 type AsyncIterableStream<T> = AsyncIterable<T> & ReadableStream<T>;

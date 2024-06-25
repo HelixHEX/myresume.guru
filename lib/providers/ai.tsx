@@ -11,35 +11,37 @@ import { context } from "../context";
 import { saveMessageToDb } from "@/actions";
 import { api } from "../api";
 
-export default function AssistantProvider({
+export default function Provider({
   children,
+  fileKey
 }: Readonly<{
   children: React.ReactNode;
+  fileKey: Resume['fileKey'];
 }>) {
-  const { resume, feedbacks } = useContext(context.resume.LayoutContext);
 
   const { data } = api.queries.chat.useGetMessages({
-    resumeId: resume?.id,
-    enabled: resume?.id !== null,
+    fileKey,
+    enabled: fileKey !== null,
   });
 
   const chat = useChat({
     api: "/api/ai/chat",
     id: "chat",
-    initialMessages: data?.map((m) => ({
-      id: m.id.toString(),
-      content: m.content,
-      role: m.role as "user" | "assistant" | "system",
-    } satisfies Message)),
+    initialMessages: data?.messages.map(
+      (m) =>
+        ({
+          id: m.id.toString(),
+          content: m.content,
+          role: m.role as "user" | "assistant" | "system",
+        } satisfies Message)
+    ),
 
-    onFinish: (message) => {
-      saveMessageToDb({
-        message,
-        resumeId: resume?.id,
-        applicationId: resume?.applicationId,
-        userId: resume?.userId,
-      });
-    },
+    // onFinish: (message) => {
+    //   saveMessageToDb({
+    //     message,
+    //     fileKey: fileKey,
+    //   });
+    // },
     body: {
       context: [
         {
@@ -49,7 +51,7 @@ export default function AssistantProvider({
         },
         {
           role: "system",
-          content: `resume: ${resume?.text}`,
+          content: `resume: ${data?.resume?.text}`,
         },
         // {
         //   role: "system",
@@ -65,21 +67,31 @@ export default function AssistantProvider({
         //     .join("")}`,
         // },
       ],
-      resumeId: resume?.id,
-      applicationId: resume?.applicationId,
-      userId: resume?.userId,
+      resumeId: data?.resume?.id,
+      // applicationId: resume!.applicationId,
+      userId: data?.resume?.userId,
     },
   });
 
-  useEffect(() => {
-    console.log(feedbacks)
-  }, [feedbacks])
-
   const runtime = useVercelUseChatRuntime(chat);
+
 
   return (
     <AssistantRuntimeProvider runtime={runtime}>
       {children}
     </AssistantRuntimeProvider>
   );
+}
+
+export function AssistantProvider({
+  children,
+  fileKey
+}: {
+  children: React.ReactNode;
+  fileKey: Resume['fileKey'];
+}) {
+  // const { resume, feedbacks } = useContext(context.resume.LayoutContext);
+  // if (!resume) return null;
+
+  return <Provider fileKey={fileKey}>{children}</Provider>;
 }

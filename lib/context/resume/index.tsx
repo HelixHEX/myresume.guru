@@ -2,8 +2,9 @@
 
 import { saveMessageToDb } from "@/actions";
 import { api } from "@/lib/api";
+import { useGetResume } from "@/lib/api/queries/resumes";
 import { useChat } from "ai/react";
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 
 interface LayoutContextProps {
   sortBy: string;
@@ -29,13 +30,47 @@ export const LayoutContext = createContext<LayoutContextProps>({
 
 export function LayoutProvider({
   children,
+  fileKey,
 }: {
   children: React.ReactNode;
+  fileKey: Resume["fileKey"];
 }) {
   const [resume, setResume] = useState<Resume | null>(null);
-  const [status, setStatus] = useState<Feedback["status"]>("loading");
+  const [status, setStatus] = useState<string>("loading");
   const [sortBy, setSortBy] = useState<string>("");
   const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
+  const {
+    data: resumeData,
+    status: resumeStatus,
+    error: resumeError,
+  } = api.queries.resume.useGetResume(fileKey);
+
+  useEffect(() => {
+    if (resumeStatus === "success" && resumeData && resumeData.resume) {
+      setResume(resumeData.resume);
+      setStatus("done-loading");
+    }
+  }, [resumeStatus, resumeData]);
+
+  if (resumeStatus === "pending") {
+    return <div>Loading...</div>;
+  }
+
+  if (resumeStatus === "error") {
+    return <div>Error: {resumeError.message}</div>;
+  }
+
+  if (!resumeData) {
+    return <div>Resume not found</div>;
+  }
+
+  if (resumeData.message) {
+    return <div>Error: {resumeData.message}</div>;
+  }
+
+  if (!resumeData.resume) {
+    return <div>Resume not found</div>;
+  }
 
   return (
     <LayoutContext.Provider
@@ -59,7 +94,7 @@ export const useInitiateAssistantUI = () => {
   const { resume, feedbacks } = useContext(LayoutContext);
 
   const { data } = api.queries.chat.useGetMessages({
-    resumeId: resume!.id,
+    fileKey: resume!.fileKey,
     enabled: resume!.id !== null,
   });
   const chat = useChat({

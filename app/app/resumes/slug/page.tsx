@@ -8,7 +8,7 @@ export default function Page({ params }: { params: { slug: string } }) {
   const { slug } = params;
 
   return (
-    <AI>
+    <>
       <h1 className=" text-4xl font-light text-black">Improve your resume</h1>
       <div className="mt-8 md:mt-0 w-full flex flex-col">
         <p className="text-gray-400">
@@ -34,6 +34,6 @@ export default function Page({ params }: { params: { slug: string } }) {
       </p>
       <Feedback  slug={slug} />
       {/* <AssistantModal /> */}
-    </AI>
+    </>
   );
 }
