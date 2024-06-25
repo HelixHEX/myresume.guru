@@ -13,6 +13,9 @@ export const GET = async (
     where: {
       fileKey,
     },
+    include: {
+      feedbacks: { include: { actionableFeedbacks: true } },
+    },
   });
 
   if (!resume) {

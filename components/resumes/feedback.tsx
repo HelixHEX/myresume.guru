@@ -8,13 +8,16 @@ import { useGenerateFeedback } from "@/lib/hooks";
 import { useGetResumeFeedback } from "@/lib/api/queries/resumes";
 import { context } from "@/lib/context";
 
-export default function Feedback({ slug }: { slug: string }) {
-  const {status, setStatus} = useContext(context.resume.LayoutContext)
-  const { feedbacks } = useGenerateFeedback({
-    slug,
-    setStatus,
-    status,
-  });
+export default function Feedback() {
+  const { resume, status, feedbacks, setStatus } = useContext(
+    context.resume.ResumeContext
+  );
+
+  // const { feedbacks } = useGenerateFeedback({
+  //   slug,
+  //   setStatus,
+  //   status,
+  // });
 
   return (
     <>

@@ -1,34 +1,54 @@
-'use client'
+"use client";
+import Feedback from "@/components/resumes/feedback";
+import ResumeName from "@/components/resumes/resumeName";
 import { api } from "@/lib/api";
+import { context } from "@/lib/context";
+import Image from "next/image";
+import { useContext, useEffect } from "react";
+import StreamFeedback from "@/components/resumes/streamFeedback";
 
-export default function ResumeDetails({fileKey}: {fileKey: Resume['fileKey']}) {
-  // const {data: resumeData, status, error} = api.queries.resume.useGetResume(fileKey); 
-  
-  // if (status === "pending") {
-  //   return <div>Loading...</div>;
-  // }
+export default function ResumeDetails({
+  fileKey,
+}: {
+  fileKey: Resume["fileKey"];
+}) {
+  const { resume,feedbacks,  status } = useContext(context.resume.ResumeContext);
 
-  // if (status === "error") {
-  //   return <div>Error: {error.message}</div>;
-  // }
+  useEffect(() => {
+   console.log(resume)
+  }, [resume]);
 
-  // if (!resumeData) {
-  //   return <div>Resume not found</div>;
-  // }
+  if (status === "pending") {
+    return <div>Loading...</div>;
+  }
 
-  // if (resumeData.message) { 
-  //   return <div>Error: {resumeData.message}</div>;
-  // }
-
-  // if (!resumeData.resume) {
-  //   return <div>Resume not found</div>;
-  // }
+  if (!resume) {
+    return <div>Resume not found</div>;
+  }
 
   return (
     <>
-      {/* {resumeData.resume.text} */}
+      <div className="mt-8 flex w-full flex-col md:flex-row justify-between">
+        <ResumeName />
+        <Image
+          className="bg-none mt-8 md:mt-0 ml-[-40px]"
+          height={100}
+          width={300}
+          src="/images/resume.jpg"
+          alt=""
+        />
+      </div>
+      <h2 className="mt-44 font-bold text-2xl">Suggested Improvements</h2>
+      <p className="mt-4 mb-8">
+        {"We've used AI to help you improve your resume!"}
+      </p>
+      {resume.feedbacks && resume.feedbacks.length > 0 ? (
+        <Feedback />
+      ) : (
+        <StreamFeedback />
+      )}
     </>
-  )
+  );
 }
 
 // export const LoadResume = ({
@@ -48,4 +68,3 @@ export default function ResumeDetails({fileKey}: {fileKey: Resume['fileKey']}) {
 //     );
 //   return <>{children}</>;
 // };
-

@@ -6,7 +6,7 @@ import { useGetResume } from "@/lib/api/queries/resumes";
 import { useChat } from "ai/react";
 import React, { createContext, useContext, useEffect, useState } from "react";
 
-interface LayoutContextProps {
+interface ResumeContextProps {
   sortBy: string;
   setSortBy: React.Dispatch<React.SetStateAction<string>>;
   resume: Resume | null;
@@ -17,7 +17,7 @@ interface LayoutContextProps {
   setFeedbacks: React.Dispatch<React.SetStateAction<Feedback[]>>;
 }
 
-export const LayoutContext = createContext<LayoutContextProps>({
+export const ResumeContext = createContext<ResumeContextProps>({
   sortBy: "",
   setSortBy: () => {},
   resume: null,
@@ -28,7 +28,7 @@ export const LayoutContext = createContext<LayoutContextProps>({
   setFeedbacks: () => {},
 });
 
-export function LayoutProvider({
+export function ResumeProvider({
   children,
   fileKey,
 }: {
@@ -49,6 +49,7 @@ export function LayoutProvider({
     if (resumeStatus === "success" && resumeData && resumeData.resume) {
       setResume(resumeData.resume);
       setStatus("done-loading");
+      setFeedbacks(resumeData.resume.feedbacks || []);
     }
   }, [resumeStatus, resumeData]);
 
@@ -73,7 +74,7 @@ export function LayoutProvider({
   }
 
   return (
-    <LayoutContext.Provider
+    <ResumeContext.Provider
       value={{
         sortBy,
         setSortBy,
@@ -86,12 +87,12 @@ export function LayoutProvider({
       }}
     >
       {children}
-    </LayoutContext.Provider>
+    </ResumeContext.Provider>
   );
 }
 
 export const useInitiateAssistantUI = () => {
-  const { resume, feedbacks } = useContext(LayoutContext);
+  const { resume, feedbacks } = useContext(ResumeContext);
 
   const { data } = api.queries.chat.useGetMessages({
     fileKey: resume!.fileKey,

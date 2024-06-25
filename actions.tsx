@@ -1,57 +1,23 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { generateObject, streamObject, type StreamObjectResult } from "ai";
+import {  streamObject } from "ai";
 import { createAI, createStreamableValue, type StreamableValue } from "ai/rsc";
 import { openai } from "@ai-sdk/openai";
 import { z } from "zod";
-import { connect } from "http2";
 import { toast } from "sonner";
-import { Stream } from "stream";
 
 export async function generateFeedback(
   fileKey: string
-): Promise<ApiResponse | StreamableApiResponse> {
+): Promise<StreamableApiResponse> {
   try {
-    let error = "";
     const resume = await prisma.resume.findUnique({
       where: { fileKey },
       include: {
         feedbacks: { include: { resume: true, actionableFeedbacks: true } },
       },
     });
-
-    if (!resume) {
-      console.log("Resume not found");
-      error = "Resume not found";
-      // const streamValue = createStreamableValue();
-      // streamValue.update({ error, feedbacks: [] });
-      // streamValue.done();
-      // return { type: "stream", response: streamValue.value };
-      return {
-        type: "http",
-        response: { error },
-      };
-    }
-
-    if (!resume.text) {
-      console.log("Resume text not found");
-      error = "Unable to convert pdf.";
-
-      return {
-        type: "http",
-        response: { error },
-      };
-    }
-
-    if (resume.status === "Analyzed" && resume.feedbacks.length > 0) {
-      const feedbackss = resume.feedbacks;
-      return {
-        type: "http",
-        response: { feedbacks: feedbackss },
-      };
-    }
-
+   
     await prisma.resume.update({
       where: {
         fileKey,
@@ -126,7 +92,7 @@ export async function generateFeedback(
                   ]
             Resume:
 
-          ${resume.text}
+          ${resume!.text}
             `,
         },
         // { role: "user", content: test.text },
@@ -146,14 +112,13 @@ export async function generateFeedback(
       },
     });
     return {
-      type: "stream",
+      // type: "stream",
       response: createStreamableValue({ feedbacks: result.partialObjectStream })
         .value,
     } satisfies StreamableApiResponse;
   } catch (e: any) {
     let error = e.message;
     return {
-      type: "http",
       response: { error },
     };
   }
@@ -297,7 +262,7 @@ type ApiResponse = {
   response: { feedbacks?: Feedback[]; error?: string; message?: string };
 };
 type StreamableApiResponse = {
-  type: "stream";
+  // type: "stream";
   // response: StreamableValue<
   //   {
   //     feedbacks?: StreamObjectResult<Feedback> | [];

@@ -5,13 +5,13 @@ import { useContext, useState } from "react";
 import { Button } from "../ui/button";
 import { useModalOpen } from "../ui/assistant-ui/assistant-modal";
 
-export default function ResumeName({ slug }: { slug: string }) {
-  const { resume, status } = useContext(context.resume.LayoutContext);
+export default function ResumeName() {
+  const { resume, status } = useContext(context.resume.ResumeContext);
   const setOpen = useModalOpen((s) => s.setOpen);
 
   return (
     <div className="self-start md:self-center">
-      {status === "Done" ? (
+      {status === "done-loading" ? (
         <>
           <p className="w-auto  underline text-gray-400">{resume?.name}</p>
           <p className="font-bold">Your feedback is ready!</p>

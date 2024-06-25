@@ -6,7 +6,7 @@ import ResumeDetails from "./data";
 export default function Page({ params }: { params: { fileKey: string } }) {
   return (
     <>
-    <context.resume.LayoutProvider fileKey={params.fileKey}>
+    <context.resume.ResumeProvider fileKey={params.fileKey}>
       <AIProvider fileKey={params.fileKey}>
         <h1 className=" text-4xl font-light text-black">Improve your resume</h1>
         <div className="mt-8 md:mt-0 w-full flex flex-col">
@@ -18,9 +18,9 @@ export default function Page({ params }: { params: { fileKey: string } }) {
           </p>
         </div>
         <div className="mt-8 flex w-full flex-col md:flex-row justify-between"></div>
-        {/* <ResumeDetails fileKey={params.fileKey} /> */}
+        <ResumeDetails fileKey={params.fileKey} />
       </AIProvider>
-    </context.resume.LayoutProvider>
+    </context.resume.ResumeProvider>
     </>
   );
 }
