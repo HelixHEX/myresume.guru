@@ -151,14 +151,14 @@ export async function saveMessageToDb({
 }
 
 export async function getMessagesFromDb(fileKey: Resume["fileKey"]) {
-  const resume = await prisma.resume.findUnique({ where: { fileKey } });
+  const resume = await prisma.resume.findUnique({ where: { fileKey }, include: { feedbacks: {include: {actionableFeedbacks: true}} } });
   if (!resume) {
     throw new Error("Unable to find resume");
   }
 
   const messages = await prisma.message.findMany({
     where: {
-      id: resume.id,
+      resumeId: resume.id,
     },
     orderBy: {
       createdAt: "asc",

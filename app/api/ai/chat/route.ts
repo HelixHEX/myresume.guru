@@ -19,7 +19,7 @@ export async function POST(req: Request) {
     userId: string;
   } = await req.json();
   const message = messages[messages.length - 1];
-
+console.log(message)
   await prisma.message.create({
     data: {
       content: message.content,

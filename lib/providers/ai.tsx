@@ -36,12 +36,13 @@ export default function Provider({
         } satisfies Message)
     ),
 
-    // onFinish: (message) => {
-    //   saveMessageToDb({
-    //     message,
-    //     fileKey: fileKey,
-    //   });
-    // },
+    onFinish: (message) => {
+      console.log(message)
+      saveMessageToDb({
+        message,
+        fileKey: fileKey,
+      });
+    },
     body: {
       context: [
         {
@@ -53,19 +54,19 @@ export default function Provider({
           role: "system",
           content: `resume: ${data?.resume?.text}`,
         },
-        // {
-        //   role: "system",
-        //   content: `feedback you have already provided. Use it as context for responding to any questions users have: ${feedbacks
-        //     .map((f: Feedback, index) => {
-        //       return `\n- ${f.title}: ${f.text ?? ""} \n${f.actionableFeedbacks
-        //         ?.map(
-        //           (aF, aFIndex) =>
-        //             `${aFIndex + 1}. ${aF.title}: ${aF.text ?? ""}`
-        //         )
-        //         .join("\n")}`;
-        //     })
-        //     .join("")}`,
-        // },
+        {
+          role: "system",
+          content: `feedback you have already provided. Use it as context for responding to any questions users have: ${data?.resume.feedbacks
+            .map((f: Feedback) => {
+              return `\n- ${f.title}: ${f.text ?? ""} \n${f.actionableFeedbacks
+                ?.map(
+                  (aF, aFIndex) =>
+                    `${aFIndex + 1}. ${aF.title}: ${aF.text ?? ""}`
+                )
+                .join("\n")}`;
+            })
+            .join("")}`,
+        },
       ],
       resumeId: data?.resume?.id,
       // applicationId: resume!.applicationId,
