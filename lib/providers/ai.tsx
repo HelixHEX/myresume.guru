@@ -90,7 +90,7 @@ export function AssistantProvider({
   children: React.ReactNode;
   fileKey: Resume['fileKey'];
 }) {
-  // const { resume, feedbacks } = useContext(context.resume.LayoutContext);
+  // const { resume, feedbacks } = useContext(context.resume.ResumeContext);
   // if (!resume) return null;
 
   return <Provider fileKey={fileKey}>{children}</Provider>;

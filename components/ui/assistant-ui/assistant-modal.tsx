@@ -31,7 +31,7 @@ export const useModalOpen = create<ModalOpen>((set) => ({
 }));
 
 export const AssistantModal = () => {
-  const {resume} = useContext(context.resume.LayoutContext)
+  const {resume} = useContext(context.resume.ResumeContext)
 
   
   const { open, setOpen } = useModalOpen();

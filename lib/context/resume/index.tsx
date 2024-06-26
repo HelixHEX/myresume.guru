@@ -254,7 +254,7 @@ export const useInitiateAssistantUI = () => {
 // LEGACY CODE
 
 // const ChangeTitle = ({title}: {title: string}) => {
-//   const {setTitle} = useContext(context.resume.LayoutContext)
+//   const {setTitle} = useContext(context.resume.ResumeContext)
 
 //   useEffect(() => {
 //     setTitle(title)
