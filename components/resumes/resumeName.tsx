@@ -4,6 +4,7 @@ import { context } from "@/lib/context";
 import { useContext, useState } from "react";
 import { Button } from "../ui/button";
 import { useModalOpen } from "../ui/assistant-ui/assistant-modal";
+import { Sparkles } from "lucide-react";
 
 export default function ResumeName() {
   const { resume, status } = useContext(context.resume.ResumeContext);
@@ -15,9 +16,10 @@ export default function ResumeName() {
       <>
         <p className="w-auto  underline text-gray-400">{resume?.name}</p>
         {/* <p className="font-bold">{status}</p> */}
-        {/* <Button onClick={() => setOpen(true)} className="mt-2 w-18 h-8">
-            Chat with AI
-          </Button> */}
+        <Button onClick={() => setOpen(true)} className="mt-2 w-18 h-8">
+          Chat with AI
+          <Sparkles height={18} className="ml-2" width={18}/>
+        </Button>
       </>
       {/* ) : (
         <p className="font-bold">{status}</p>
