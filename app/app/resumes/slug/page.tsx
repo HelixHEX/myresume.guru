@@ -4,11 +4,9 @@ import ResumeName from "@/components/resumes/resumeName";
 import { AssistantModal } from "@/components/ui/assistant-ui/assistant-modal";
 import Image from "next/image";
 
-export default function Page({ params }: { params: { slug: string } }) {
-  const { slug } = params;
-
+export default function Page() {
   return (
-    <AI>
+    <>
       <h1 className=" text-4xl font-light text-black">Improve your resume</h1>
       <div className="mt-8 md:mt-0 w-full flex flex-col">
         <p className="text-gray-400">
@@ -19,7 +17,7 @@ export default function Page({ params }: { params: { slug: string } }) {
         </p>
       </div>
       <div className="mt-8 flex w-full flex-col md:flex-row justify-between">
-        <ResumeName slug={slug} />
+        <ResumeName />
         <Image
           className="bg-none mt-8 md:mt-0 ml-[-40px]"
           height={100}
@@ -32,8 +30,8 @@ export default function Page({ params }: { params: { slug: string } }) {
       <p className="mt-4 mb-8">
         {"We've used AI to help you improve your resume!"}
       </p>
-      <Feedback  slug={slug} />
+      <Feedback />
       {/* <AssistantModal /> */}
-    </AI>
+    </>
   );
 }

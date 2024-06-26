@@ -1,57 +1,23 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { generateObject, streamObject, type StreamObjectResult } from "ai";
+import {  streamObject } from "ai";
 import { createAI, createStreamableValue, type StreamableValue } from "ai/rsc";
 import { openai } from "@ai-sdk/openai";
 import { z } from "zod";
-import { connect } from "http2";
 import { toast } from "sonner";
-import { Stream } from "stream";
 
 export async function generateFeedback(
   fileKey: string
-): Promise<ApiResponse | StreamableApiResponse> {
+): Promise<StreamableApiResponse> {
   try {
-    let error = "";
+    
     const resume = await prisma.resume.findUnique({
       where: { fileKey },
       include: {
         feedbacks: { include: { resume: true, actionableFeedbacks: true } },
       },
     });
-
-    if (!resume) {
-      console.log("Resume not found");
-      error = "Resume not found";
-      // const streamValue = createStreamableValue();
-      // streamValue.update({ error, feedbacks: [] });
-      // streamValue.done();
-      // return { type: "stream", response: streamValue.value };
-      return {
-        type: "http",
-        response: { error },
-      };
-    }
-
-    if (!resume.text) {
-      console.log("Resume text not found");
-      error = "Unable to convert pdf.";
-
-      return {
-        type: "http",
-        response: { error },
-      };
-    }
-
-    if (resume.status === "Analyzed" && resume.feedbacks.length > 0) {
-      const feedbackss = resume.feedbacks;
-      return {
-        type: "http",
-        response: { feedbacks: feedbackss },
-      };
-    }
-
     await prisma.resume.update({
       where: {
         fileKey,
@@ -126,17 +92,13 @@ export async function generateFeedback(
                   ]
             Resume:
 
-          ${resume.text}
+          ${resume!.text}
             `,
         },
         // { role: "user", content: test.text },
       ],
       schema: FeedbackSchema,
-    });
-    // console.log(result)
-
-    // result.rawRes
-
+    })
     await prisma.resume.update({
       where: {
         fileKey,
@@ -146,58 +108,63 @@ export async function generateFeedback(
       },
     });
     return {
-      type: "stream",
-      response: createStreamableValue({ feedbacks: result.partialObjectStream })
+      response: createStreamableValue(result.partialObjectStream)
         .value,
     } satisfies StreamableApiResponse;
   } catch (e: any) {
     let error = e.message;
     return {
-      type: "http",
-      response: { error },
+      error,
+      response: [],
     };
   }
 }
 
 export async function saveMessageToDb({
   message,
-  resumeId,
-  userId,
+  fileKey,
   applicationId,
 }: {
   message: MessageInput;
-  resumeId?: Resume["id"];
+  fileKey?: Resume["fileKey"];
   applicationId?: Application["id"];
-  userId: string;
 }) {
   if (!message.content) {
     toast.error("No message content provided");
     return;
   }
 
+  const resume = await prisma.resume.findUnique({ where: { fileKey } });
+  if (!resume) {
+    throw new Error("Unable to find resume");
+  }
   await prisma.message.create({
     data: {
       content: message.content,
       role: message.role,
-      userId: userId,
+      userId: resume.userId,
       createdAt: message.createdAt,
-      resumeId,
+      resumeId: resume.id,
       applicationId,
     },
   });
 }
 
-export async function getMessagesFromDb(resumeId: number) {
+export async function getMessagesFromDb(fileKey: Resume["fileKey"]) {
+  const resume = await prisma.resume.findUnique({ where: { fileKey } });
+  if (!resume) {
+    throw new Error("Unable to find resume");
+  }
+
   const messages = await prisma.message.findMany({
     where: {
-      resumeId,
+      id: resume.id,
     },
     orderBy: {
       createdAt: "asc",
     },
   });
-  console.log(messages);
-  return messages;
+  return {messages, resume};
 }
 
 const FeedbackSchema = z.object({
@@ -257,11 +224,13 @@ export const runThread = async () => {
 export const saveToDb = async (fileKey: string, feedbacks: Feedback[]) => {
   const resume = await prisma.resume.findUnique({ where: { fileKey } });
   if (!resume) {
+    console.log('hi')
     throw new Error("Unable to find resume");
   } else {
+    console.log(feedbacks)
     for (var i = 0; i < feedbacks.length; i++) {
       const feedback: Feedback = feedbacks[i];
-
+      console.log(i)
       const feedbackDB = await prisma.feedback.create({
         data: {
           title: feedback.title,
@@ -270,7 +239,7 @@ export const saveToDb = async (fileKey: string, feedbacks: Feedback[]) => {
         },
       });
 
-      const actionableFeedbackDB = await prisma.actionableFeedback.createMany({
+      await prisma.actionableFeedback.createMany({
         data: feedback.actionableFeedbacks!.map((f) => ({
           ...f,
           userId: resume.userId,
@@ -290,7 +259,7 @@ type ApiResponse = {
   response: { feedbacks?: Feedback[]; error?: string; message?: string };
 };
 type StreamableApiResponse = {
-  type: "stream";
+  // type: "stream";
   // response: StreamableValue<
   //   {
   //     feedbacks?: StreamObjectResult<Feedback> | [];
@@ -299,7 +268,7 @@ type StreamableApiResponse = {
   //   },
   //   any
   // >;
-  response:StreamableValue<any, any>
+  response: StreamableValue<any, any>;
 
   error?: string | null | undefined;
   message?: string | null | undefined;
@@ -310,6 +279,6 @@ type StreamableApiResponse = {
   // }
 };
 
-type FeedbackStreamableValue =  | []
+type FeedbackStreamableValue = [];
 
 type AsyncIterableStream<T> = AsyncIterable<T> & ReadableStream<T>;

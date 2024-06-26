@@ -7,7 +7,7 @@ import { useContext, useEffect } from "react";
 import { context } from "@/lib/context";
 
 export default function FeedbackSuggestion() {
-  const { resume } = useContext(context.resume.LayoutContext);
+  const { resume } = useContext(context.resume.ResumeContext);
 
   const chat = useChat({
     api: "/api/ai/chat",

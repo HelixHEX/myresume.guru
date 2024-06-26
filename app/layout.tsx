@@ -9,33 +9,33 @@ import { extractRouterConfig } from "uploadthing/server";
 import { ourFileRouter } from "./api/uploadthing/core";
 import { Toaster } from "@/components/ui/sonner";
 
-const manrope = Manrope({ subsets: ["latin"], variable: "--font-sans" });
-
 export const metadata: Metadata = {
   title: "myresume.guru",
   description: "Land your dream job with myresume.guru",
 };
-
+const manrope = Manrope({ subsets: ["latin"], variable: "--font-sans" });
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <Providers>
-      <html lang="en">
-        <body
-          className={cn(
-            " min-h-svh h-screen bg-white font-sans antialiased",
-            manrope.variable
-          )}
-        >
+    <html lang="en">
+      <body
+        className={cn(
+          " min-h-svh h-screen bg-white font-sans antialiased",
+          manrope.variable
+        )}
+      >
+        <Providers>
           <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
           <Header />
-          <div className="flex w-full flex-col h-auto min-h-screen pt-20">{children}</div>
+          <div className="flex w-full flex-col h-auto min-h-screen pt-20">
+            {children}
+          </div>
           <Toaster />
-        </body>
-      </html>
-    </Providers>
+        </Providers>
+      </body>
+    </html>
   );
 }
