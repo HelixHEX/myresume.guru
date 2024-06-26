@@ -11,17 +11,17 @@ export default function ResumeName() {
 
   return (
     <div className="self-start md:self-center">
-      {status === "done-loading" ? (
-        <>
-          <p className="w-auto  underline text-gray-400">{resume?.name}</p>
-          <p className="font-bold">Your feedback is ready!</p>
-          {/* <Button onClick={() => setOpen(true)} className="mt-2 w-18 h-8">
+      {/* {status === "Loaded"? ( */}
+      <>
+        <p className="w-auto  underline text-gray-400">{resume?.name}</p>
+        {/* <p className="font-bold">{status}</p> */}
+        {/* <Button onClick={() => setOpen(true)} className="mt-2 w-18 h-8">
             Chat with AI
           </Button> */}
-        </>
-      ) : (
-        <p className="font-bold">{status}...</p>
-      )}
+      </>
+      {/* ) : (
+        <p className="font-bold">{status}</p>
+      )} */}
       {/* <p className="hover:cursor-pointer w-auto hover:text-gray-500 underline text-gray-400">
         {resume ? resume.name : ""}
       </p>

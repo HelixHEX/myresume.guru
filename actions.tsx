@@ -98,7 +98,7 @@ export async function generateFeedback(
         // { role: "user", content: test.text },
       ],
       schema: FeedbackSchema,
-    });
+    })
     // console.log(result)
 
     // result.rawRes
@@ -113,13 +113,14 @@ export async function generateFeedback(
     });
     return {
       // type: "stream",
-      response: createStreamableValue({ feedbacks: result.partialObjectStream })
+      response: createStreamableValue(result.partialObjectStream)
         .value,
     } satisfies StreamableApiResponse;
   } catch (e: any) {
     let error = e.message;
     return {
-      response: { error },
+      error,
+      response: [],
     };
   }
 }

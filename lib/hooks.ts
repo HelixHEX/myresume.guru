@@ -1,5 +1,5 @@
 "use client";
-import { generateFeedback } from "@/actions";
+import { generateFeedback, saveToDb } from "@/actions";
 import { readStreamableValue } from "ai/rsc";
 import { useContext, useEffect } from "react";
 import { context } from "./context";
@@ -7,30 +7,36 @@ import { toast } from "sonner";
 import posthog from "posthog-js";
 
 export const useGenerateFeedback = async () => {
-  const { resume, setFeedbacks } = useContext(context.resume.ResumeContext);
+  const { resume, status, feedbacks, setFeedbacks, setStatus } = useContext(
+    context.resume.ResumeContext
+  );
 
-  useEffect(() => {
-    const main = async () => {
-      const { response, error } = await generateFeedback(resume!.fileKey);
-      if (error) {
-        toast(`${error}`);
-      } else {
-        for await (const value of readStreamableValue(response)) {
-          if (value?.error) {
-            throw new Error(value.error);
-          }
-
-          console.log(value?.feedbacks);
-          setFeedbacks(value?.feedbacks || []);
-          // setFeedbacksContext(value?.feedbacks || []);
-        }
+  const handleGenerateFeedbacks = async () => {
+    setStatus("Analyzing");
+    const { response, error } = await generateFeedback(resume!.fileKey);
+    if (error) {
+      toast(`${error}`);
+    } else {
+      // console.log(response);
+      for await (const value of readStreamableValue(response)) {
+        // console.log(value?.feedbacks);
+        setFeedbacks(value || []);
+        // setFeedbacksContext(value?.feedbacks || []);
       }
-    };
-    main();
-  }, [setFeedbacks, resume]);
+      setStatus("Analyzed");
+    }
+  };
+  useEffect(() => {
+    if (status === "Analyzed" && feedbacks.length > 0) {
+      saveToDb(resume!.fileKey, feedbacks);
+      setStatus("Done");
+    }
+  }, [status, feedbacks, resume, setStatus]);
+
+  return { handleGenerateFeedbacks };
 };
 
-// export const useGenerateFeedback = ({
+// export const useGenerateFeedbacks = ({
 //   fileKey,
 //   status,
 //   setStatus,
@@ -50,7 +56,7 @@ export const useGenerateFeedback = async () => {
 //   } = useContext(context.resume.ResumeContext);
 //   const [feedbacks, setFeedbacks] = useState<any>([]);
 //   const [type, setType] = useState<"http" | "stream" | null>(null);
-//   const router = useRouter()
+//   const router = useRouter();
 //   useEffect(() => {
 //     const fetchFeedbacks = async () => {
 //       const feedbacksData = await generateFeedback(resume!.fileKey);
@@ -73,7 +79,7 @@ export const useGenerateFeedback = async () => {
 //         setStatus("Loading");
 //         if (feedbacksData.response.error) {
 //           toast(`${feedbacksData.response.error}`);
-//           router.push('/app/resumes')
+//           router.push("/app/resumes");
 //         } else {
 //           setFeedbacks(feedbacksData.response.feedbacks!);
 //           setFeedbacksContext(feedbacksData.response.feedbacks!);
@@ -82,7 +88,6 @@ export const useGenerateFeedback = async () => {
 //         }
 //       }
 //       posthog.capture("Generated feedback", { fileKey });
-
 //     };
 //     fetchFeedbacks();
 //   }, [setStatus, setResume, router, resume, fileKey, setFeedbacksContext]);

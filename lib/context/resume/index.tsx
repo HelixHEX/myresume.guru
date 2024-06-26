@@ -48,7 +48,7 @@ export function ResumeProvider({
   useEffect(() => {
     if (resumeStatus === "success" && resumeData && resumeData.resume) {
       setResume(resumeData.resume);
-      setStatus("done-loading");
+      setStatus("Loaded");
       setFeedbacks(resumeData.resume.feedbacks || []);
     }
   }, [resumeStatus, resumeData]);
