@@ -26,12 +26,12 @@ export const useGenerateFeedback = async () => {
       setStatus("Analyzed");
     }
   };
-  useEffect(() => {
-    if (status === "Analyzed" && feedbacks.length > 0) {
-      saveToDb(resume!.fileKey, feedbacks);
-      setStatus("Done");
-    }
-  }, [status, feedbacks, resume, setStatus]);
+  // useEffect(() => {
+  //   if (status === "Analyzed" && feedbacks.length > 0) {
+  //     saveToDb(resume!.fileKey, feedbacks);
+  //     setStatus("Done");
+  //   }
+  // }, [status, feedbacks, resume, setStatus]);
 
   return { handleGenerateFeedbacks };
 };
