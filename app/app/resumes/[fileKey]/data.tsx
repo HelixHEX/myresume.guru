@@ -6,6 +6,7 @@ import { context } from "@/lib/context";
 import Image from "next/image";
 import { useContext, useEffect } from "react";
 import StreamFeedback from "@/components/resumes/streamFeedback";
+import { AssistantModal } from "@/components/ui/assistant-ui/assistant-modal";
 
 export default function ResumeDetails({
   fileKey,
@@ -47,6 +48,7 @@ export default function ResumeDetails({
       ) : (
         <StreamFeedback />
       )}
+      <AssistantModal />
     </>
   );
 }
