@@ -35,7 +35,7 @@ type Application = {
   description: string;
   company?: Company;
   companyId?: number;
-  resumes?: Resume[];
+  resume?: Resume[];
   currentResume?: Resume;
   feedbacks?: Feedback[];
   applicationScores?: ApplicationScore[];
@@ -81,7 +81,7 @@ type FeedbackSchema = {
   text: string;
 }
 
-type ApplicationScore =  {
+type ApplicationScore = {
   title: string;
   score: number;
 }
@@ -105,7 +105,7 @@ type ActionableFeedback = {
 
 type MessageInput = {
   content: string;
-  createdAt?: Date ;
+  createdAt?: Date;
   id: string;
   role: string;
 }

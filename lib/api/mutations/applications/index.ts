@@ -2,6 +2,18 @@ import axios from "axios";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
+const updateApplication = async (application: ApplicationUpdateInput): Promise<ApplicationUpdateResponse> => {
+  const response = await axios.post(`/api/applications/${application.id}`, application);
+  return response.data;
+}
+
+export const useUpdateApplication = () => {
+  return useMutation<ApplicationUpdateResponse, Error, ApplicationUpdateInput>({
+    mutationKey: ['update_application'],
+    mutationFn: updateApplication
+  })
+}
+
 const addApplication = async ({
   title,
   url,
