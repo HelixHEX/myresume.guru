@@ -23,3 +23,10 @@ type UseAddApplication = {
   setResumeId: React.Dispatch<React.SetStateAction<number | null>>;
   companyId?: number | undefined | null;
 }
+
+type ApplicationUpdateResponse = {
+  success: boolean;
+  message?: boolean;
+}
+
+type ApplicationUpdateInput = Application

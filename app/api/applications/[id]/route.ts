@@ -4,6 +4,35 @@ import { generateObject } from "ai";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
+export async function POST(request: Request) {
+  const application = await request.json();
+
+  let oldApplication = await prisma.application.findUnique({
+    where: {
+      id: application.id
+    },
+
+  });
+
+  if (!oldApplication) {
+    return NextResponse.json({ error: "Application not found" });
+  }
+
+  await prisma.application.update({
+    where: {
+      id: application.id
+    },
+    data: {
+      title: application.title,
+      status: application.status as string,
+      description: application.description,
+    }
+  })
+
+  return NextResponse.json({ success: true })
+}
+
+
 export async function GET(
   _request: Request,
   { params }: { params: { id: string } }
@@ -80,17 +109,17 @@ export async function GET(
       })),
     });
 
-  // MOVE TO IF STATEMENT WHEN GENERATING THE RESULT
-  application = await prisma.application.findUnique({
-    where: {
-      id: id ? parseInt(id) : undefined,
-    },
-    include: {
-      applicationScores: true,
-      currentResume: true,
-      feedbacks: { include: { resume: true } },
-    },
-  });
+    // MOVE TO IF STATEMENT WHEN GENERATING THE RESULT
+    application = await prisma.application.findUnique({
+      where: {
+        id: id ? parseInt(id) : undefined,
+      },
+      include: {
+        applicationScores: true,
+        currentResume: true,
+        feedbacks: { include: { resume: true } },
+      },
+    });
   } else {
     await prisma.application.update({
       where: {
@@ -111,13 +140,11 @@ export async function GET(
   });
 
 
-  console.log(application);
-
-
   return NextResponse.json({ application });
 }
 
 const ApplicationScoreSchema = z.object({
+
   scores: z
     .array(
       z.object({

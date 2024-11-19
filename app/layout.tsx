@@ -8,6 +8,7 @@ import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
 import { ourFileRouter } from "./api/uploadthing/core";
 import { Toaster } from "@/components/ui/sonner";
+import { Analytics } from "@vercel/analytics/react"
 
 export const metadata: Metadata = {
   title: "myresume.guru",
@@ -34,6 +35,7 @@ export default function RootLayout({
             {children}
           </div>
           <Toaster />
+
         </Providers>
       </body>
     </html>
