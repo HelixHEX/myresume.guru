@@ -62,7 +62,7 @@ export default function CreateCard({
               onClick={action}
               type="submit"
             >
-              {actionText}git 
+              {actionText}
             </Button>
           </DialogClose>
         </DialogFooter>
