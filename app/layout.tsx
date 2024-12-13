@@ -14,11 +14,7 @@ export const metadata: Metadata = {
   description: "Land your dream job with myresume.guru",
 };
 const manrope = Manrope({ subsets: ["latin"], variable: "--font-sans" });
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body
