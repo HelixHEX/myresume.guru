@@ -19,13 +19,13 @@ interface ResumeContextProps {
 
 export const ResumeContext = createContext<ResumeContextProps>({
   sortBy: "",
-  setSortBy: () => {},
+  setSortBy: () => { },
   resume: null,
-  setResume: () => {},
+  setResume: () => { },
   status: "loading",
-  setStatus: () => {},
+  setStatus: () => { },
   feedbacks: [],
-  setFeedbacks: () => {},
+  setFeedbacks: () => { },
 });
 
 export function ResumeProvider({
@@ -98,6 +98,8 @@ export const useInitiateAssistantUI = () => {
     fileKey: resume!.fileKey,
     enabled: resume!.id !== null,
   });
+
+
   const chat = useChat({
     api: "/api/ai/chat",
     id: "chat",
@@ -120,7 +122,7 @@ export const useInitiateAssistantUI = () => {
         {
           role: "system",
           content:
-            "You area resume analyzer tool. You will be analyzing a user-uploaded resume that has been converted to plain text. You also have already provided some feedback on the resume. Your job is to answer any questions the user has about their resume or the feedback provided",
+            "You are a resume analyzer tool. You will be analyzing a user-uploaded resume that has been converted to plain text. You also have already provided some feedback on the resume. Your job is to answer any questions the user has about their resume or the feedback provided",
         },
         // {
         //   role: "system",
@@ -145,6 +147,10 @@ export const useInitiateAssistantUI = () => {
       userId: resume!.userId,
     },
   });
+
+  if (!resume || resume.status !== "Analyzed") {
+    return { chat: null, isReady: false }
+  }
 
   return { chat };
 };

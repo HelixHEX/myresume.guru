@@ -31,13 +31,34 @@ export const useModalOpen = create<ModalOpen>((set) => ({
 }));
 
 export const AssistantModal = () => {
-  const {resume} = useContext(context.resume.ResumeContext)
+  const { resume } = useContext(context.resume.ResumeContext)
 
-  
+
   const { open, setOpen } = useModalOpen();
 
   if (!resume) return null
-  
+
+  if (resume.status !== "Analyzed") {
+    return (
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="outline"
+              className="fixed bottom-4 right-4 h-12 w-12 rounded-full"
+              disabled
+            >
+              <BotIcon className="h-6 w-6" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Please wait for resume analysis to complete before chatting</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    );
+  }
+
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
