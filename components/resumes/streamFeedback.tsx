@@ -1,56 +1,52 @@
 "use client";
 
+import React, { useContext } from "react";
+import { Button } from "@/components/ui/button";
 import { context } from "@/lib/context";
-import { useGenerateFeedback } from "@/lib/hooks";
-import { useContext, useEffect } from "react";
-import ImprovementCard from "./cards/improvement";
-import { generateFeedback, saveToDb } from "@/actions";
-import { readStreamableValue } from "ai/rsc";
+import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import { Button } from "../ui/button";
+import { startResumeAnalysis } from "@/app/_actions/resume";
 
 export default function StreamFeedback() {
-  const { feedbacks, status, resume, setFeedbacks, setStatus } = useContext(
+  const { status, resume, setStatus } = useContext(
     context.resume.ResumeContext
   );
 
-  const handleGenerateFeedbacks = async () => {
-    setStatus("Analyzing");
+  const handleGenerateFeedback = async () => {
+    if (!resume) return;
 
-    const { response, error } = await generateFeedback(resume!.fileKey);
-    if (error) {
-      toast(`${error}`);
-    } else {
-      toast("Generating feedback...");
-      const feedbacksArray = [];
-      for await (const value of readStreamableValue(response)) {
-        setFeedbacks(value.feedbacks || []);
-        feedbacksArray.push(value.feedbacks);
+    try {
+      setStatus("analyzing");
+
+      const result = await startResumeAnalysis(resume.fileKey);
+
+      if (!result.success) {
+        throw new Error(result.error);
       }
-      setStatus("Analyzed");
+
+      toast.success("Analysis started! This may take a few minutes.");
+    } catch (error) {
+      console.error("Error starting analysis:", error);
+      toast.error("Failed to start analysis. Please try again.");
+      setStatus("idle");
     }
   };
 
-  useEffect(() => {
-    const save = async () => {
-      if (status === "Analyzed" && feedbacks.length > 0) {
-        await saveToDb(resume!.fileKey, feedbacks);
-        setStatus("Done");
-      }
-    };
-    save()
-  }, [resume, setStatus, status, feedbacks]);
   return (
-    <div>
-      {feedbacks.length > 0 ? (
-        <>
-          {feedbacks.map((feedback: Feedback, index: number) => (
-            <ImprovementCard key={index} {...feedback} />
-          ))}
-        </>
-      ) : (
-        <Button onClick={handleGenerateFeedbacks}>{status}</Button>
-      )}
+    <div className="flex justify-end mb-6">
+      <Button
+        onClick={handleGenerateFeedback}
+        disabled={!resume || status === "analyzing"}
+      >
+        {status === "analyzing" ? (
+          <>
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            Analyzing...
+          </>
+        ) : (
+          "Generate Feedback"
+        )}
+      </Button>
     </div>
   );
 }

@@ -6,7 +6,7 @@ import { NextRequest, NextResponse } from "next/server";
 // Please edit this to allow other routes to be public as needed.
 // See https://clerk.com/docs/references /nextjs/auth-middleware for more information about configuring your Middleware
 
-const isProtectedRouteClient = createRouteMatcher(["/app(.*)", "/api(.*)"]);
+const isProtectedRouteClient = createRouteMatcher(["/app(.*)"]);
 
 const postHogMiddleware = (request: NextRequest) => {
   let url = request.nextUrl.clone();

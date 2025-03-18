@@ -1,39 +1,49 @@
-import { MoveRight } from "lucide-react";
-import FeedbackSuggestion from "../feedbackSuggestion";
+import React from "react";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
-type Props = {
-  title?: Feedback["title"];
-  text?: Feedback["text"];
-  actionableFeedbacks?: ActionableFeedback[];
+interface Props {
+  id: number;
+  title: string;
+  text: string;
+  priority: number;
+  status: string;
+}
+
+const getPriorityColor = (priority: number) => {
+  switch (priority) {
+    case 5:
+      return "bg-red-500/10 text-red-500 hover:bg-red-500/20";
+    case 4:
+      return "bg-orange-500/10 text-orange-500 hover:bg-orange-500/20";
+    case 3:
+      return "bg-yellow-500/10 text-yellow-500 hover:bg-yellow-500/20";
+    case 2:
+      return "bg-blue-500/10 text-blue-500 hover:bg-blue-500/20";
+    default:
+      return "bg-gray-500/10 text-gray-500 hover:bg-gray-500/20";
+  }
 };
 
-export default function ImprovementCard({
-  title,
-  text,
-  actionableFeedbacks,
-}: Props) {
+export default function ImprovementCard({ title, text, priority }: Props) {
   return (
-    <>
-      <div className="flex flex-row w-full mb-12  ">
-        <div className="bg-gray-200 w-12 h-12 flex rounded-lg items-center mr-4 justify-center ">
-          <MoveRight />
-        </div>
-        <div className="w-full">
-          <h2 className="font-semibold text-xl">{title}</h2>
-          {title ? (
-            <>
-              <p className=" text-gray-400">{text}</p>
-              {actionableFeedbacks?.map((feedback, index) => (
-                <div className="mt-4 w-full" key={index}>
-                  <p className="font-semibold">{feedback.title}</p>
-                  <p className="text-sm text-gray-400">{feedback.text}</p>
-                </div>
-              ))}
-            </>
-          ) : null}
+    <Card className="p-6">
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex-1">
+          <div className="flex items-center gap-3 mb-3">
+            <h3 className="text-lg font-semibold">{title}</h3>
+            {/* <Badge 
+              className={`${getPriorityColor(priority)} cursor-default`}
+              variant="secondary"
+            >
+              Priority {priority}
+            </Badge> */}
+          </div>
+          <div className="text-gray-600 whitespace-pre-wrap">
+            {text}
+          </div>
         </div>
       </div>
-      {/* <FeedbackSuggestion /> */}
-    </>
+    </Card>
   );
 }

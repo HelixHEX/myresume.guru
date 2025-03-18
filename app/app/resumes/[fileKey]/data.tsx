@@ -31,19 +31,19 @@ export default function ResumeDetails({
     <>
       <div className="mt-8 flex w-full flex-col md:flex-row justify-between">
         <ResumeName />
-        <Image
+        {/* <Image
           className="bg-none mt-8 md:mt-0 ml-[-40px]"
           height={100}
           width={300}
           src="/images/resume.jpg"
           alt=""
-        />
+        /> */}
       </div>
-      <h2 className="mt-44 font-bold text-2xl">Suggested Improvements</h2>
+      <h2 className="mt-20 font-bold text-2xl">Suggested Improvements</h2>
       <p className="mt-4 mb-8">
         {"We've used AI to help you improve your resume!"}
       </p>
-      {resume.feedbacks && resume.feedbacks.length > 0 ? (
+      {resume.improvements && resume.improvements.length > 0 ? (
         <Feedback />
       ) : (
         <StreamFeedback />

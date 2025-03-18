@@ -22,6 +22,16 @@ model Resume {
   fileKey   String   @unique
   status    String   @default("Not analyzed")
   text      String?
+  analysis  Json?    @map("analysis_json")
+
+  candidateName     String?  @map("candidate_name")
+  candidateEmail    String?  @map("candidate_email")
+  candidatePhone    String?  @map("candidate_phone")
+  candidateLocation String?  @map("candidate_location")
+  technicalSkills   String[] @map("technical_skills")
+  companies         String[] @map("companies_worked")
+  jobTitles         String[] @map("job_titles")
+  education         String[] @map("education_institutions")
 
   applications        Application[]        @relation("ApplicationToResume")
   activeApplications  Application[]        @relation("CurrentResume")
@@ -29,6 +39,7 @@ model Resume {
   applicationScores   ApplicationScore[]
   actionableFeedbacks ActionableFeedback[]
   messages            Message[]
+  improvements    Improvement[]      @relation("ResumeToImprovements")
 }
 
 model Company {
@@ -69,15 +80,24 @@ model Feedback {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
   userId    String
+  type      String   @default("improvement") // Only improvement type now
   title     String
   text      String?
+  priority  Int      @default(0) // Higher number = higher priority
   status    String   @default("active")
+  impact    String?  // The potential impact of implementing this feedback
+  section   String?  // Which section of the resume this feedback relates to
 
   application         Application?         @relation(fields: [applicationId], references: [id])
   applicationId       Int?
   resume              Resume?              @relation(fields: [resumeId], references: [id])
   resumeId            Int?
   actionableFeedbacks ActionableFeedback[]
+
+  @@index([type])
+  @@index([priority])
+  @@index([section])
+  @@index([status])
 }
 
 model ApplicationScore {
@@ -96,13 +116,16 @@ model ApplicationScore {
 }
 
 model ActionableFeedback {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-  userId    String
-  title     String
-  text      String
-  status    String   @default("not-done")
+  id             Int      @id @default(autoincrement())
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+  userId         String
+  title          String
+  text           String
+  status         String   @default("not-done")
+  priority       Int      @default(0)
+  difficultyLevel String  @default("medium") @map("difficulty_level") // easy, medium, hard
+  stepsList      Json?    @map("steps_list") // Array of specific steps to implement this feedback
 
   feedback      Feedback?    @relation(fields: [feedbackId], references: [id])
   feedbackId    Int?
@@ -110,6 +133,10 @@ model ActionableFeedback {
   applicationId Int?
   resume        Resume?      @relation(fields: [resumeId], references: [id])
   resumeId      Int?
+
+  @@index([status])
+  @@index([priority])
+  @@index([difficultyLevel])
 }
 
 model Message {
@@ -124,4 +151,17 @@ model Message {
   applicationId Int?
   resume        Resume?      @relation(fields: [resumeId], references: [id])
   resumeId      Int?
+}
+
+model Improvement {
+  id                 Int                 @id @default(autoincrement())
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  userId            String
+  title             String
+  text              String              // This will now contain the actionable feedback directly
+  priority          Int
+  status            String              @default("active")
+  resumeId          Int
+  resume            Resume              @relation("ResumeToImprovements", fields: [resumeId], references: [id])
 }

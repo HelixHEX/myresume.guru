@@ -13,6 +13,7 @@ type Resume = {
   activeApplication?: Application[];
   feedbacks?: Feedback[];
   actionableFeedbacks?: ActionableFeedback[];
+  improvements?: Improvement[];
 };
 
 type Company = {
@@ -74,6 +75,17 @@ type Feedback = {
   resume?: Resume | null;
   resumeId?: number | null;
   actionableFeedbacks?: ActionableFeedback[];
+}
+
+type Improvement = {
+  id: number;
+  createdAt: Date;
+  updatedAt: Date;
+  userId: string;
+  title: string;
+  text: string;
+  status: string;
+  priority: number;
 }
 
 type FeedbackSchema = {

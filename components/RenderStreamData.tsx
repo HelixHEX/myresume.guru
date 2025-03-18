@@ -12,7 +12,7 @@ export default function RenderStreamData({
 
   useEffect(() => {
     const asyncFetch = async () => {
-      const it = streamingFetch("/api/resume/analyze");
+      const it = streamingFetch("/api/resume/generate-feedback");
 
       for await (let value of it) {
         try {

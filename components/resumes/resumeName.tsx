@@ -17,7 +17,7 @@ export default function ResumeName() {
         <p className="w-auto  underline text-gray-400">{resume?.name}</p>
         {/* <p className="font-bold">{status}</p> */}
         <Button disabled={resume?.status !== "Analyzed"} onClick={() => setOpen(true)} className="mt-2 w-18 h-8">
-          Chat with AI
+          Get help with your resume
           <Sparkles height={18} className="ml-2" width={18} />
         </Button>
       </>
