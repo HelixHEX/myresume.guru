@@ -1,15 +1,17 @@
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
+import { RESUME_ANALYSIS_STATUS } from "@/lib/actions/resume";
 
 const getResume = async (fileKey: string) => {
   const res = await axios.get(`/api/resume/${fileKey}`);
   return res.data;
 };
 
-export const useGetResume = (fileKey: string) => {
+export const useGetResume = (fileKey: string, refetchInterval: number) => {
   return useQuery<GetResumeResponse>({
     queryKey: ["resume", fileKey],
     queryFn: () => getResume(fileKey),
+    refetchInterval: refetchInterval || 0,
   });
 };
 
@@ -34,5 +36,19 @@ export const useGetResumeFeedback = (id: string) => {
   return useQuery<GetResumeFeedbackResponse>({
     queryKey: ["resume_feedback", id],
     queryFn: () => getResumeFeedback(id),
+  });
+};
+
+const getResumeAnalysisStatus = async (fileKey?: string) => {
+  const resumeStatus = await RESUME_ANALYSIS_STATUS(fileKey);
+  return { status: resumeStatus.status || "Pending" };
+};
+
+export const useGetResumeAnalysisStatus = (fileKey?: string) => {
+  return useQuery<GetResumeAnalysisStatusResponse>({
+    enabled: !!fileKey,
+    queryKey: ["resume_analysis_status", fileKey],
+    queryFn: () => getResumeAnalysisStatus(fileKey),
+    refetchInterval: 2000
   });
 };

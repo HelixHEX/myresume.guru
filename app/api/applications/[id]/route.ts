@@ -11,7 +11,6 @@ export async function POST(request: Request) {
     where: {
       id: application.id
     },
-
   });
 
   if (!oldApplication) {

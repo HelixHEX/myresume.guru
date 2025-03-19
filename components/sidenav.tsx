@@ -38,12 +38,12 @@ const sidenavItems: SidenavItem[] = [
     Icon: FcOrganization,
     flag: "production",
   },
-  {
-    title: "Settings",
-    href: "/app/settings",
-    Icon: FcSettings,
-    flag: "production",
-  },
+  // {
+  //   title: "Settings",
+  //   href: "/app/settings",
+  //   Icon: FcSettings,
+  //   flag: "production",
+  // },
 ];
 
 export default function Sidenav({

@@ -16,7 +16,7 @@ export default function Page() {
           <p className="font-bold text-xl mt-8">Upload your resume</p>
 
           <UploadButton endpoint="resumeUpload" />
-          <p className="mt-2">We support .pdf files.</p>
+          <p className="mt-2">We currently only support .pdf files.</p>
         </div>
       </div>
     </>

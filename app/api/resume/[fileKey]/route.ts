@@ -15,6 +15,7 @@ export const GET = async (
     },
     include: {
       feedbacks: { include: { actionableFeedbacks: true } },
+      improvements: true,
     },
   });
 

@@ -9,3 +9,7 @@ type GetResumeResponse = {
   resume?: Resume
   message?: string
 }
+
+type GetResumeAnalysisStatusResponse = {
+  status: string
+}
