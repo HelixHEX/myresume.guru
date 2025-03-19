@@ -4,7 +4,6 @@ import { generateObject } from "ai";
 import { openai } from "@ai-sdk/openai";
 import prisma from "@/lib/prisma";
 import { getFile } from "@/lib/utils";
-import { anthropic } from '@ai-sdk/anthropic';
 
 // Schema for resume analysis
 const ResumeAnalysisSchema = z.object({
@@ -230,7 +229,6 @@ export const analyzeResume = task({
     await prisma.resume.update({
       where: { id: resume.id },
       data: {
-        status: "Analyzed",
         analysis: result.object,
         candidateName: result.object.personalInfo.name,
         candidateEmail: result.object.personalInfo.email || null,

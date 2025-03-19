@@ -150,7 +150,8 @@ export async function saveMessageToDb({
   });
 }
 
-export async function getMessagesFromDb(fileKey: Resume["fileKey"]) {
+export async function getMessagesFromDb(fileKey?: Resume["fileKey"]) {
+  if (!fileKey) return { messages: [], resume: null };
   const resume = await prisma.resume.findUnique({ where: { fileKey }, include: { feedbacks: {include: {actionableFeedbacks: true}} } });
   if (!resume) {
     throw new Error("Unable to find resume");

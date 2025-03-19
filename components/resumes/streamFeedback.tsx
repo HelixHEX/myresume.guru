@@ -1,14 +1,15 @@
 "use client";
 
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { context } from "@/lib/context";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import { startResumeAnalysis } from "@/app/_actions/resume";
+import { startResumeAnalysis } from "@/lib/actions/resume";
 
 export default function StreamFeedback() {
-  const { status, resume, setStatus } = useContext(
+
+  const { resume, setStatus, setRefetchInterval } = useContext(
     context.resume.ResumeContext
   );
 
@@ -16,15 +17,13 @@ export default function StreamFeedback() {
     if (!resume) return;
 
     try {
-      setStatus("analyzing");
-
       const result = await startResumeAnalysis(resume.fileKey);
-
+      setRefetchInterval(2000);
       if (!result.success) {
         throw new Error(result.error);
       }
 
-      toast.success("Analysis started! This may take a few minutes.");
+      toast.success("Analysis started! This may take a minute or two.");
     } catch (error) {
       console.error("Error starting analysis:", error);
       toast.error("Failed to start analysis. Please try again.");
@@ -38,7 +37,7 @@ export default function StreamFeedback() {
         onClick={handleGenerateFeedback}
         disabled={!resume || status === "analyzing"}
       >
-        {status === "analyzing" ? (
+        {resume?.status === "Analyzing" ? (
           <>
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
             Analyzing...

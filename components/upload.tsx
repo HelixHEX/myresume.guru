@@ -4,6 +4,9 @@ import { toast } from "sonner";
 import { UploadDropzone as UploadThingDropzone } from "@uploadthing/react";
 import { OurFileRouter } from "@/app/api/uploadthing/core";
 import { useRouter } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
+import { useContext } from "react";
+import { context } from "@/lib/context";
 
 export default function UploadButton({
   endpoint,

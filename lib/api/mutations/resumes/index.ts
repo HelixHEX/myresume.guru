@@ -29,5 +29,16 @@ export const useGenerateFeedback = (fileKey: string) => {
     //   }
     // }
   });
-  
+
 };
+const updateResume = async ({ fileKey, resume }: { fileKey: string, resume: Resume }) => {
+  const response = await axios.post(`/api/resume/${fileKey}`, resume);
+  return response.data;
+}
+
+export const useUpdateResume = (fileKey: string) => {
+  return useMutation({
+    mutationKey: ["update_resume", fileKey],
+    mutationFn: updateResume,
+  });
+}
