@@ -169,7 +169,7 @@ export const useInitiateAssistantUI = () => {
 	});
 
 	if (!resume || resume.status !== "Analyzed") {
-		return { chat: null, isReady: false };
+		return { chat, isReady: false };
 	}
 
 	return { chat };

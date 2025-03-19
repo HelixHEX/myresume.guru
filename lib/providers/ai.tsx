@@ -56,7 +56,7 @@ export default function Provider({
         },
         {
           role: "system",
-          content: `feedback you have already provided. Use it as context for responding to any questions users have: ${data?.resume.feedbacks
+          content: `feedback you have already provided. Use it as context for responding to any questions users have: ${data?.resume?.feedbacks
             .map((f: Feedback) => {
               return `\n- ${f.title}: ${f.text ?? ""} \n${f.actionableFeedbacks
                 ?.map(

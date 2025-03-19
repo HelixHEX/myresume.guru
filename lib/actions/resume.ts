@@ -8,10 +8,6 @@ export async function startResumeAnalysis(fileKey: string) {
     await tasks.trigger('analyze-resume', {
       fileKey
     });
-    await prisma.resume.update({
-      where: { fileKey },
-      data: { status: "Analyzing" }
-    })
     return { success: true };
   } catch (error) {
     console.error("Error triggering analysis:", error);

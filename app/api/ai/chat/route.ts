@@ -35,5 +35,5 @@ console.log(message)
     messages: [...context, ...messages],
   });
 
-  return result.toAIStreamResponse();
+  return result.toDataStreamResponse();
 }
