@@ -33,7 +33,7 @@ export default function ResumeDetails({
           alt=""
         /> */}
 			</div>
-			<h2 className="mt-20 font-bold text-2xl">Suggested Improvements</h2>
+			<h2 className="mt-20 font-bold mb-8 text-2xl">Suggested Improvements</h2>
 			{/* <p className="mt-4 mb-8">
 				{"We've used AI to help you improve your resume!"}
 			</p> */}
