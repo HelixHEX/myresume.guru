@@ -1,6 +1,6 @@
 import prisma from "@/lib/prisma";
 import { currentUser } from "@clerk/nextjs/server";
-import { NextResponse, type NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 import { tasks, configure } from "@trigger.dev/sdk/v3";
 
 configure({
@@ -8,7 +8,7 @@ configure({
   secretKey: process.env.TRIGGER_SECRET_KEY,
 });
 
-export async function GET({ }: NextRequest) {
+export async function GET() {
   const user = await currentUser();
 
   if (!user) return;

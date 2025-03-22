@@ -1,7 +1,7 @@
 import prisma from "@/lib/prisma";
 import { openai } from "@ai-sdk/openai";
 import { generateObject } from "ai";
-import { NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
 export async function POST(request: Request) {
@@ -32,15 +32,13 @@ export async function POST(request: Request) {
 }
 
 
-export async function GET(
-  _request: Request,
-  { params }: { params: { id: string } }
-) {
-  const id = params.id;
+export async function GET(request: NextRequest) {
+  const searchParams = request.nextUrl.searchParams
+  const id = searchParams.get("id")
 
   let application = await prisma.application.findUnique({
     where: {
-      id: id ? parseInt(id) : undefined,
+      id: id ? Number.parseInt(id) : undefined,
     },
     include: {
       applicationScores: true,
@@ -111,7 +109,7 @@ export async function GET(
     // MOVE TO IF STATEMENT WHEN GENERATING THE RESULT
     application = await prisma.application.findUnique({
       where: {
-        id: id ? parseInt(id) : undefined,
+        id: id ? Number.parseInt(id) : undefined,
       },
       include: {
         applicationScores: true,

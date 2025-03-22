@@ -31,8 +31,8 @@ type Application = {
   updatedAt: string;
   userId: string;
   title: string;
-  status: String;
-  aiStatus: String;
+  status: string;
+  aiStatus: string;
   description: string;
   company?: Company;
   companyId?: number;
@@ -91,11 +91,6 @@ type Improvement = {
 type FeedbackSchema = {
   title: string;
   text: string;
-}
-
-type ApplicationScore = {
-  title: string;
-  score: number;
 }
 
 

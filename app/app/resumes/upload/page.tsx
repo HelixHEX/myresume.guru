@@ -3,7 +3,7 @@ import UploadButton from "@/components/upload";
 export default function Page() {
   return (
     <>
-      <div className="w-full p-4">
+      <div className="w-full p-4 flex flex-col items-center h-full justify-center">
         <div className="flex flex-col w-full md:w-[500px] self-center">
           <h1 className="font-bold text-4xl">
             Get instant feedback on your resume
