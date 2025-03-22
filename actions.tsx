@@ -196,11 +196,10 @@ export const AI = createAI({
 	actions: {
 		generateFeedback,
 	},
-	onSetAIState: ({ state, done }) => {
+	onSetAIState: async ({ state, done }) => {
 		"use server";
 		state;
 		if (done) {
-			alert("hi");
 			// saveToDb();
 		}
 	},

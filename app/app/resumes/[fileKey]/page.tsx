@@ -10,7 +10,7 @@ export default function Page({ params }: { params: { fileKey: string } }) {
       <AIProvider fileKey={params.fileKey}>
         <h1 className=" text-4xl font-light text-black">Improve your resume</h1>
         <div className="mt-8 md:mt-0 w-full flex flex-col">
-          <p className="text-gray-400">
+          <p className="text-gray-400 mt-2 w-full md:w-3/5">
             Get specific, actionable feedback on how to improve your resume. The
             Al will highlight areas for improvement and provide clear
             recommendations to help you make your resume stand out for your next

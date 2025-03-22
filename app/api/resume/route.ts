@@ -8,7 +8,7 @@ configure({
   secretKey: process.env.TRIGGER_SECRET_KEY,
 });
 
-export async function GET({ }: NextRequest) {
+export async function GET(_request: NextRequest) {
   const user = await currentUser();
 
   if (!user) return;
