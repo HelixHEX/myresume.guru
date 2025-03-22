@@ -5,8 +5,9 @@ import { NextResponse } from "next/server";
 // }
 export const GET = async (
   request: Request,
-  { params }: { params: { fileKey: Resume["fileKey"] } }
+  props: { params: Promise<{ fileKey: Resume["fileKey"] }> }
 ) => {
+  const params = await props.params;
   const { fileKey } = params;
 
   const resume = await prisma.resume.findUnique({

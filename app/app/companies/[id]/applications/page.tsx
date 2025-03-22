@@ -3,7 +3,8 @@ import CompanyApplications from "./data";
 import CreateApplicationCard from "@/components/applications/cards/create";
 import CompanyApplicationsTitle from "@/components/companies/applications/title";
 
-export default function Page({ params }: { params: { id: string } }) {
+export default async function Page(props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   return (
     <div className=" flex flex-col w-full h-full ">
       <CompanyApplicationsTitle companyId={params.id} />

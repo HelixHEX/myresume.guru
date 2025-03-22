@@ -3,7 +3,8 @@ import { context } from "@/lib/context";
 import AIProvider from "@/lib/providers/ai";
 import ResumeDetails from "./data";
 
-export default function Page({ params }: { params: { fileKey: string } }) {
+export default async function Page(props: { params: Promise<{ fileKey: string }> }) {
+  const params = await props.params;
   return (
     <>
     <context.resume.ResumeProvider fileKey={params.fileKey}>

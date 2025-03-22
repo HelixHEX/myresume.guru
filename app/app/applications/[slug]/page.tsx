@@ -5,7 +5,8 @@ import ImprovementCard from "@/components/resumes/cards/improvement";
 import { Badge } from "@/components/ui/badge";
 import { context } from "@/lib/context";
 
-export default function Page({ params }: { params: { slug: string } }) {
+export default async function Page(props: { params: Promise<{ slug: string }> }) {
+  const params = await props.params;
   return (
     <context.application.ApplicationProvider id={params.slug}>
       <div className=" flex flex-col w-full h-full ">

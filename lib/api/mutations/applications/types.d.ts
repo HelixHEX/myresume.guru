@@ -11,11 +11,6 @@ type CreateApplicationResponse = {
   message?: string;
 };
 
-type CreateApplicationResponse = {
-  application?: Application;
-  message?: string;
-}
-
 type UseAddApplication = {
   setTitle: React.Dispatch<React.SetStateAction<string>>;
   setUrl: React.Dispatch<React.SetStateAction<string>>;
