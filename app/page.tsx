@@ -88,7 +88,7 @@ export default function Home() {
                   "Upload your resume and in seconds we'll assess your skills, experiences, and more. Then we'll give you feedback from our team of experts."
                 }
               </p>
-              <Button onClick={() => router.push('/sign-up?redirect_url=http://localhost:3000/app/resumes/')} className="mt-4">Upload your resume</Button>
+              <Button onClick={() => router.push('/sign-up')} className="mt-4">Upload your resume</Button>
             </Zoom>
           </div>
         </div>

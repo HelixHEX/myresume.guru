@@ -34,9 +34,9 @@ export default function ResumeDetails({
         /> */}
 			</div>
 			<h2 className="mt-20 font-bold text-2xl">Suggested Improvements</h2>
-			<p className="mt-4 mb-8">
+			{/* <p className="mt-4 mb-8">
 				{"We've used AI to help you improve your resume!"}
-			</p>
+			</p> */}
 			{resume.status === "Analyzed" ? <Feedback /> : <StreamFeedback />}
 			<AssistantModal />
 		</>
