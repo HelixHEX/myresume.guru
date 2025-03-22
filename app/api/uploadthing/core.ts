@@ -33,7 +33,7 @@ export const ourFileRouter = {
             userId: metadata.userId,
             name: file.name,
             fileKey: file.key,
-            status: "Uploaded",
+            status: "Analyzing",
           },
         });
         if (!resume) {

@@ -1,6 +1,21 @@
-import { clsx, type ClassValue } from "clsx"
-import { twMerge } from "tailwind-merge"
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+import pdf from "pdf-parse";
+import { logger } from "@trigger.dev/sdk/v3";
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
 }
+
+export const getFileUrl = (fileKey: string) => {
+  const url = new URL(`${process.env.UPLOAD_THING_FILE_URL}/${fileKey}`)
+  return url.toString()
+}
+
+  export const getFile = async (fileKey: string) => {
+    const url = getFileUrl(fileKey)
+    logger.info("Getting file from URL", { url })
+    const response = await fetch(url)
+    const blob = await response.blob();
+    return await blob.arrayBuffer();
+  } 

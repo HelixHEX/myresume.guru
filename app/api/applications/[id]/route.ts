@@ -33,14 +33,13 @@ export async function POST(request: Request) {
 
 
 export async function GET(
-  _request: Request,
-  { params }: { params: { id: string } }
+  {params}: {params: Promise<{id: string}>}
 ) {
-  const id = params.id;
+  const {id} = await params;
 
   let application = await prisma.application.findUnique({
     where: {
-      id: id ? parseInt(id) : undefined,
+      id: id ? Number.parseInt(id) : undefined,
     },
     include: {
       applicationScores: true,
