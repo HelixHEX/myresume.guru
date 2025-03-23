@@ -65,13 +65,13 @@ export default function CreateApplicationCard({companyId}: {companyId?: number |
       >
         <div className="w-full">
           <Label htmlFor="name" className="">
-            Title
+            Job Title
           </Label>
           <Input
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             id="name"
-            placeholder="Software Engineeer - Frontend"
+            placeholder="Enter the job title"
             className="w-full mb-4 "
           />
           <Label htmlFor="name" className="mt-4 text-left">

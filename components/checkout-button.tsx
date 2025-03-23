@@ -5,6 +5,7 @@ import { Button, buttonVariants } from "./ui/button";
 import { createCheckoutSession } from "@/lib/actions/checkout";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
+import { SignedIn } from "@clerk/nextjs";
 
 export default function CheckoutButton() {
 	const [loading, setLoading] = useState(false);

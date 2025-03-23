@@ -9,39 +9,31 @@ export default function Header() {
 	const router = useRouter();
 	const pathname = usePathname();
 	return (
-		<div className=" z-10 w-full h-[20px] bg-white  fixed flex flex-row p-6 text-black justify-between">
-			<div className="flex items-center gap-4 flex-row">
-				<Logo />
-				<Link className="text-sm font-bold" href="/">Home</Link>
+		<div
+			className={` z-10 w-full h-[20px] bg-white  ${pathname.includes("sign-in") || pathname.includes("sign-up") ? "" : "fixed"} flex flex-row p-6 text-black justify-between`}
+		>
+			<div className="flex items-center gap-2 sm:gap-4 flex-row">
+				<Link className="text-sm font-bold" href="/">
+					Home
+				</Link>
 				<SignedIn>
-					<Link className="text-sm font-bold" href="/app">Dashboard</Link>
-				</SignedIn>
-				<Link className="text-sm font-bold" href="/plans">Plans</Link>
-			</div>
-			<SignedOut>
-				<div className="flex flex-row">
-					{pathname !== "/" && (
-						<Link
-							href="/"
-							className="hover:underline text-sm md:text-md mr-2 md:mr-8 self-center"
-						>
-							Home
-						</Link>
-					)}
-					<Link
-						href="/sign-in"
-						className="hover:underline mr-2 md:mr-8 text-sm md:text-md self-center"
-					>
-						Signup
+					<Link className="text-sm font-bold" href="/app">
+						Dashboard
 					</Link>
-					<Button
-						className=" w-14 sm:w-full"
-						onClick={() => router.push("/sign-in")}
-					>
-						Signin
-					</Button>
-				</div>
-			</SignedOut>
+				</SignedIn>
+
+				<Link className="text-sm font-bold" href="/plans">
+					Plans
+				</Link>
+				<SignedOut>
+				<Link className="text-sm font-bold" href="/sign-in">
+						Sign-in
+					</Link>
+					<Link className="text-sm font-bold" href="/sign-up">
+						Sign-up
+					</Link>
+				</SignedOut>
+			</div>
 			<SignedIn>
 				<UserButton />
 			</SignedIn>

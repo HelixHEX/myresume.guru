@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Check } from "lucide-react";
 import Header from "@/components/header";
 import CheckoutButton from "@/components/checkout-button";
+import { SignedIn, SignedOut } from "@clerk/nextjs";
 
 export default function Plans() {
 	return (
@@ -23,7 +24,7 @@ export default function Plans() {
 					<div className="grid w-full items-start gap-10 rounded-lg border p-10 md:grid-cols-[1fr_200px]">
 						<div className="grid gap-6">
 							<h3 className="text-xl font-bold sm:text-2xl">
-								What&apos;s included in the Plus plan
+								What&apos;s included in the Free plan
 							</h3>
 							<ul className="grid gap-3 text-sm text-muted-foreground sm:grid-cols-2">
 								<li className="flex items-center">
@@ -34,8 +35,8 @@ export default function Plans() {
 									<Check className="mr-2 h-4 w-4" /> 3 resume feedbacks a day
 								</li>
 								<li className="flex items-center">
-									<Check className="mr-2 h-4 w-4" /> Limited messages with AI
-									guru per day
+									<Check className="mr-2 h-4 w-4" /> Limited messaging with AI
+									guru
 								</li>
 							</ul>
 						</div>
@@ -89,7 +90,17 @@ export default function Plans() {
 									Billed Monthly
 								</p>
 							</div>
-							<CheckoutButton />
+							<SignedIn>
+								<CheckoutButton />
+							</SignedIn>
+							<SignedOut>
+								<Link
+									href="/sign-up"
+									className={cn(buttonVariants({ size: "lg" }), "bg-dark-gray")}
+								>
+									Get Started
+								</Link>
+							</SignedOut>
 						</div>
 					</div>
 				</div>

@@ -3,17 +3,18 @@
 import { tasks } from "@trigger.dev/sdk/v3";
 import prisma from "@/lib/prisma";
 
-export async function startResumeAnalysis(fileKey: string) {
+export async function startResumeAnalysis(fileKey: string, userId: string) {
   try {
     await tasks.trigger('analyze-resume', {
-      fileKey
+      fileKey,
+      userId
     });
     return { success: true };
   } catch (error) {
     console.error("Error triggering analysis:", error);
     return {
       success: false,
-      error: error instanceof Error ? error.message : "Failed to start analysis"
+      error: error instanceof Error ? error : "Failed to start analysis"
     };
   }
 }

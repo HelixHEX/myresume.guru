@@ -15,7 +15,7 @@ export default function Logo({ size }: { size?: number | string }) {
           <FileText />
           <Link
             href={user ? "/app/resumes" : "/"}
-            className="font-bold ml-2 text-sm sm:text-md  self-center h-full hover:cursor-pointer"
+            className="font-bold ml-1 sm:ml-2 text-sm sm:text-md  self-center h-full hover:cursor-pointer"
           >
             myresume.guru
           </Link>

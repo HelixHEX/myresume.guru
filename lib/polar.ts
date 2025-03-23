@@ -49,7 +49,7 @@ export const updateDbWithLatestSubscriptionData = async (subscriptionId: string)
 
 	await clerk.users.updateUserMetadata(userId, {
 		unsafeMetadata: {
-			plan: 'Plus'
+			plan: subscription.status === 'active' ? 'Plus' : 'Free',
 		}
 	})
 }
