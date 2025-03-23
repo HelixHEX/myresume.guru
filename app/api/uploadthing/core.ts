@@ -47,8 +47,10 @@ export const ourFileRouter = {
         // Chain the analysis and feedback tasks
 
         waitUntil(tasks.trigger('analyze-resume', {
-          fileKey: file.key
+          fileKey: file.key,
+          userId: metadata.userId
         }))
+
 
         // const analysisResult = await analyzeResume.run({ fileKey: file.key });
         // await generateFeedback.run(analysisResult);

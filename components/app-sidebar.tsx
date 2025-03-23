@@ -7,6 +7,7 @@ import {
   Bot,
   BriefcaseBusiness,
   Command,
+  CreditCard,
   FileText,
   Frame,
   GalleryVerticalEnd,
@@ -64,7 +65,7 @@ const data = {
           url: "/app/resumes/upload",
         },
         {
-          title: "View Resumes",
+          title: "My Resumes",
           url: "/app/resumes",
         },
       ],
@@ -85,6 +86,12 @@ const data = {
         },
       ],
     },
+    {
+      title: 'Billing',
+      url: 'https://polar.sh/myresumeguru/portal',
+      icon: CreditCard,
+
+    }
   ],
   
 }

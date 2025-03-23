@@ -94,13 +94,13 @@ const FeedbackSchema = z.object({
     title: z.string(),
     text: z.string(),
     priority: z.number(),
-  })),
+  }))
 });
 
 // Task 1: Analyze Resume
 export const analyzeResume = task({
   id: "analyze-resume",
-  run: async ({ fileKey }: { fileKey: string }) => {
+  run: async ({ fileKey, userId }: { fileKey: string, userId: string }) => {
     logger.info("Starting resume analysis", { fileKey });
 
     // Get the resume from the database
@@ -112,11 +112,42 @@ export const analyzeResume = task({
       throw new Error("Resume not found");
     }
 
-    // Update status
-    await prisma.resume.update({
-      where: { id: resume.id },
-      data: { status: "Analyzing" },
+    const subscription = await prisma.subscription.findUnique({
+      where: {
+        userId: userId,
+      }
+    })
+
+    const improvements = await prisma.improvement.count({
+      where: {
+        userId: userId,
+        createdAt: {
+          gte: new Date(new Date().setHours(0, 0, 0, 0)), // 12am today
+        },
+      },
     });
+
+
+
+    if (subscription) {
+      if (subscription.status !== 'active') {
+        if (improvements >= 3) {
+          await prisma.resume.update({
+            where: { fileKey },
+            data: { status: "Limit Reached" },
+          });
+          throw new Error("Daily Limit Reached");
+        }
+      }
+    } else {
+      if (improvements >= 3) {
+        await prisma.resume.update({
+          where: { fileKey },
+          data: { status: "Limit Reached" },
+        });
+        throw new Error("Daily Limit Reached");
+      }
+    }
 
     // Get the PDF data
     const pdfData = await getFile(fileKey);
@@ -237,25 +268,38 @@ export const analyzeResume = task({
         technicalSkills: allTechnicalSkills,
         companies: result.object.workExperience?.map(exp => exp.company) || [],
         jobTitles: result.object.workExperience?.map(exp => exp.title) || [],
-        education: result.object.education?.map(edu => edu.institution) || []
+        education: result.object.education?.map(edu => edu.institution) || [],
+        status: "JSON Generated"
       },
     });
 
+
+
     logger.info("Resume analysis complete", { fileKey });
 
-    await generateFeedback.trigger({
-      resumeId: resume.id,
-      userId: resume.userId,
-    });
+    if (subscription) {
+      await generateFeedback.trigger({
+        resumeId: resume.id,
+        userId: resume.userId,
+        length: 5,
+      })
+    } else {
+      await generateFeedback.trigger({
+        resumeId: resume.id,
+        userId: resume.userId,
+        length: 2,
+      });
+    }
+
 
     return { resumeId: resume.id, fileKey, userId: resume.userId };
-  },
+  }
 });
 
 // Task 2: Generate Feedback
 export const generateFeedback = task({
   id: "generate-feedback",
-  run: async ({ resumeId, userId, }: { resumeId: number; userId: string }) => {
+  run: async ({ resumeId, userId, length }: { resumeId: number; userId: string, length: number }) => {
     logger.info("Starting feedback generation", { resumeId });
 
     const resume = await prisma.resume.findUnique({
@@ -274,7 +318,7 @@ export const generateFeedback = task({
       messages: [
         {
           role: "system",
-          content: `You are an expert resume reviewer and career coach. Analyze the resume and provide actionable feedback for improvements.
+          content: `You are an expert resume reviewer and career coach. Analyze the resume and provide EXACTLY ${length} actionable feedback for improvements.
 
           IMPORTANT GUIDELINES:
           1. Focus on providing clear, actionable improvements
@@ -293,7 +337,7 @@ export const generateFeedback = task({
         {
           role: "user",
           content: [
-          {
+            {
               type: 'text',
               text: "The following is a json representation of the resume as well of the pdf resume."
             },

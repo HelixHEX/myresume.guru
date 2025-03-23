@@ -13,6 +13,20 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Subscription {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  userId              String @unique
+  status              String
+  plan                String
+  priceId             String
+  polarCustomerId     String
+  polarSubscriptionId String @unique
+  endsAt              DateTime?
+}
+
 model Resume {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now()) @map("created_at")
@@ -39,7 +53,7 @@ model Resume {
   applicationScores   ApplicationScore[]
   actionableFeedbacks ActionableFeedback[]
   messages            Message[]
-  improvements    Improvement[]      @relation("ResumeToImprovements")
+  improvements        Improvement[]        @relation("ResumeToImprovements")
 }
 
 model Company {
@@ -85,8 +99,8 @@ model Feedback {
   text      String?
   priority  Int      @default(0) // Higher number = higher priority
   status    String   @default("active")
-  impact    String?  // The potential impact of implementing this feedback
-  section   String?  // Which section of the resume this feedback relates to
+  impact    String? // The potential impact of implementing this feedback
+  section   String? // Which section of the resume this feedback relates to
 
   application         Application?         @relation(fields: [applicationId], references: [id])
   applicationId       Int?
@@ -116,16 +130,16 @@ model ApplicationScore {
 }
 
 model ActionableFeedback {
-  id             Int      @id @default(autoincrement())
-  createdAt      DateTime @default(now()) @map("created_at")
-  updatedAt      DateTime @updatedAt @map("updated_at")
-  userId         String
-  title          String
-  text           String
-  status         String   @default("not-done")
-  priority       Int      @default(0)
-  difficultyLevel String  @default("medium") @map("difficulty_level") // easy, medium, hard
-  stepsList      Json?    @map("steps_list") // Array of specific steps to implement this feedback
+  id              Int      @id @default(autoincrement())
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+  userId          String
+  title           String
+  text            String
+  status          String   @default("not-done")
+  priority        Int      @default(0)
+  difficultyLevel String   @default("medium") @map("difficulty_level") // easy, medium, hard
+  stepsList       Json?    @map("steps_list") // Array of specific steps to implement this feedback
 
   feedback      Feedback?    @relation(fields: [feedbackId], references: [id])
   feedbackId    Int?
@@ -154,14 +168,14 @@ model Message {
 }
 
 model Improvement {
-  id                 Int                 @id @default(autoincrement())
-  createdAt         DateTime            @default(now())
-  updatedAt         DateTime            @updatedAt
-  userId            String
-  title             String
-  text              String              // This will now contain the actionable feedback directly
-  priority          Int
-  status            String              @default("active")
-  resumeId          Int
-  resume            Resume              @relation("ResumeToImprovements", fields: [resumeId], references: [id])
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    String
+  title     String
+  text      String // This will now contain the actionable feedback directly
+  priority  Int
+  status    String   @default("active")
+  resumeId  Int
+  resume    Resume   @relation("ResumeToImprovements", fields: [resumeId], references: [id])
 }
