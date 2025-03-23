@@ -12,10 +12,23 @@ export const getFileUrl = (fileKey: string) => {
   return url.toString()
 }
 
-  export const getFile = async (fileKey: string) => {
-    const url = getFileUrl(fileKey)
-    logger.info("Getting file from URL", { url })
-    const response = await fetch(url)
-    const blob = await response.blob();
-    return await blob.arrayBuffer();
-  } 
+export const getFile = async (fileKey: string) => {
+  const url = getFileUrl(fileKey)
+  logger.info("Getting file from URL", { url })
+  const response = await fetch(url)
+  const blob = await response.blob();
+  return await blob.arrayBuffer();
+}
+
+export function getUrl(url: string) {
+  if (process.env.NODE_ENV === "development") {
+    return `http://localhost:3000${url}`;
+  }
+
+  if (process.env.URL === "https://myresume.guru") {
+    return `https://myresume.guru${url}`;
+  }
+
+  console.log("[UTILS][GET URL]", `${process.env.URL}${url}`)
+  return `${process.env.URL}${url}`
+}

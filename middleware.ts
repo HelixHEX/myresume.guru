@@ -28,7 +28,7 @@ const postHogMiddleware = (request: NextRequest) => {
 };
 export default clerkMiddleware((auth, req) => {
   if (isProtectedRouteClient(req) && !req.url.includes("/api/uploadthing"))
-    auth().protect();
+    auth.protect();
 
   // return 
 });

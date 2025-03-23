@@ -64,7 +64,7 @@ const data = {
           url: "/app/resumes/upload",
         },
         {
-          title: "View Resumes",
+          title: "My Resumes",
           url: "/app/resumes",
         },
       ],
