@@ -6,7 +6,7 @@ import { tasks } from "@trigger.dev/sdk/v3";
 export const polar = new Polar({
 	//biome-ignore lint:Will fix later.
 	accessToken: process.env.POLAR_ACCESS_TOKEN!,
-	server: process.env.URL === "https://muyresume.guru" ? "production" : "sandbox", // Use sandbox for testing purposes - otherwise use 'production' or omit this line
+	server: process.env.URL === "https://www.myresume.guru" ? "production" : "sandbox", // Use sandbox for testing purposes - otherwise use 'production' or omit this line
 });
 
 

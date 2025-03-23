@@ -25,8 +25,8 @@ export function getUrl(url: string) {
     return `http://localhost:3000${url}`;
   }
 
-  if (process.env.URL === "https://myresume.guru") {
-    return `https://myresume.guru${url}`;
+  if (process.env.URL === "https://www.myresume.guru") {
+    return `https://www.myresume.guru${url}`;
   }
 
   console.log("[UTILS][GET URL]", `${process.env.URL}${url}`)
