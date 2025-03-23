@@ -54,7 +54,7 @@ export function ResumeProvider({
 		data: resumeData,
 		status: resumeStatus,
 		error: resumeError,
-	} = api.queries.resume.useGetResume(fileKey, refetchInterval);
+	} = useGetResume(fileKey, refetchInterval);
 
 	useEffect(() => {
 		if (resumeStatus === "success" && resumeData && resumeData.resume) {
