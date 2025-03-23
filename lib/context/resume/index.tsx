@@ -2,7 +2,7 @@
 
 import { saveMessageToDb } from "@/actions";
 import { api } from "@/lib/api";
-import { useGetResume } from "@/lib/api/queries/resumes";
+import { useGetResume } from "@/app/app/(resumes)/lib/queries";
 import { useChat } from "ai/react";
 import type React from "react";
 import { createContext, useContext, useEffect, useState } from "react";

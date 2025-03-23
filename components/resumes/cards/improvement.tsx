@@ -27,7 +27,7 @@ const getPriorityColor = (priority: number) => {
 
 export default function ImprovementCard({ title, text, priority }: Props) {
   return (
-    <Card className="p-6">
+    <Card className="p-6 rounded-none">
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1">
           <div className="flex items-center gap-3 mb-3">

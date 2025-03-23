@@ -16,6 +16,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
+import { useGetResumes } from "@/app/app/(resumes)/lib/queries";
 export default function CreateApplicationCard({companyId}: {companyId?: number | undefined | null}) {
   const [title, setTitle] = useState<string>("");
   const [url, setUrl] = useState<string>("");
@@ -23,7 +24,7 @@ export default function CreateApplicationCard({companyId}: {companyId?: number |
   const [jobDescription, setJobDescription] = useState<string>("");
   const complete = !!(title.length > 0 && url.length > 0 && resumeId && resumeId.toString().length > 0 && jobDescription.length > 0);
 
-  const { data, status, error } = api.queries.resume.useGetResumes();
+  const { data, status, error } = useGetResumes();
   const { mutate: addApplication, isPending } =
     api.mutations.applications.useAddApplication({
       setTitle,

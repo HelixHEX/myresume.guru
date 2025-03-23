@@ -23,7 +23,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 						<UserButton />
 					</div>
 				</header>
-				<div className="px-4 pb-4">{children}</div>
+				<div className="pb-4">{children}</div>
 			</SidebarInset>
 		</SidebarProvider>
 	);

@@ -2,7 +2,7 @@ import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { RESUME_ANALYSIS_STATUS } from "@/lib/actions/resume";
 
-const getResume = async (fileKey: string) => {
+export const getResume = async (fileKey: string) => {
   const res = await axios.get(`/api/resume/${fileKey}`);
   return res.data;
 };
@@ -15,7 +15,7 @@ export const useGetResume = (fileKey: string, refetchInterval: number) => {
   });
 };
 
-const getResumes = async () => {
+export const getResumes = async () => {
   const res = await axios.get("/api/resume");
   return res.data;
 };
