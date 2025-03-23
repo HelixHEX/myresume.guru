@@ -22,8 +22,10 @@ export async function createCheckoutSession() {
       }
     })
 
-    if (!subscription) {
-      throw new Error("User already has an active subscription");
+    console.log("[CHECKOUT][SUBSCRIPTION]", subscription)
+    if (subscription) {
+      return redirect(getUrl('/app'))
+
     }
 
     let polarCustomerId: string | unknown = await POLAR_CUSTOMER_ID_KV.get(user.id);
@@ -65,9 +67,11 @@ export async function createCheckoutSession() {
 
     redirectPath = checkoutSession.url
 
+    return {success: true, redirectPath}
+
   } catch (error) {
     console.log("[Polar][Checkout Session] Error creating checkout session", error);
-    throw new Error("Failed to create checkout session. Please refresh and try again.");
+    // throw new Error("Failed to create checkout session. Please refresh and try again.");
   } finally {
     redirect(redirectPath as string)
   }

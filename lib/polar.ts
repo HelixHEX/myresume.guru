@@ -1,6 +1,7 @@
 import { Polar } from "@polar-sh/sdk";
 import { clerkClient } from "@clerk/nextjs/server";
 import prisma from "./prisma";
+import { tasks } from "@trigger.dev/sdk/v3";
 
 export const polar = new Polar({
 	//biome-ignore lint:Will fix later.
@@ -27,7 +28,7 @@ export const updateDbWithLatestSubscriptionData = async (subscriptionId: string)
 	}
 
 
-	await prisma.subscription.upsert({
+	const dbSubscription = await prisma.subscription.upsert({
 		where: {
 			userId: user.id,
 		},
@@ -44,12 +45,39 @@ export const updateDbWithLatestSubscriptionData = async (subscriptionId: string)
 			plan: 'Plus',
 			priceId: subscription.prices[0].id,
 			polarSubscriptionId: subscription.id,
+			endsAt: subscription.endsAt
 		}
 	})
+
+	const resumes = await prisma.resume.findMany({
+		where: {
+			AND: [{
+				userId,
+				status: "Limit Reached"
+			}]
+		}
+	})
+
+	if (subscription.status === 'active') {
+		for (const resume of resumes) {
+			await tasks.trigger('analyze-resume', {
+				fileKey: resume.fileKey,
+				userId: resume.userId,
+			})
+		}
+	}
 
 	await clerk.users.updateUserMetadata(userId, {
 		unsafeMetadata: {
 			plan: subscription.status === 'active' ? 'Plus' : 'Free',
 		}
 	})
+
+	if (subscription.status === 'canceled' && subscription.endsAt && subscription.endsAt < new Date()) {
+		await prisma.subscription.delete({
+			where: {
+				polarSubscriptionId: subscription.id
+			}
+		})
+	}
 }

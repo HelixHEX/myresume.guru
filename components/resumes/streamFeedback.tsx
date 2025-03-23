@@ -19,8 +19,9 @@ export default function StreamFeedback() {
 			toast.info("Analysis started! This may take a minute or two.");
 		} else if (resume?.status === "Limit Reached") {
 			toast.error("Daily Limit Reached");
+			setRefetchInterval(0)
 		}
-	}, [resume]);
+	}, [resume, setRefetchInterval]);
 
 	const handleGenerateFeedback = async () => {
 		if (!resume) return;
@@ -33,6 +34,7 @@ export default function StreamFeedback() {
 			setRefetchInterval(2000);
 			if (!result.success) {
 				toast.error(result.error as string);
+				setRefetchInterval(0)
 			} else {
 				toast.success("Analysis started! This may take a minute or two.");
 			}

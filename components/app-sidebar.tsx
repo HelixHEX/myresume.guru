@@ -7,6 +7,7 @@ import {
   Bot,
   BriefcaseBusiness,
   Command,
+  CreditCard,
   FileText,
   Frame,
   GalleryVerticalEnd,
@@ -85,6 +86,12 @@ const data = {
         },
       ],
     },
+    {
+      title: 'Billing',
+      url: 'https://polar.sh/myresumeguru/portal',
+      icon: CreditCard,
+
+    }
   ],
   
 }
