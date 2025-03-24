@@ -125,7 +125,7 @@ export default function Home() {
 						</Zoom>
 					</div>
 
-					<div className="items-center md:itesm-start mt-44 mb-[700px] sm:mb-44 h-[400] w-full flex flex-col md:flex-row justify-between">
+					<div className="items-center md:items-start py-44 w-full flex flex-col md:flex-row justify-between">
 						{/* <div className="md:w-[400px] self-center flex flex-col items-center md:h-[300px] h-[400px] w-full">
 							<Image
 								src="/images/hero2.png"
@@ -135,7 +135,7 @@ export default function Home() {
 								height={400}
 							/>
 						</div> */}
-						<div className=" h-[400] mt-24 md:mt-0 w-full flex flex-col">
+						<div className=" h-[400] md:mt-0 w-full flex flex-col">
 							<h1 className="font-bold text-4xl">
 								{"Get resume feedback that's actually meaningful"}
 							</h1>
