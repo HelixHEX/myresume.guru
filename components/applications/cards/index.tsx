@@ -6,7 +6,7 @@ import { MoveRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 type Props = {
-	id: number;
+	id: string;
 	title: string;
 	score: number;
 	company?: string;
