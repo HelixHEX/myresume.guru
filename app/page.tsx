@@ -81,7 +81,7 @@ export default function Home() {
 					</div>
 					<div className="flex flex-col w-full sm:self-center ">
 						<h1 className="text-4xl  font-bold">Why use myresume.guru?</h1>
-						<div className="flex w-full items-center h-auto justify-between flex-col lg:flex-row mt-8">
+						<div className="flex w-full items-center h-full justify-between flex-col lg:flex-row mt-8">
 							<FeatureCard
 								title="AI-powered suggestions"
 								description="Our AI powered resume scanner will help you identify areas of improvement."
