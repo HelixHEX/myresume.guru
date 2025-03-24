@@ -26,7 +26,7 @@ export default function ApplicationTitle({ id }: { id: string }) {
 	const application = applicationData.application;
 	return (
 		<div className="flex mt-[-6px] ">
-			<h1 className="self-center font-light  text-2xl text-black">
+			<h1 className="self-center w-full md:w-[500px] font-bold  text-2xl text-black">
 				{status === "Loading" && !application
 					? "Loading..."
 					: application?.title}

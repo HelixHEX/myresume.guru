@@ -20,7 +20,7 @@ export default function ApplicationCard({ id, title, company, score }: Props) {
 				<h2 className="text-md font-medium">{title}</h2>
 				<Button
 					onClick={() => router.push(`/app/applications/${id}`)}
-					className="bg-white self-center rounded-full text-black text-xl hover:bg-gray-800 hover:border-gray-800 hover:text-white w-12 h-12 border-2 border-black"
+					className="bg-white hover:cursor-pointer self-center rounded-full text-black text-xl hover:bg-gray-800 hover:border-gray-800 hover:text-white w-12 h-12 border-2 border-black"
 				>
 					<MoveRight />
 				</Button>
