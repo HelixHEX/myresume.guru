@@ -10,6 +10,8 @@ import { useUser } from "@clerk/nextjs";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Info } from "lucide-react";
 
 export default function ResumeDetails({
 	fileKey,
@@ -30,9 +32,12 @@ export default function ResumeDetails({
 				toast.error(
 					"You have reached the daily limit of resumes you can get feedback on. Please upgrade to continue.",
 				);
+			} else if (resume.status === "JSON Generated") {
+				setRefetchInterval(1000);
 			}
 		}
 	}, [resume]);
+
 	const handleGenerateFeed = async () => {
 		const result = await startResumeAnalysis(resume?.fileKey!, user!.id);
 		setRefetchInterval(1000);
@@ -45,24 +50,38 @@ export default function ResumeDetails({
 	};
 	return (
 		<>
-			<div className="p-4">
+			<div className="p-4 flex flex-col gap-2">
 				<Link
 					href={`${process.env.NEXT_PUBLIC_UPLOAD_THING_FILE_URL}/${resume?.fileKey}`}
 					className="text-[#373737] text-lg hover:underline hover:text-blue-800 font-bold"
 				>
 					{resume?.name}
 				</Link>
-				{resume?.status !== "Analyzed" && !isLoading && (
+				{/* {resume?.status !== "Analyzed" && !isLoading && (
 					<Button
 						disabled={resume?.status === "Limit Reached" || isLoading}
 						className="w-fit mb-4"
 						onClick={() => handleGenerateFeed()}
 					>
-						{resume?.status === "Not Started" ||
-						resume?.status === "Limit Reeched"
+						{resume?.status === "Not Started"
 							? "Generate Feedback"
-							: resume?.status}
+							: resume?.status === "JSON Generated" && resume?.status}
 					</Button>
+				)} */}
+				{resume?.status === "Not Started" && !isLoading && (
+					<Button className="w-fit mb-4" onClick={() => handleGenerateFeed()}>
+						Generate Feedback
+					</Button>
+				)}
+
+				{resume?.status === "Limit Reached" && !isLoading && (
+					<Alert variant="destructive" className="w-[400px]">
+						<Info className="h-4 w-4]" />
+						{/* <AlertTitle>Error</AlertTitle> */}
+						<AlertDescription>
+						You have reached the daily limit of feedbacks you can generate. Please upgrade to continue.
+						</AlertDescription>
+					</Alert>
 				)}
 			</div>
 
