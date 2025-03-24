@@ -36,8 +36,7 @@ const ThreadEmpty: FC = () => {
 				<AvatarFallback>C</AvatarFallback>
 			</Avatar>
 			<p className="mt-4 text-xl">
-				Hi Im your resume assistant. You can asks me things like "What are my
-				strengths?" or "What should I change about my resume?"
+			{'	Hi Im your resume assistant. You can asks me things like "What are my strengths?" or "What should I change about my resume?"'}
 			</p>
 		</div>
 	);

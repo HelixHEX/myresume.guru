@@ -73,7 +73,11 @@ const ThreadWelcome: FC = () => {
 		<ThreadPrimitive.Empty>
 			<div className="flex w-full max-w-[var(--thread-max-width)] flex-grow flex-col">
 				<div className="flex w-full flex-grow flex-col items-center justify-center">
-					<p className="mt-4 font-medium text-center">Hi Im your resume assistant. You can asks me things like "What are my strengths?" or "What should I change about my resume?"</p>
+					<p className="mt-4 font-medium text-center">
+						{
+							'Hi Im your resume assistant. You can asks me things like "What are my strengths?" or "What should I change about my resume?"'
+						}
+					</p>
 				</div>
 				<ThreadWelcomeSuggestions />
 			</div>
@@ -101,7 +105,7 @@ const ThreadWelcomeSuggestions: FC = () => {
 				autoSend
 			>
 				<span className="line-clamp-2 text-ellipsis text-sm font-semibold">
-					I have a job interview, help me prepare. 
+					I have a job interview, help me prepare.
 				</span>
 			</ThreadPrimitive.Suggestion>
 		</div>
