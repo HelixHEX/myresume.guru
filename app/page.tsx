@@ -79,7 +79,7 @@ export default function Home() {
 							</Zoom>
 						</div>
 					</div>
-					<div className="flex mt-[150px] sm:mt-44 flex-col w-full sm:self-center ">
+					<div className="flex pt-[150px] sm:mt-44 flex-col w-full sm:self-center ">
 						<h1 className="text-4xl  font-bold">Why use myresume.guru?</h1>
 						<div className="flex w-full items-center h-auto justify-between flex-col lg:flex-row mt-8">
 							<FeatureCard
