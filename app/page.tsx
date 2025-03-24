@@ -2,7 +2,16 @@
 import Header from "@/components/header";
 import FeatureCard from "@/components/home/featureCard";
 import { Button } from "@/components/ui/button";
-import { BriefcaseBusiness, CircleCheck, FileEdit, FileText, Megaphone, Search, Sparkles, WandSparkles } from "lucide-react";
+import {
+	BriefcaseBusiness,
+	CircleCheck,
+	FileEdit,
+	FileText,
+	Megaphone,
+	Search,
+	Sparkles,
+	WandSparkles,
+} from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Zoom from "react-reveal/Zoom";
@@ -50,7 +59,16 @@ export default function Home() {
 						</Zoom>
 					</div>
 
-					<div className="items-center md:itesm-start mt-44 mb-[400px] sm:mb-44 h-[400] w-full flex flex-col md:flex-row justify-between">
+					<div className="flex flex-col w-full h-[650px] relative self-center">
+						<Image
+							src="/images/feedback_demo.png"
+							className="relative"
+							alt="Hero 2"
+							fill
+						/>
+					</div>
+
+					<div className="items-center md:itesm-start mt-44 mb-[500px] sm:mb-44 h-[400] w-full flex flex-col md:flex-row justify-between">
 						<div className="md:w-[400px] self-center flex flex-col items-center md:h-[300px] h-[400px] w-full">
 							<Image
 								src="/images/hero2.png"
@@ -102,7 +120,6 @@ export default function Home() {
 								description="AI powered resume builder will help you create a resume that stands out from the crowd. (Coming soon...!)"
 								Icon={() => <FileEdit />}
 							/>
-							
 						</div>
 					</div>
 
