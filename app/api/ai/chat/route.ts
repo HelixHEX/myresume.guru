@@ -51,7 +51,7 @@ export async function POST(req: Request) {
   });
 
   const result = await streamText({
-    model: openai("gpt-3.5-turbo"),
+    model: openai("gpt-4o-mini"),
     messages: [{
       role: "system",
       content: `You are a resume guru assistant. Here is the resume text and improvements that have already been recommended. Resume: ${resume?.text} Improvements: ${resume?.improvements?.map((improvement) => `${improvement.title}: ${improvement.text}`).join(", ")}`
@@ -65,7 +65,7 @@ export async function POST(req: Request) {
         data: {
           content: text,
           role: "assistant",
-          userId: userId,
+          userId: userId!,
           chatId
         },
       });

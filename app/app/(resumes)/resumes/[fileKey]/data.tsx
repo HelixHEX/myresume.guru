@@ -1,20 +1,13 @@
 "use client";
-import Feedback from "@/components/resumes/feedback";
+
 import ResumeName from "@/components/resumes/resumeName";
-import { api } from "@/lib/api";
-import { context } from "@/lib/context";
-import Image from "next/image";
-import { useContext, useEffect, useState } from "react";
-import StreamFeedback from "@/components/resumes/streamFeedback";
-import { AssistantModal } from "@/components/ui/assistant-ui/assistant-modal";
+import {  useEffect, useState } from "react";
 import { useGetResume } from "../../lib/queries";
 import { Button } from "@/components/ui/button";
 import ImprovementCard from "@/components/resumes/cards/improvement";
-import { useGenerateFeedback } from "../../lib/mutations";
 import { startResumeAnalysis } from "@/lib/actions/resume";
 import { useUser } from "@clerk/nextjs";
 import { toast } from "sonner";
-import { useAssistantInstructions } from "@assistant-ui/react";
 
 export default function ResumeDetails({
 	fileKey,
@@ -27,10 +20,6 @@ export default function ResumeDetails({
 		fileKey,
 		refetchInterval,
 	);
-
-	useAssistantInstructions({
-		instruction: `You are a resume guru assistan. Here is the resume text and improvements that have already been recommended. Resume: ${resumeData?.resume?.text} Improvements: ${resumeData?.resume?.improvements?.map((improvement) => `${improvement.title}: ${improvement.text}`).join(", ")}`,
-	});
 	const resume = resumeData?.resume;
 	useEffect(() => {
 		if (resume) {
