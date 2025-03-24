@@ -17,6 +17,7 @@ export default function ResumeDetails({
 }: {
 	fileKey: Resume["fileKey"];
 }) {
+	const router = useRouter();
 	const { user } = useUser();
 	const [refetchInterval, setRefetchInterval] = useState(0);
 	const { data: resumeData, isLoading } = useGetResume(
