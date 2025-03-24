@@ -50,7 +50,7 @@ export default function Home() {
 						</Zoom>
 					</div>
 
-					<div className="items-center md:itesm-start mt-44 mb-[150px]  h-[400] w-full flex flex-col md:flex-row justify-between">
+					<div className="items-center md:itesm-start mt-44 mb-[400px]  h-[400] w-full flex flex-col md:flex-row justify-between">
 						<div className="md:w-[400px] self-center flex flex-col items-center md:h-[300px] h-[400px] w-full">
 							<Image
 								src="/images/hero2.png"
