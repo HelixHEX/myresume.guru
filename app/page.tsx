@@ -99,7 +99,7 @@ export default function Home() {
 							/>
 							<FeatureCard
 								title="AI Resume Builder"
-								description="Our AI powered resume builder will help you create a resume that stands out from the crowd. (Coming soon...!)"
+								description="AI powered resume builder will help you create a resume that stands out from the crowd. (Coming soon...!)"
 								Icon={() => <FileEdit />}
 							/>
 							
