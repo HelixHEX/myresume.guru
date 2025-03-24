@@ -77,9 +77,15 @@ export default function ResumeDetails({
 					<Alert variant="destructive" className="w-[400px]">
 						<Info className="h-4 w-4]" />
 
-						<AlertDescription>
-							You have reached the daily limit of feedbacks you can generate.
-							Please upgrade to continue.
+						<AlertDescription className="flex flex-col">
+							<p className="font-bold">
+								You have reached the daily limit of feedbacks you can generate.
+								Please{" "}
+								<span onClick={() => router.push("/plans")} className=" text-blue-800 underline w-auto hover:cursor-pointer">
+									upgrade
+								</span>{" "}
+								to continue.
+							</p>
 						</AlertDescription>
 					</Alert>
 				)}

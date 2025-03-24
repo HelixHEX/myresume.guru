@@ -17,7 +17,7 @@ export default async function Page(props: {
 			<div className="px-4">
 				<h1 className=" text-4xl font-bold text-black">Suggested Improvements</h1>
 				<div className="mt-8 md:mt-0 w-full flex flex-col">
-					<p className="text-gray-[#373737] mt-2 w-full md:w-3/5">
+					<p className="text-[#525252] mt-2 text-sm w-full md:w-3/5">
 						Get specific, actionable feedback on how to improve your resume. The
 						Al will highlight areas for improvement and provide clear
 						recommendations to help you make your resume stand out for your next
