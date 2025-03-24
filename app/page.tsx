@@ -81,7 +81,7 @@ export default function Home() {
 												</h3>
 											</Fade>
 										</div>
-										<div className="text-[#373737] whitespace-pre-wrap">
+										<p className="text-[#373737] text-left whitespace-pre-wrap">
 											<Fade out delay={200}>
 												The resume currently lacks a personal summary, which is
 												a crucial section that provides a snapshot of your
@@ -94,41 +94,23 @@ export default function Home() {
 											<Fade out delay={300}>**Actionable Steps:**</Fade>
 											<br />
 											<Fade out delay={400}>
-												{`1. **Write a Concise Summary:** Start with a strong
-												opening that highlights your key skills and experiences.
-												For example, "Dynamic Front-End Developer with over 5
-												years of experience in building scalable web
-												applications using React and Next.js."`}
+												{`1. **Write a Concise Summary:** Start with a strong opening that highlights your key skills and experiences. For example, "Dynamic Front-End Developer with over 5 years of experience in building scalable web applications using React and Next.js."`}
 											</Fade>
 											<br />
 											<Fade out delay={500}>
-												{`2. **Include Career Goals:** Mention your career
-												aspirations and how they align with the roles you are
-												applying for. For example, "Seeking to leverage
-												expertise in UI/UX design to contribute to innovative
-												projects at a forward-thinking tech company."`}
+												{`2. **Include Career Goals:** Mention your career aspirations and how they align with the roles you are applying for. For example, "Seeking to leverage expertise in UI/UX design to contribute to innovative projects at a forward-thinking tech company."`}
 											</Fade>
 											<br />
-											<Fade out delay={600}>
-												{`3. **Highlight Key Achievements:** Briefly mention one
-												or two significant accomplishments that demonstrate your
-												impact, such as "Led a team to increase app performance
-												by 30%, enhancing user experience."`}
+											<Fade out delay={600}> {`3. **Highlight Key Achievements:** Briefly mention one or two significant accomplishments that demonstrate your impact, such as "Led a team to increase app performance by 30%, enhancing user experience."`}
 											</Fade>
 											<br />
 											<br />
 											<Fade out delay={700}>**Example Summary:**</Fade>
 											<br />
 											<Fade out delay={800}>
-												{`"Innovative Front-End Developer with 5+ years of
-												experience in creating user-centric applications using
-												React and Next.js. Proven track record of improving app
-												performance and user satisfaction. Passionate about
-												leveraging technology to solve real-world problems and
-												eager to contribute to cutting-edge projects in a
-												dynamic tech environment."`}
+												{`"Innovative Front-End Developer with 5+ years of experience in creating user-centric applications using React and Next.js. Proven track record of improving app performance and user satisfaction. Passionate about leveraging technology to solve real-world problems and eager to contribute to cutting-edge projects in a dynamic tech environment."`}
 											</Fade>
-										</div>
+										</p>
 									</div>
 								</div>
 							</Card>
