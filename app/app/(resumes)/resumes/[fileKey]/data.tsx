@@ -1,6 +1,5 @@
 "use client";
 
-import ResumeName from "@/components/resumes/resumeName";
 import { useEffect, useState } from "react";
 import { useGetResume } from "../../lib/queries";
 import { Button } from "@/components/ui/button";
@@ -18,7 +17,6 @@ export default function ResumeDetails({
 }: {
 	fileKey: Resume["fileKey"];
 }) {
-	const router = useRouter();
 	const { user } = useUser();
 	const [refetchInterval, setRefetchInterval] = useState(0);
 	const { data: resumeData, isLoading } = useGetResume(
@@ -39,6 +37,7 @@ export default function ResumeDetails({
 	}, [resume]);
 
 	const handleGenerateFeed = async () => {
+		//biome-ignore lint:
 		const result = await startResumeAnalysis(resume?.fileKey!, user!.id);
 		setRefetchInterval(1000);
 		if (!result.success) {
@@ -77,9 +76,10 @@ export default function ResumeDetails({
 				{resume?.status === "Limit Reached" && !isLoading && (
 					<Alert variant="destructive" className="w-[400px]">
 						<Info className="h-4 w-4]" />
-						{/* <AlertTitle>Error</AlertTitle> */}
+
 						<AlertDescription>
-						You have reached the daily limit of feedbacks you can generate. Please upgrade to continue.
+							You have reached the daily limit of feedbacks you can generate.
+							Please upgrade to continue.
 						</AlertDescription>
 					</Alert>
 				)}
@@ -90,7 +90,6 @@ export default function ResumeDetails({
 					<ImprovementCard key={index} {...improvement} />
 				))}
 			</div>
-			{/* <AssistantModal fileKey={fileKey} /> */}
 		</>
 	);
 }

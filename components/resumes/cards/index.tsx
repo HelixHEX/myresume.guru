@@ -8,6 +8,13 @@ import { useRouter } from "next/navigation";
 
 export default function ResumeCard({ name, fileKey, createdAt }: Resume) {
 	const router = useRouter();
+
+	const formattedDate = new Date(createdAt).toLocaleDateString();
+	const time = new Date(createdAt).toLocaleTimeString();
+	const formattedTime =
+		time.substring(0, time.length - 6) +
+		" " +
+		time.slice(time.length - 2, time.length);
 	return (
 		<Card
 			onClick={() => router.push(`/app/resumes/${fileKey}`)}
@@ -18,12 +25,8 @@ export default function ResumeCard({ name, fileKey, createdAt }: Resume) {
 			</CardHeader>
 			<CardContent className="h-full w-full pt-3 flex-col flex items-end">
 				<div className="flex gap-2  h-full   flex-row justify-end">
-					<p className="text-sm text-gray-500">
-						{new Date(createdAt).toLocaleDateString()}
-					</p>
-					<p className="text-sm text-gray-500">
-						{new Date(createdAt).toLocaleTimeString()}
-					</p>
+					<p className="text-sm text-gray-500">{formattedDate}</p>
+					<p className="text-sm text-gray-500">{formattedTime}</p>
 					{/* <Button
             onClick={() => router.push(`/app/resumes/${fileKey}`)}
             className="bg-white rounded-full text-black text-xl hover:bg-gray-800 hover:border-gray-800 hover:text-white w-10 h-10 border-2 border-black"
