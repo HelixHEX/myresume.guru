@@ -50,7 +50,7 @@ export default function Home() {
 						</Zoom>
 					</div>
 
-					<div className="items-center md:itesm-start mt-44  h-[400] w-full flex flex-col md:flex-row justify-between">
+					<div className="items-center md:itesm-start mt-44 mb-[150px]  h-[400] w-full flex flex-col md:flex-row justify-between">
 						<div className="md:w-[400px] self-center flex flex-col items-center md:h-[300px] h-[400px] w-full">
 							<Image
 								src="/images/hero2.png"
@@ -79,7 +79,7 @@ export default function Home() {
 							</Zoom>
 						</div>
 					</div>
-					<div className="flex pt-[150px] sm:mt-44 flex-col w-full sm:self-center ">
+					<div className="flex flex-col w-full sm:self-center ">
 						<h1 className="text-4xl  font-bold">Why use myresume.guru?</h1>
 						<div className="flex w-full items-center h-auto justify-between flex-col lg:flex-row mt-8">
 							<FeatureCard
