@@ -1,7 +1,7 @@
 import { context } from "@/lib/context";
 import { useContext, useState } from "react";
 import { Button } from "../ui/button";
-import { useAssistantModalOpenState, useM } from "../assistant-ui/assistant-modal";
+import { useAssistantModalOpenState } from "../assistant-ui/assistant-modal";
 import { Sparkles } from "lucide-react";
 
 export default function ResumeName() {
