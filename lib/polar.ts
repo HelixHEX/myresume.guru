@@ -28,7 +28,7 @@ export const updateDbWithLatestSubscriptionData = async (subscriptionId: string)
 	}
 
 
-	const dbSubscription = await prisma.subscription.upsert({
+	await prisma.subscription.upsert({
 		where: {
 			userId: user.id,
 		},

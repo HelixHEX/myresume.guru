@@ -31,7 +31,7 @@ export default function ImprovementCard({ title, text, priority }: Props) {
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1">
           <div className="flex items-center gap-3 mb-3">
-            <h3 className="text-lg font-semibold">{title}</h3>
+            <h3 className="text-xl font-bold">{title}</h3>
             {/* <Badge 
               className={`${getPriorityColor(priority)} cursor-default`}
               variant="secondary"
@@ -39,7 +39,7 @@ export default function ImprovementCard({ title, text, priority }: Props) {
               Priority {priority}
             </Badge> */}
           </div>
-          <div className="text-gray-600 whitespace-pre-wrap">
+          <div className="text-[#373737] whitespace-pre-wrap">
             {text}
           </div>
         </div>

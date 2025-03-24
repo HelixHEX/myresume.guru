@@ -1,19 +1,18 @@
 import { context } from "@/lib/context";
 import { useContext, useState } from "react";
 import { Button } from "../ui/button";
-import { useModalOpen } from "../ui/assistant-ui/assistant-modal";
+import { useAssistantModalOpenState, useM } from "../assistant-ui/assistant-modal";
 import { Sparkles } from "lucide-react";
 
 export default function ResumeName() {
-	const { resume, status } = useContext(context.resume.ResumeContext);
-	const setOpen = useModalOpen((s) => s.setOpen);
+	const { resume } = useContext(context.resume.ResumeContext);
+	const [_open, setOpen] = useAssistantModalOpenState({defaultOpen: false});
 
 	return (
-		<div className="self-start md:self-center">
+		<div className="">
 			<>
 				<p className="w-auto  underline text-gray-400">{resume?.name}</p>
 				<Button
-					disabled={resume?.status !== "Analyzed"}
 					onClick={() => setOpen(true)}
 					className="mt-2 w-full h-8"
 				>
