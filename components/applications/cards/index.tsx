@@ -1,39 +1,30 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import Link from "next/link";
+import { MoveRight } from "lucide-react";
+import { useRouter } from "next/navigation";
 
-export default function ApplicationCard({
-  title,
-  id,
-  company,
-  score,
-}: {
-  title: string;
-  id: string;
-  company?: string;
-  score: number;
-}) {
-  return (
-    <Link href={`/app/applications/${id}`}>
-      <Card className="hover:bg-gray-50 transition-all duration-200">
-        <CardHeader>
-          <div className="flex justify-between">
-            <div>
-              <h2 className="text-lg font-medium">{title}</h2>
-              <p className="text-sm text-gray-500">{company}</p>
-            </div>
-            <div className="flex flex-col items-end">
-              <p className="text-sm text-gray-500">Match Score</p>
-              <p className="text-lg font-medium">{score}%</p>
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <Progress value={score} />
-        </CardContent>
-      </Card>
-    </Link>
-  );
+type Props = {
+	id: number;
+	title: string;
+	score: number;
+	company?: string;
+};
+
+export default function ApplicationCard({ id, title, company, score }: Props) {
+	const router = useRouter();
+	return (
+		<Card className="w-full flex items-center md:w-[270px] lg:w-[320px] h-auto  min-h-[100px]">
+			<CardContent className="flex mt-6 justify-between flex-row h-full w-full self-center relative items-center">
+				<h2 className="text-md font-medium">{title}</h2>
+				<Button
+					onClick={() => router.push(`/app/applications/${id}`)}
+					className="bg-white self-center rounded-full text-black text-xl hover:bg-gray-800 hover:border-gray-800 hover:text-white w-12 h-12 border-2 border-black"
+				>
+					<MoveRight />
+				</Button>
+			</CardContent>
+		</Card>
+	);
 }
