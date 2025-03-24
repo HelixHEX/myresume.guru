@@ -1,12 +1,10 @@
 "use client";
 
-import { context } from "@/lib/context";
-import { useContext } from "react";
+import { useGetApplication } from "@/lib/api/queries/applications";
 
 export default function ApplicationDescription({ id }: { id: string }) {
-  const { application, status } = useContext(
-    context.application.ApplicationContext
-  );
+  const { data: applicationData, status: applicationStatus } = useGetApplication(id);
+  const application = applicationData?.application;
 
   if (!application) return <p>Loading...</p>;
   return (

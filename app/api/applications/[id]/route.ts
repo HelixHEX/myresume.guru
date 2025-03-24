@@ -32,13 +32,15 @@ export async function POST(request: Request) {
 }
 
 
-export async function GET(request: NextRequest) {
-  const searchParams = request.nextUrl.searchParams
-  const id = searchParams.get("id")
+export async function GET(
+  request: Request,
+  props: { params: Promise<{ id: Application["id"] }> }) {
+  const params = await props.params;
+  const { id } = params;
 
   let application = await prisma.application.findUnique({
     where: {
-      id: id ? Number.parseInt(id) : undefined,
+      id
     },
     include: {
       applicationScores: true,
@@ -55,86 +57,86 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Current resume not found" });
   }
 
-  await prisma.application.update({
-    where: {
-      id: application.id,
-    },
-    data: {
-      aiStatus: "analyzing",
-    },
-  });
+  // await prisma.application.update({
+  //   where: {
+  //     id: application.id,
+  //   },
+  //   data: {
+  //     aiStatus: "analyzing",
+  //   },
+  // });
 
-  if (
-    application.aiStatus !== "done" ||
-    application.applicationScores.length === 0
-  ) {
-    const result = await generateObject({
-      model: openai("gpt-3.5-turbo"),
-      messages: [
-        {
-          role: "user",
-          content: `This is a resume analysis tool. You will be analyzing a user-uploaded resume that has been converted to plain text and will see how well their resume matches the job description.
-        
+  // if (
+  //   application.aiStatus !== "done" ||
+  //   application.applicationScores.length === 0
+  // ) {
+  //   const result = await generateObject({
+  //     model: openai("gpt-3.5-turbo"),
+  //     messages: [
+  //       {
+  //         role: "user",
+  //         content: `This is a resume analysis tool. You will be analyzing a user-uploaded resume that has been converted to plain text and will see how well their resume matches the job description.
 
-        Analysis:
-          1. Identify key sections like "Summary," "Experience," "Skills," and "Education." Extract relevant information from each section (e.g., job titles, companies, skills, degrees).
-          2. Provide scores for 
-            * Relevant Skills: percentage out of 100 that the resume has relevant skills to the job description.
-            * Work Experience: percentage out of 100 that the resume has relevant work experience to the job description.
-            * Education: percentage out of 100 that the resume has relevant education to the job description.
-            * Relevant Keywords: percentage out of 100 that the resume has relevant keywords to the job description.
 
-        Job Description:
-        ${application.description}
+  //       Analysis:
+  //         1. Identify key sections like "Summary," "Experience," "Skills," and "Education." Extract relevant information from each section (e.g., job titles, companies, skills, degrees).
+  //         2. Provide scores for 
+  //           * Relevant Skills: percentage out of 100 that the resume has relevant skills to the job description.
+  //           * Work Experience: percentage out of 100 that the resume has relevant work experience to the job description.
+  //           * Education: percentage out of 100 that the resume has relevant education to the job description.
+  //           * Relevant Keywords: percentage out of 100 that the resume has relevant keywords to the job description.
 
-        Resume:
-        ${application.currentResume.text}
-        `,
-        },
-        // { role: "user", content: test.text },
-      ],
-      schema: ApplicationScoreSchema,
-    });
+  //       Job Description:
+  //       ${application.description}
 
-    await prisma.applicationScore.createMany({
-      data: result.object.scores.map((score) => ({
-        title: score.title,
-        score: score.score,
-        userId: application!.userId,
-        applicationId: application!.id,
-        resumeId: application!.currentResume!.id,
-      })),
-    });
+  //       Resume:
+  //       ${application.currentResume.text}
+  //       `,
+  //       },
+  //       // { role: "user", content: test.text },
+  //     ],
+  //     schema: ApplicationScoreSchema,
+  //   });
 
-    // MOVE TO IF STATEMENT WHEN GENERATING THE RESULT
-    application = await prisma.application.findUnique({
-      where: {
-        id: id ? Number.parseInt(id) : undefined,
-      },
-      include: {
-        applicationScores: true,
-        currentResume: true,
-        feedbacks: { include: { resume: true } },
-      },
-    });
-  } else {
-    await prisma.application.update({
-      where: {
-        id: application.id,
-      },
-      data: {
-        aiStatus: "done",
-      },
-    });
-  }
-  await prisma.application.update({
-    where: {
-      id: application!.id,
-    },
-    data: {
-      aiStatus: "done",
-    },
-  });
+  //   await prisma.applicationScore.createMany({
+  //     data: result.object.scores.map((score) => ({
+  //       title: score.title,
+  //       score: score.score,
+  //       userId: application!.userId,
+  //       applicationId: application!.id,
+  //       resumeId: application!.currentResume!.id,
+  //     })),
+  //   });
+
+  //   // MOVE TO IF STATEMENT WHEN GENERATING THE RESULT
+  //   application = await prisma.application.findUnique({
+  //     where: {
+  //       id: id ? Number.parseInt(id) : undefined,
+  //     },
+  //     include: {
+  //       applicationScores: true,
+  //       currentResume: true,
+  //       feedbacks: { include: { resume: true } },
+  //     },
+  //   });
+  // } else {
+  //   await prisma.application.update({
+  //     where: {
+  //       id: application.id,
+  //     },
+  //     data: {
+  //       aiStatus: "done",
+  //     },
+  //   });
+  // }
+  // await prisma.application.update({
+  //   where: {
+  //     id: application!.id,
+  //   },
+  //   data: {
+  //     aiStatus: "done",
+  //   },
+  // });
 
 
   return NextResponse.json({ application });

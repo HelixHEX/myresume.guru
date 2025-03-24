@@ -1,38 +1,39 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { MoveRight } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { Progress } from "@/components/ui/progress";
+import Link from "next/link";
 
-type Props = {
-  id: number;
+export default function ApplicationCard({
+  title,
+  id,
+  company,
+  score,
+}: {
   title: string;
-  score: number;
+  id: string;
   company?: string;
-};
-
-export default function ApplicationCard({ id, title, company, score }: Props) {
-  const router = useRouter();
+  score: number;
+}) {
   return (
-    <Card className="w-full md:w-[270px] lg:w-[320px] min-h-[180px] h-full">
-      <CardHeader className="flex  flex-col">
-        <h2 className="text-lg font-medium">{title}</h2>
-        {company && (
-          <p className="text-sm  text-gray-800">Company: {company}</p>
-        )}
-        <p className=" text-sm text-gray-800">Match: {score}%</p>
-      </CardHeader>
-      <CardContent>
-        <div className="flex flex-row justify-end">
-          <Button
-            onClick={() => router.push(`/app/applications/${id}`)}
-            className="bg-white rounded-full text-black text-xl hover:bg-gray-800 hover:border-gray-800 hover:text-white w-12 h-12 border-2 border-black"
-          >
-            <MoveRight />
-          </Button>
-        </div>
-      </CardContent>
-    </Card>
+    <Link href={`/app/applications/${id}`}>
+      <Card className="hover:bg-gray-50 transition-all duration-200">
+        <CardHeader>
+          <div className="flex justify-between">
+            <div>
+              <h2 className="text-lg font-medium">{title}</h2>
+              <p className="text-sm text-gray-500">{company}</p>
+            </div>
+            <div className="flex flex-col items-end">
+              <p className="text-sm text-gray-500">Match Score</p>
+              <p className="text-lg font-medium">{score}%</p>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <Progress value={score} />
+        </CardContent>
+      </Card>
+    </Link>
   );
 }

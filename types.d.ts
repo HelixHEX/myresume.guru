@@ -25,7 +25,7 @@ type Company = {
 };
 
 type Application = {
-  id: number;
+  id: string;
   createdAt: string;
   updatedAt: string;
   userId: string;
@@ -70,7 +70,7 @@ type Feedback = {
   status: string;
 
   application?: Application | null;
-  applicationId?: number | null;
+  applicationId?: string | null;
   resume?: Resume | null;
   resumeId?: number | null;
   actionableFeedbacks?: ActionableFeedback[];
@@ -104,7 +104,7 @@ type ActionableFeedback = {
 
   feedback?: Feedback | null;
   application?: Application | null;
-  applicationId?: number | null;
+  applicationId?: string | null;
   resume?: Resume | null;
   resumeId?: number | null;
 }
@@ -125,7 +125,7 @@ type Message = {
   role: string;
 
   application?: Application | null;
-  applicationId?: number | null;
+  applicationId?: string | null;
   resume?: Resume | null;
   resumeId?: number | null;
 }

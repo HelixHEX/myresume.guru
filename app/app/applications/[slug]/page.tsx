@@ -7,18 +7,18 @@ import { context } from "@/lib/context";
 
 export default async function Page(props: { params: Promise<{ slug: string }> }) {
   const params = await props.params;
+  
   return (
-    <context.application.ApplicationProvider id={params.slug}>
       <div className="px-4 flex flex-col w-full h-full ">
         <div className="flex mt-2">
           {/* {params.slug} */}
-          <ApplicationTitle id={"1"} />
+          <ApplicationTitle id={params.slug} />
         </div>
         <h2 className="mt-4 font-semibold text-lg">Job Description</h2>
-        <ApplicationDescription id={"1"} />
-        <h2 className="mt-20 md:mt-28 font-semibold text-lg">
+        <ApplicationDescription id={params.slug} />
+        {/* <h2 className="mt-20 md:mt-28 font-semibold text-lg">
           Compare to Job Posting
-        </h2>
+        </h2> */}
         {/* <div className="mt-4 w-full flex flex-col">
           <div className="w-full flex justify-between">
             <p className="font-semibold">Job Requirments</p>
@@ -38,7 +38,7 @@ export default async function Page(props: { params: Promise<{ slug: string }> })
             <p className=" text-green-400">95%</p>
           </div>
         </div> */}
-        <ApplicationScores />
+        {/* <ApplicationScores /> */}
         {/* <h2 className="mt-28 font-bold text-2xl">Suggested Improvements</h2>
       <p className="mt-4">{"We've used AI to help you improve your resume!"}</p>
       <div className="flex flex-col mt-8">
@@ -52,6 +52,5 @@ export default async function Page(props: { params: Promise<{ slug: string }> })
         ))}
       </div> */}
       </div>
-    </context.application.ApplicationProvider>
   );
 }
