@@ -4,6 +4,7 @@ import Query from "./query";
 import { Analytics } from "@vercel/analytics/react";
 import { Manrope } from "next/font/google";
 import { cn } from "@/lib/utils";
+import AIProvider from "./ai";
 const manrope = Manrope({ subsets: ["latin"], variable: "--font-sans" });
 
 export default function Providers({ children }: { children: React.ReactNode }) {

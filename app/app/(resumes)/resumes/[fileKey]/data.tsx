@@ -14,6 +14,7 @@ import { useGenerateFeedback } from "../../lib/mutations";
 import { startResumeAnalysis } from "@/lib/actions/resume";
 import { useUser } from "@clerk/nextjs";
 import { toast } from "sonner";
+import { useAssistantInstructions } from "@assistant-ui/react";
 
 export default function ResumeDetails({
 	fileKey,
@@ -27,6 +28,9 @@ export default function ResumeDetails({
 		refetchInterval,
 	);
 
+	useAssistantInstructions({
+		instruction: `You are a resume guru assistan. Here is the resume text and improvements that have already been recommended. Resume: ${resumeData?.resume?.text} Improvements: ${resumeData?.resume?.improvements?.map((improvement) => `${improvement.title}: ${improvement.text}`).join(", ")}`,
+	});
 	const resume = resumeData?.resume;
 	useEffect(() => {
 		if (resume) {
@@ -68,7 +72,7 @@ export default function ResumeDetails({
 					{resume?.status === "Not Started"
 						? "Generate Feedback"
 						: resume?.status === "Analyzing"
-							? "Generating"
+							? "Analyzing..."
 							: isLoading
 								? "Loading..."
 								: "Analyzed"}
@@ -80,7 +84,7 @@ export default function ResumeDetails({
 					<ImprovementCard key={index} {...improvement} />
 				))}
 			</div>
-			<AssistantModal />
+			{/* <AssistantModal fileKey={fileKey} /> */}
 		</>
 	);
 }

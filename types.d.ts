@@ -1,4 +1,3 @@
-
 type Resume = {
   id: number;
   createdAt: Date;
@@ -118,7 +117,7 @@ type MessageInput = {
 }
 
 type Message = {
-  id: number;
+  id: string;
   createdAt: Date;
   updatedAt: Date;
   userId: string;

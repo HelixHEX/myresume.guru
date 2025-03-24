@@ -27,6 +27,16 @@ model Subscription {
   endsAt              DateTime?
 }
 
+model Chat {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  userId    String
+
+  messages  Message[]
+  resumes   Resume[]
+}
+
 model Resume {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now()) @map("created_at")
@@ -54,6 +64,8 @@ model Resume {
   actionableFeedbacks ActionableFeedback[]
   messages            Message[]
   improvements        Improvement[]        @relation("ResumeToImprovements")
+  chat                Chat?                @relation(fields: [chatId], references: [id])
+  chatId              Int?
 }
 
 model Company {
@@ -154,13 +166,15 @@ model ActionableFeedback {
 }
 
 model Message {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(uuid())
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
   userId    String
   content   String
   role      String
 
+  chat        Chat?        @relation(fields: [chatId], references: [id])
+  chatId      Int?
   application   Application? @relation(fields: [applicationId], references: [id])
   applicationId Int?
   resume        Resume?      @relation(fields: [resumeId], references: [id])
