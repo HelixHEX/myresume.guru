@@ -2,7 +2,7 @@
 import Header from "@/components/header";
 import FeatureCard from "@/components/home/featureCard";
 import { Button } from "@/components/ui/button";
-import { CircleCheck, Megaphone, Search, WandSparkles } from "lucide-react";
+import { BriefcaseBusiness, CircleCheck, FileEdit, FileText, Megaphone, Search, Sparkles, WandSparkles } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Zoom from "react-reveal/Zoom";
@@ -37,31 +37,6 @@ export default function Home() {
 							Try now!
 						</Button>
 					</div>
-					<div className="flex mt-44 flex-col w-full sm:self-center ">
-						<h1 className="text-4xl  font-bold">Why use myresume.guru?</h1>
-						<div className="flex w-full items-center h-auto justify-between flex-col lg:flex-row mt-8">
-							<FeatureCard
-								title="AI-powered suggestions"
-								description="Our AI powered resume scanner will help you identify areas of improvement."
-								Icon={() => <WandSparkles />}
-							/>
-							<FeatureCard
-								title="Instant feedback"
-								description="Get instant feedback on your resume and improve it in real-time."
-								Icon={() => <Search />}
-							/>
-							<FeatureCard
-								title="Resume score"
-								description="Get a score for your resume and see how it compares to others."
-								Icon={() => <CircleCheck />}
-							/>
-							<FeatureCard
-								title="Job application tips"
-								description="Get tips on how to apply for jobs and stand out from the crowd."
-								Icon={() => <Megaphone />}
-							/>
-						</div>
-					</div>
 					<div className="mt-44 flex flex-col w-full self-center">
 						<h1 className="text-4xl  font-bold">
 							The easiest way to get your resume reviewed
@@ -74,6 +49,7 @@ export default function Home() {
 							</p>
 						</Zoom>
 					</div>
+
 					<div className="items-center md:itesm-start mt-44  h-[400] w-full flex flex-col md:flex-row justify-between">
 						<div className="md:w-[400px] self-center flex flex-col items-center md:h-[300px] h-[400px] w-full">
 							<Image
@@ -103,6 +79,33 @@ export default function Home() {
 							</Zoom>
 						</div>
 					</div>
+					<div className="flex mt-44 flex-col w-full sm:self-center ">
+						<h1 className="text-4xl  font-bold">Why use myresume.guru?</h1>
+						<div className="flex w-full items-center h-auto justify-between flex-col lg:flex-row mt-8">
+							<FeatureCard
+								title="AI-powered suggestions"
+								description="Our AI powered resume scanner will help you identify areas of improvement."
+								Icon={() => <Sparkles />}
+							/>
+							<FeatureCard
+								title="AI Resume Guru"
+								description="Personalized AI resume assistant. You can ask questions about your resume or get tips on how to prepare for an interview."
+								Icon={() => <WandSparkles />}
+							/>
+							<FeatureCard
+								title="Job Application Tracker"
+								description="You can keep track of the jobs you've applied to and the status of your applications."
+								Icon={() => <BriefcaseBusiness />}
+							/>
+							<FeatureCard
+								title="AI Resume Builder"
+								description="Our AI powered resume builder will help you create a resume that stands out from the crowd. (Coming soon...!)"
+								Icon={() => <FileEdit />}
+							/>
+							
+						</div>
+					</div>
+
 					{/* <h1 className="mt-44 font-bold text-4xl text-center">
           Coming Soon...!
         </h1> */}

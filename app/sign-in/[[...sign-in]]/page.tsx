@@ -23,7 +23,7 @@ export default function Page() {
 						<SignIn path="/sign-in" />
 					</div>
 				</div>
-				<div className="md:w-full sm:w-3/5 hidden md:flex shadow-lg rounded-2x; h-full relative">
+				<div className="md:w-full sm:w-3/5 hidden md:flex shadow-lg rounded-2xl h-full relative">
 					<Image
 						src="/images/resume_2.jpg"
 						alt="Abstract"

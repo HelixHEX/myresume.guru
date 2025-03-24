@@ -17,7 +17,7 @@ export default function FeatureCard({
   return (
     <div className="w-full mb-8 lg:w-[220px]">
       <Zoom>
-        <Card className="w-full mb-8 h-72 lg:w-[220px] p-2">
+        <Card className="w-full mb-8 h-82 lg:w-[220px] p-2">
           <CardHeader>
             <Icon />
             <h1 className="text-lg font-bold">{title}</h1>
