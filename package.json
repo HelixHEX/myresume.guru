@@ -51,6 +51,7 @@
     "fs": "^0.0.1-security",
     "lucide": "^0.378.0",
     "lucide-react": "^0.378.0",
+    "motion": "^12.5.0",
     "nanoid": "^5.1.5",
     "next": "^15.2.3",
     "next-themes": "^0.3.0",

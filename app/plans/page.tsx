@@ -6,6 +6,7 @@ import { Check } from "lucide-react";
 import Header from "@/components/header";
 import CheckoutButton from "@/components/checkout-button";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
+import Footer from "@/components/fooer";
 
 export default function Plans() {
 	return (
@@ -101,6 +102,7 @@ export default function Plans() {
 					</div>
 				</div>
 			</div>
+				<Footer />
 		</>
 	);
 }

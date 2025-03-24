@@ -1,8 +1,10 @@
 "use client";
+import Footer from "@/components/fooer";
 import Header from "@/components/header";
 import FeatureCard from "@/components/home/featureCard";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { GlowingEffect } from "@/components/ui/glowing-effect";
 import {
 	BriefcaseBusiness,
 	CircleCheck,
@@ -81,7 +83,7 @@ export default function Home() {
 												</h3>
 											</Fade>
 										</div>
-										<p className="text-[#373737] text-left whitespace-pre-wrap">
+										<div className="text-[#373737] text-left whitespace-pre-wrap">
 											<Fade out delay={200}>
 												The resume currently lacks a personal summary, which is
 												a crucial section that provides a snapshot of your
@@ -91,7 +93,9 @@ export default function Home() {
 											</Fade>
 											<br />
 											<br />
-											<Fade out delay={300}>**Actionable Steps:**</Fade>
+											<Fade out delay={300}>
+												**Actionable Steps:**
+											</Fade>
 											<br />
 											<Fade out delay={400}>
 												{`1. **Write a Concise Summary:** Start with a strong opening that highlights your key skills and experiences. For example, "Dynamic Front-End Developer with over 5 years of experience in building scalable web applications using React and Next.js."`}
@@ -101,24 +105,28 @@ export default function Home() {
 												{`2. **Include Career Goals:** Mention your career aspirations and how they align with the roles you are applying for. For example, "Seeking to leverage expertise in UI/UX design to contribute to innovative projects at a forward-thinking tech company."`}
 											</Fade>
 											<br />
-											<Fade out delay={600}> {`3. **Highlight Key Achievements:** Briefly mention one or two significant accomplishments that demonstrate your impact, such as "Led a team to increase app performance by 30%, enhancing user experience."`}
+											<Fade out delay={600}>
+												{" "}
+												{`3. **Highlight Key Achievements:** Briefly mention one or two significant accomplishments that demonstrate your impact, such as "Led a team to increase app performance by 30%, enhancing user experience."`}
 											</Fade>
 											<br />
 											<br />
-											<Fade out delay={700}>**Example Summary:**</Fade>
+											<Fade out delay={700}>
+												**Example Summary:**
+											</Fade>
 											<br />
 											<Fade out delay={800}>
 												{`"Innovative Front-End Developer with 5+ years of experience in creating user-centric applications using React and Next.js. Proven track record of improving app performance and user satisfaction. Passionate about leveraging technology to solve real-world problems and eager to contribute to cutting-edge projects in a dynamic tech environment."`}
 											</Fade>
-										</p>
+										</div>
 									</div>
 								</div>
 							</Card>
 						</Zoom>
 					</div>
 
-					<div className="items-center md:itesm-start mt-44 mb-[700px] lg:mb-44 h-[400] w-full flex flex-col md:flex-row justify-between">
-						<div className="md:w-[400px] self-center flex flex-col items-center md:h-[300px] h-[400px] w-full">
+					<div className="items-center md:itesm-start mt-44 mb-[700px] sm:mb-44 h-[400] w-full flex flex-col md:flex-row justify-between">
+						{/* <div className="md:w-[400px] self-center flex flex-col items-center md:h-[300px] h-[400px] w-full">
 							<Image
 								src="/images/hero2.png"
 								className="w-full h-full"
@@ -126,13 +134,13 @@ export default function Home() {
 								width={400}
 								height={400}
 							/>
-						</div>
-						<div className=" h-[400] mt-24 md:mt-0 w-full md:w-96 flex flex-col">
+						</div> */}
+						<div className=" h-[400] mt-24 md:mt-0 w-full flex flex-col">
 							<h1 className="font-bold text-4xl">
 								{"Get resume feedback that's actually meaningful"}
 							</h1>
 							<Zoom>
-								<p className="mt-8">
+								<p className="mt-2 w-full md:w-[500px] ">
 									{
 										"Upload your resume and in seconds we'll assess your skills, experiences, and more. Also get help from our AI resume guru."
 									}
@@ -147,9 +155,69 @@ export default function Home() {
 						</div>
 					</div>
 					<div className="flex flex-col w-full sm:self-center ">
-						<h1 className="text-4xl  font-bold">Why use myresume.guru?</h1>
+						<h1 className="text-4xl  font-bold">Features</h1>
 						<div className="flex w-full items-center h-full justify-between flex-col lg:flex-row mt-8">
-							<FeatureCard
+							<ul className="grid grid-cols-1 grid-rows-none gap-4 md:grid-cols-12 md:grid-rows-3 lg:gap-4 xl:max-h-[34rem] xl:grid-rows-2">
+								{/* <Zoom> */}
+									<GridItem
+
+										area="md:[grid-area:1/1/2/7] xl:[grid-area:1/1/2/5]"
+										icon={
+											<Sparkles className="h-4 w-4 text-black dark:text-neutral-400" />
+										}
+										title="AI-powered suggestions"
+										description="Our AI powered resume scanner will help you identify areas of improvement."
+									/>
+								{/* </Zoom> */}
+
+								{/* <Zoom delay={600}> */}
+									<GridItem
+										delay={600}
+										area="md:[grid-area:1/7/2/13] xl:[grid-area:2/1/3/5]"
+										icon={
+											<WandSparkles className="h-4 w-4 text-black dark:text-neutral-400" />
+										}
+										title="AI Resume Guru"
+										description="Personalized AI resume assistant. You can ask questions about your resume or get tips on how to prepare for an interview."
+									/>
+								{/* </Zoom> */}
+
+								{/* <Zoom delay={400}> */}
+									<GridItem
+										delay={400}
+										area="md:[grid-area:2/1/3/7] xl:[grid-area:1/5/3/8]"
+										icon={
+											<BriefcaseBusiness className="h-4 w-4 text-black dark:text-neutral-400" />
+										}
+										title="Job Application Tracker"
+										description="You can keep track of the jobs you've applied to and the status of your applications."
+									/>
+								{/* </Zoom> */}
+
+								{/* <Zoom delay={600}> */}
+									<GridItem
+										delay={600}
+										area="md:[grid-area:2/7/3/13] xl:[grid-area:1/8/2/13]"
+										icon={
+											<FileEdit className="h-4 w-4 text-black dark:text-neutral-400" />
+										}
+										title="AI Resume Builder"
+										description="AI powered resume builder will help you create a resume that stands out from the crowd. (Coming soon...!)"
+									/>
+								{/* </Zoom> */}
+								{/* <Zoom delay={300}> */}
+									<GridItem
+										delay={300}
+										area="md:[grid-area:2/7/3/13] xl:[grid-area:2/8/2/13]"
+										icon={
+											<FileEdit className="h-4 w-4 text-black dark:text-neutral-400" />
+										}
+										title="Chrome Extension"
+										description="With the chrome extension, you can generate tailored resumes for job applications and auto apply to jobs on sites like LinkedIn & Indeed.  (Comming soon...!)"
+									/>
+								{/* </Zoom> */}
+							</ul>
+							{/* <FeatureCard
 								title="AI-powered suggestions"
 								description="Our AI powered resume scanner will help you identify areas of improvement."
 								Icon={() => <Sparkles />}
@@ -171,7 +239,7 @@ export default function Home() {
 								description="AI powered resume builder will help you create a resume that stands out from the crowd. (Coming soon...!)"
 								Icon={() => <FileEdit />}
 								delay={900}
-							/>
+							/> */}
 						</div>
 					</div>
 
@@ -180,6 +248,54 @@ export default function Home() {
         </h1> */}
 				</div>
 			</div>
+			<Footer />
 		</>
 	);
 }
+
+interface GridItemProps {
+	area: string;
+	icon: React.ReactNode;
+	title: string;
+	description: React.ReactNode;
+	delay?: number;
+}
+
+const GridItem = ({ area, icon, title, description, delay }: GridItemProps) => {
+	return (
+		<Zoom delay={delay}>
+			<li className={`min-h-[14rem] w-full list-none ${area}`}>
+				<div className="relative h-full rounded-2.5xl border  p-2  md:rounded-3xl md:p-3">
+					<GlowingEffect
+						variant="blue"
+						blur={0}
+						borderWidth={3}
+						spread={80}
+						glow={true}
+						disabled={false}
+						proximity={64}
+						inactiveZone={0.01}
+					/>
+					<div className="relative flex h-full flex-col justify-between gap-6 overflow-hidden rounded-xl border-0.75 p-6  dark:shadow-[0px_0px_27px_0px_#2D2D2D] md:p-6">
+						<div className="relative flex flex-1 flex-col justify-between gap-3">
+							<div className="w-fit rounded-lg border border-gray-600 p-2 ">
+								{icon}
+							</div>
+							<div className="space-y-3">
+								<h3 className="pt-0.5 text-xl/[1.375rem] font-semibold font-sans -tracking-4 md:text-2xl/[1.875rem] text-balance text-black dark:text-white">
+									{title}
+								</h3>
+								<h2
+									className="[&_b]:md:font-semibold [&_strong]:md:font-semibold font-sans text-sm/[1.125rem] 
+              md:text-base/[1.375rem]  text-black dark:text-neutral-400"
+								>
+									{description}
+								</h2>
+							</div>
+						</div>
+					</div>
+				</div>
+			</li>
+		</Zoom>
+	);
+};
