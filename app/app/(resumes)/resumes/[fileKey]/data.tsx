@@ -10,7 +10,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Info } from "lucide-react";
+import { Info, Loader2 } from "lucide-react";
 
 export default function ResumeDetails({
 	fileKey,
@@ -47,6 +47,15 @@ export default function ResumeDetails({
 			toast.success("Analysis started! This may take a minute or two.");
 		}
 	};
+
+	if (isLoading) {
+		return (
+			<div className="flex items-center justify-center w-full">
+				<div className="text-gray-800">Loading...</div>
+				<Loader2 className="ml-2 animate-spin text-gray-800" />
+			</div>
+		);
+	}
 	return (
 		<>
 			<div className="p-4 flex flex-col gap-2">
@@ -81,7 +90,10 @@ export default function ResumeDetails({
 							<p className="font-bold">
 								You have reached the daily limit of feedbacks you can generate.
 								Please{" "}
-								<span onClick={() => router.push("/plans")} className=" text-blue-800 underline w-auto hover:cursor-pointer">
+								<span
+									onClick={() => router.push("/plans")}
+									className=" text-blue-800 underline w-auto hover:cursor-pointer"
+								>
 									upgrade
 								</span>{" "}
 								to continue.
