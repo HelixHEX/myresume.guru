@@ -55,7 +55,7 @@ export function NavMain({
 					>
 						<SidebarMenuItem>
 							<CollapsibleTrigger asChild>
-								<SidebarMenuButton tooltip={item.title}>
+								<SidebarMenuButton className="cursor-pointer" tooltip={item.title}>
 									{item.icon && <item.icon />}
 									<span>{item.title}</span>
 									{item.items && (
@@ -79,7 +79,7 @@ export function NavMain({
 						</SidebarMenuItem>
 					</Collapsible>
 				))}
-				{user?.unsafeMetadata.plan !== "Plus" && (
+				{user && user?.unsafeMetadata.plan !== "Plus" && (
 					<SidebarMenuItem>
 						<SidebarMenuButton onClick={() => router.push("/plans")} className="cursor-pointer" tooltip="Upgrade">
 							<Sparkles />
