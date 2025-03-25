@@ -156,9 +156,11 @@ export const editorSchema = z.object({
 		.optional(),
 });
 
-export default function Editor() {
+export default function Editor({ resumeId }: { resumeId?: string }) {
 	const { user } = useUser();
-	const { data: resumeEditorData, isLoading } = useGetResumeEditorData("");
+	const { data: resumeEditorData, isLoading } = useGetResumeEditorData(
+		resumeId ?? "",
+	);
 	const { mutate: saveResumeEditorData } = useSaveResumeEditorData("");
 
 	useEffect(() => {
@@ -218,6 +220,7 @@ function EditorForm({
 	const form = useForm<z.infer<typeof editorSchema>>({
 		resolver: zodResolver(editorSchema),
 		defaultValues: {
+			name: resumeData?.name || "",
 			firstName: resumeData?.firstName || firstName,
 			lastName: resumeData?.lastName || lastName,
 			phone: resumeData?.phone || "",
@@ -371,22 +374,6 @@ function EditorForm({
 				<div className="mt-8">
 					<Accordion type="multiple">
 						<EditorSection value="work-experience" title="Work Experience">
-							<Button
-								onClick={() =>
-									appendWorkExperience({
-										title: "",
-										company: "",
-										summary: [{ summaryPoint: "" }],
-										startDate: "",
-										endDate: "",
-										location: "",
-										current: false,
-									})
-								}
-								className="sm:bg-white rounded-none  sm:text-blue-800 sm:hover:bg-gray-300 sm:hover:text-blue-800 bg-blue-800 text-white hover:bg-blue-900 font-bold cursor-pointer"
-							>
-								Add Work Experience
-							</Button>
 							{workExperienceFields.map((workExperienceField, index) => (
 								<div key={workExperienceField.id} className="pt-10">
 									<div className="flex justify-between">
@@ -824,7 +811,7 @@ export function EditorSection({
 }) {
 	return (
 		<AccordionItem value={value}>
-			<AccordionTrigger className="font-bold cursor-pointer text-md text-blue-800 sm:text-white">
+			<AccordionTrigger className="font-bold cursor-pointer text-2xl text-blue-800 sm:text-white">
 				{title}
 			</AccordionTrigger>
 			<AccordionContent>{children}</AccordionContent>

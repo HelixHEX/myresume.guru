@@ -18,12 +18,12 @@ model Subscription {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  userId              String @unique
+  userId              String    @unique
   status              String
   plan                String
   priceId             String
   polarCustomerId     String
-  polarSubscriptionId String @unique
+  polarSubscriptionId String    @unique
   endsAt              DateTime?
 }
 
@@ -33,8 +33,8 @@ model Chat {
   updatedAt DateTime @updatedAt @map("updated_at")
   userId    String
 
-  messages  Message[]
-  resumes   Resume[]
+  messages Message[]
+  resumes  Resume[]
 }
 
 model Resume {
@@ -56,6 +56,22 @@ model Resume {
   companies         String[] @map("companies_worked")
   jobTitles         String[] @map("job_titles")
   education         String[] @map("education_institutions")
+
+  firstName      String? 
+  lastName       String? 
+  email          String? 
+  phone          String? 
+  location       String? 
+  website        String? 
+  github         String? 
+  linkedin       String?
+  twitter        String? 
+  summary        String? 
+  skills         String?
+  workExperience Json[] @map("work_experience")
+  education_new  Json[] @map("education")
+  projects       Json[] @map("projects")
+  certifications Json[] @map("certifications")
 
   applications        Application[]        @relation("ApplicationToResume")
   activeApplications  Application[]        @relation("CurrentResume")

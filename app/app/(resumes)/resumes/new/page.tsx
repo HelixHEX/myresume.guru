@@ -6,7 +6,6 @@ import { useReactToPrint } from "react-to-print";
 import DownloadResume from "../../_components/downloadResume";
 
 export default function NewResumePage() {
-
 	return (
 		<div className="w-full flex h-full">
 			<div className="h-full p-4 px-4 sm:px-8 transition-all duration-300 w-full lg:w-[700px] bg-white sm:bg-blue-800">
@@ -15,7 +14,7 @@ export default function NewResumePage() {
 						New Resume
 					</h1>
 				</div>
-				<Editor />
+				<Editor resumeId={""} />
 			</div>
 			<div className="hidden w-full md:flex">
 				<PDFPreview />
