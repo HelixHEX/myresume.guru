@@ -347,7 +347,7 @@ function EditorForm({
 										current: false,
 									})
 								}
-								className="bg-white rounded-none text-blue-800 font-bold cursor-pointer hover:bg-gray-300 hover:text-blue-800"
+								className="sm:bg-white rounded-none  sm:text-blue-800 sm:hover:bg-gray-300 sm:hover:text-blue-800 bg-blue-800 text-white hover:bg-blue-900 font-bold cursor-pointer"
 							>
 								Add Work Experience
 							</Button>
@@ -415,7 +415,7 @@ function EditorForm({
 										current: false,
 									})
 								}
-								className="bg-white rounded-none text-blue-800 font-bold cursor-pointer hover:bg-gray-300 hover:text-blue-800"
+								className="sm:bg-white rounded-none  sm:text-blue-800 sm:hover:bg-gray-300 sm:hover:text-blue-800 bg-blue-800 text-white hover:bg-blue-900 font-bold cursor-pointer"
 							>
 								Add Education
 							</Button>
@@ -488,7 +488,7 @@ function EditorForm({
 										url: "",
 									})
 								}
-								className="bg-white rounded-none text-blue-800 font-bold cursor-pointer hover:bg-gray-300 hover:text-blue-800"
+								className="sm:bg-white rounded-none  sm:text-blue-800 sm:hover:bg-gray-300 sm:hover:text-blue-800 bg-blue-800 text-white hover:bg-blue-900 font-bold cursor-pointer"
 							>
 								Add Project
 							</Button>
@@ -559,7 +559,7 @@ function EditorForm({
 										date: "",
 									})
 								}
-								className="bg-white rounded-none text-blue-800 font-bold cursor-pointer hover:bg-gray-300 hover:text-blue-800"
+								className="sm:bg-white rounded-none  sm:text-blue-800 sm:hover:bg-gray-300 sm:hover:text-blue-800 bg-blue-800 text-white hover:bg-blue-900 font-bold cursor-pointer"
 							>
 								Add Certification
 							</Button>
@@ -624,7 +624,7 @@ function EditorInput({
 			render={({ field }) => (
 				<FormItem
 					className={cn(
-						"col-span-1 text-white flex justify-between flex-col",
+						"col-span-1 text-blue-800 sm:text-white flex justify-between flex-col",
 						className,
 					)}
 				>
@@ -632,13 +632,13 @@ function EditorInput({
 						<FormLabel>{label}</FormLabel>
 						<FormControl>
 							<Input
-								className="text-blue-800 font-bold"
+								className="text-blue-800 sm:text-white font-bold"
 								placeholder={placeholder}
 								{...field}
 							/>
 						</FormControl>
 					</div>
-					<FormMessage className="text-white" />
+					<FormMessage className="text-blue-800 sm:text-white" />
 				</FormItem>
 			)}
 		/>
@@ -699,7 +699,7 @@ export function EditorSection({
 }) {
 	return (
 		<AccordionItem value={value}>
-			<AccordionTrigger className="font-bold cursor-pointer text-md text-white">
+			<AccordionTrigger className="font-bold cursor-pointer text-md text-blue-800 sm:text-white">
 				{title}
 			</AccordionTrigger>
 			<AccordionContent>{children}</AccordionContent>
