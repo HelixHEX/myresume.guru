@@ -16,7 +16,7 @@ export default function NewResumePage() {
 				</div>
 				<Editor resumeId={""} />
 			</div>
-			<div className="hidden w-full md:flex">
+			<div className="hidden bg-[#F6F6F6] w-full md:flex">
 				<PDFPreview />
 			</div>
 		</div>

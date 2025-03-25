@@ -20,7 +20,7 @@ export default function PDFPreview() {
 	});
 
 	return (
-		<div className={"flex flex-col w-full overflow-y-auto bg-gray-200 p-3 "}>
+		<div className={"flex flex-col w-full overflow-y-auto p-3 "}>
 			<div className="flex justify-end pb-4">
 				<Download
 					onClick={() => reactToPrint()}
@@ -30,7 +30,7 @@ export default function PDFPreview() {
 			<div
 				ref={containerRef}
 				className={
-					"w-full max-w-[210mm] overflow-y-auto aspect-[210/297] bg-white h-fit text-[8px]"
+					"w-full max-w-[210mm] overflow-y-auto aspect-[210/297] bg-white shadow-md h-fit text-[8px]"
 				}
 			>
 				<div

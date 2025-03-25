@@ -82,7 +82,7 @@ export default function Home() {
 						</h1>
 						<Sparkles />
 					</div>
-					<div className="w-full shadow-lg bg-gray-50 rounded-lg flex h-full max-h-screen overflow-y-auto">
+					<div className="w-full shadow-lg bg-[#F6F6F6] rounded-lg flex h-full max-h-screen overflow-y-auto">
 						<div className="h-full p-4 px-4 sm:px-8 transition-all duration-300 w-full lg:w-[700px] bg-white sm:bg-blue-800">
 							<div className="flex gap-2">
 								<h1 className=" text-4xl font-bold text-blue-800 sm:text-white">
@@ -91,7 +91,7 @@ export default function Home() {
 							</div>
 							<Editor resumeId={""} />
 						</div>
-						<div className="hidden bg-gray-200 w-full md:flex">
+						<div className="hidden bg-[#F6F6F6] w-full md:flex">
 							<PDFPreview />
 						</div>
 					</div>
