@@ -52,8 +52,8 @@ const workExperienceSchema = z.object({
 });
 
 export const editorSchema = z.object({
-	title: z.string().min(3, {
-		message: "Title must be at least 3 characters long",
+	name: z.string().min(3, {
+		message: "Name must be at least 3 characters long",
 	}),
 	firstName: z.string().min(3, {
 		message: "First name must be at least 3 characters long",
@@ -292,8 +292,8 @@ function EditorForm({
 		<Form {...form}>
 			<form className="pt-8" onSubmit={form.handleSubmit(onSubmit)}>
 				<EditorInput
-					name="tile"
-					label="Title"
+					name="name"
+					label="Name"
 					placeholder="Updated resume"
 					control={form.control}
 				/>

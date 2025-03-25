@@ -15,9 +15,6 @@ export default function NewResumePage() {
 						New Resume
 					</h1>
 				</div>
-				<p className="text-blue-800 text-md font-bold mt-2 sm:text-white">
-					Coming Soon
-				</p>
 				<Editor />
 			</div>
 			<div className="hidden w-full md:flex">
