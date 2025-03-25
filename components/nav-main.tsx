@@ -17,7 +17,6 @@ import {
 	SidebarMenuSubButton,
 	SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
-import UpgradeBtn from "./upgrade-btn";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 
