@@ -104,7 +104,7 @@ export default function PDFPreview() {
 											Work Experience
 										</h2>
 										<div className="flex flex-col gap-2">
-											{resume.workExperience.map((work) => (
+											{resume.workExperience.map((work: any) => (
 												<div key={work.id}>
 													<div className="flex justify-between">
 														<h3 className="text-[16px] font-bold">
@@ -119,7 +119,7 @@ export default function PDFPreview() {
 													</div>
 													<ul className="list-disc pl-4">
 														{work.summary.length > 0 &&
-															work.summary.map(({ summaryPoint }, index) => (
+															work.summary.map(({ summaryPoint }: any, index: number) => (
 																<li className="list-disc" key={index}>
 																	<p className="text-[12px]">{summaryPoint}</p>
 																</li>
@@ -139,7 +139,7 @@ export default function PDFPreview() {
 											Education
 										</h2>
 										<div className="flex flex-col gap-2">
-											{resume.education.map((education) => (
+											{resume.education.map((education: any) => (
 												<div className="flex flex-col gap-2" key={education.id}>
 													<div className="flex justify-between">
 														<h3 className="text-[17px] font-bold">
@@ -175,7 +175,7 @@ export default function PDFPreview() {
 											Projects
 										</h2>
 										<div className="flex flex-col gap-2">
-											{resume.projects.map((project) => (
+											{resume.projects.map((project: any) => (
 												<div key={project.id}>
 													<h3 className="text-[17px] font-bold">
 														{project.name}
@@ -195,7 +195,7 @@ export default function PDFPreview() {
 											Certifications
 										</h2>
 										<div className="flex flex-col gap-2">
-											{resume.certifications.map((certification) => (
+											{resume.certifications.map((certification: any) => (
 												<div key={certification.id}>
 													<h3 className="text-[17px] font-bold">
 														{certification.name}

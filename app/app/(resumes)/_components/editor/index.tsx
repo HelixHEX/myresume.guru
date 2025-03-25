@@ -667,7 +667,7 @@ function EditorWorkExperienceBulletPoints({
 	control: Control<z.infer<typeof editorSchema>>;
 	index: number;
 	placeholder: string;
-	appendWorkExperience: UseFieldArrayAppend<z.infer<typeof editorSchema>>;
+	appendWorkExperience: (data: any) => void;
 }) {
 	const { fields, append, remove } = useFieldArray({
 		control,
