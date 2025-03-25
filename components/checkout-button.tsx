@@ -5,10 +5,14 @@ import { Button, buttonVariants } from "./ui/button";
 import { createCheckoutSession } from "@/lib/actions/checkout";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
-import { SignedIn } from "@clerk/nextjs";
+import { SignedIn, SignedOut, useUser } from "@clerk/nextjs";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { useClerk } from "@clerk/nextjs";
 
 export default function CheckoutButton() {
+	const router = useRouter();
+	const { openSignUp } = useClerk();
 	const [loading, setLoading] = useState(false);
 	const handleCheckout = async () => {
 		setLoading(true);
@@ -19,14 +23,30 @@ export default function CheckoutButton() {
 		// }
 
 		setLoading(false);
-	}
+	};
+
 	return (
-		<Button
-			onClick={handleCheckout}
-			className={cn(buttonVariants({ size: "lg" }), "bg-dark-gray")}
-			disabled={loading}
-		>
-			{loading ? <Loader2 className="animate-spin" /> : "Get Started"}
-		</Button>
+		<>
+			<SignedIn>
+				<Button
+					onClick={handleCheckout}
+					className={cn(buttonVariants({ size: "lg" }), "bg-dark-gray")}
+					disabled={loading}
+				>
+					{loading ? <Loader2 className="animate-spin" /> : "Upgrade Plan"}
+				</Button>
+			</SignedIn>
+			<SignedOut>
+				<Button
+					onClick={() => {
+						openSignUp({ forceRedirectUrl: "/plans?startCheckout=true" })
+					}}
+					className={cn(buttonVariants({ size: "lg" }), "bg-dark-gray")}
+					disabled={loading}
+				>
+					Get Started
+				</Button>
+			</SignedOut>
+		</>
 	);
 }

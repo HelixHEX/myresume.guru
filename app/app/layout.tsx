@@ -18,9 +18,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 					<div className="flex md:justify-start justify-between text-white bg-blue-800 h-full items-center gap-2 px-4 w-full">
 						<div className="flex  md:justify-start items justify-between flex-row w-full  gap-2">
 							<SidebarTrigger className="-ml-1 " />
-							{/* <div className="flex md:hidden bg-yellow-500"> 
+							<div className="flex md:hidden "> 
 								<Logo />
-							</div> */}
+							</div>
 							<BreadcrumbListComp />
 						</div>
 						<UserButton />
