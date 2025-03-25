@@ -7,17 +7,21 @@ import { Card } from "@/components/ui/card";
 import { GlowingEffect } from "@/components/ui/glowing-effect";
 import {
 	BriefcaseBusiness,
+	Chrome,
 	CircleCheck,
 	FileEdit,
 	FileText,
 	Megaphone,
 	Search,
+	Sparkle,
 	Sparkles,
 	WandSparkles,
 } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Fade, Jello, Tada, Zoom } from "react-swift-reveal";
+import Editor from "./app/(resumes)/_components/editor";
+import PDFPreview from "./app/(resumes)/_components/editor/preview";
 
 const text = `The resume currently lacks a personal summary, which is a crucial section that provides a snapshot of your professional identity and career goals. A well-crafted summary can capture the attention of hiring managers and set the tone for the rest of the resume.**Actionable Steps:**1. Write a concise summary (3-4 sentences) that highlights your key skills, experiences, and career objectives.2. Focus on your strengths in software development and project management.3. Mention any unique qualities or achievements that differentiate you from other candidates.**Example:**"Dynamic software engineer with over 5 years of experience in developing scalable web applications and leading project management initiatives. Proven track record in enhancing user engagement and satisfaction through innovative solutions. Passionate about leveraging AI to improve user experiences and drive business growth."`;
 
@@ -51,10 +55,50 @@ export default function Home() {
 							Try now!
 						</Button>
 					</div>
+					<div className="items-center md:items-start py-40 w-full flex flex-col md:flex-row justify-between">
+						<div className=" h-[400] md:mt-0 w-full flex flex-col">
+							<h1 className="font-bold text-4xl">
+								{"The easiest way to get your resume reviewed"}
+							</h1>
+							<Zoom>
+								<p className="mt-2 w-full md:w-[500px] ">
+									{
+										"Upload your resume and in seconds we'll assess your skills, experiences, and more. Also get help from our AI resume guru."
+									}
+								</p>
+								<Button
+									onClick={() => router.push("/sign-up")}
+									className="mt-4"
+								>
+									Upload your resume
+								</Button>
+							</Zoom>
+						</div>
+					</div>
+					<div className="flex pb-8 gap-4 items-center justify-center">
+						<Sparkles />
+						<h1 className=" text-center font-bold text-4xl">
+							Or create one for free!
+						</h1>
+						<Sparkles />
+					</div>
+					<div className="w-full bg-gray-200 rounded-lg flex h-full max-h-screen overflow-y-auto">
+						<div className="h-full p-4 px-4 sm:px-8 transition-all duration-300 w-full lg:w-[700px] bg-white sm:bg-blue-800">
+							<div className="flex gap-2">
+								<h1 className=" text-4xl font-bold text-blue-800 sm:text-white">
+									New Resume
+								</h1>
+							</div>
+							<Editor resumeId={""} />
+						</div>
+						<div className="hidden bg-gray-200 w-full md:flex">
+							<PDFPreview />
+						</div>
+					</div>
 					<div className="mt-44 flex flex-col w-full self-center">
 						<Zoom duration={1000}>
 							<h1 className="text-4xl  font-bold">
-								The easiest way to get your resume reviewed
+								{"Get resume feedback that's actually meaningful."}
 							</h1>
 						</Zoom>
 						<Zoom delay={100}>
@@ -66,7 +110,7 @@ export default function Home() {
 						</Zoom>
 					</div>
 
-					<div className="flex mt-4 flex-col w-full py-14 self-center">
+					<div className="flex mt-4 flex-col w-full py-40 self-center">
 						<Zoom>
 							<h1 className="text-2xl text-center  font-bold">
 								Example Improvements
@@ -125,96 +169,66 @@ export default function Home() {
 						</Zoom>
 					</div>
 
-					<div className="items-center md:items-start py	-44 w-full flex flex-col md:flex-row justify-between">
-						{/* <div className="md:w-[400px] self-center flex flex-col items-center md:h-[300px] h-[400px] w-full">
-							<Image
-								src="/images/hero2.png"
-								className="w-full h-full"
-								alt="Hero 2"
-								width={400}
-								height={400}
-							/>
-						</div> */}
-						<div className=" h-[400] md:mt-0 w-full flex flex-col">
-							<h1 className="font-bold text-4xl">
-								{"Get resume feedback that's actually meaningful"}
-							</h1>
-							<Zoom>
-								<p className="mt-2 w-full md:w-[500px] ">
-									{
-										"Upload your resume and in seconds we'll assess your skills, experiences, and more. Also get help from our AI resume guru."
-									}
-								</p>
-								<Button
-									onClick={() => router.push("/sign-up")}
-									className="mt-4"
-								>
-									Upload your resume
-								</Button>
-							</Zoom>
-						</div>
-					</div>
-					<div className="flex flex-col w-full sm:self-center ">
+					<div className="flex flex-col pt-40 w-full sm:self-center ">
 						<h1 className="text-4xl  font-bold">Features</h1>
 						<div className="flex w-full items-center h-full justify-between flex-col lg:flex-row mt-8">
 							<ul className="grid grid-cols-1 grid-rows-none gap-4 md:grid-cols-12 md:grid-rows-3 lg:gap-4 xl:max-h-[34rem] xl:grid-rows-2">
 								{/* <Zoom> */}
-									<GridItem
-
-										area="md:[grid-area:1/1/2/7] xl:[grid-area:1/1/2/5]"
-										icon={
-											<Sparkles className="h-4 w-4 text-black dark:text-neutral-400" />
-										}
-										title="AI-powered suggestions"
-										description="Our AI powered resume scanner will help you identify areas of improvement."
-									/>
+								<GridItem
+									area="md:[grid-area:1/1/2/7] xl:[grid-area:1/1/2/5]"
+									icon={
+										<Sparkles className="h-4 w-4 text-black dark:text-neutral-400" />
+									}
+									title="AI-powered suggestions"
+									description="Our AI powered resume scanner will help you identify areas of improvement."
+								/>
 								{/* </Zoom> */}
 
 								{/* <Zoom delay={600}> */}
-									<GridItem
-										delay={600}
-										area="md:[grid-area:1/7/2/13] xl:[grid-area:2/1/3/5]"
-										icon={
-											<WandSparkles className="h-4 w-4 text-black dark:text-neutral-400" />
-										}
-										title="AI Resume Guru"
-										description="Personalized AI resume assistant. You can ask questions about your resume or get tips on how to prepare for an interview."
-									/>
+								<GridItem
+									delay={600}
+									area="md:[grid-area:1/7/2/13] xl:[grid-area:2/1/3/5]"
+									icon={
+										<WandSparkles className="h-4 w-4 text-black dark:text-neutral-400" />
+									}
+									title="AI Resume Guru"
+									description="Personalized AI resume assistant. You can ask questions about your resume or get tips on how to prepare for an interview."
+								/>
 								{/* </Zoom> */}
 
 								{/* <Zoom delay={400}> */}
-									<GridItem
-										delay={400}
-										area="md:[grid-area:2/1/3/7] xl:[grid-area:1/5/3/8]"
-										icon={
-											<BriefcaseBusiness className="h-4 w-4 text-black dark:text-neutral-400" />
-										}
-										title="Job Application Tracker"
-										description="You can keep track of the jobs you've applied to and the status of your applications."
-									/>
+								<GridItem
+									delay={400}
+									area="md:[grid-area:2/1/3/7] xl:[grid-area:1/5/3/8]"
+									icon={
+										<BriefcaseBusiness className="h-4 w-4 text-black dark:text-neutral-400" />
+									}
+									title="Job Application Tracker"
+									description="You can keep track of the jobs you've applied to and the status of your applications."
+								/>
 								{/* </Zoom> */}
 
 								{/* <Zoom delay={600}> */}
-									<GridItem
-										delay={600}
-										area="md:[grid-area:2/7/3/13] xl:[grid-area:1/8/2/13]"
-										icon={
-											<FileEdit className="h-4 w-4 text-black dark:text-neutral-400" />
-										}
-										title="AI Resume Builder"
-										description="AI powered resume builder will help you create a resume that stands out from the crowd. (Coming soon...!)"
-									/>
+								<GridItem
+									delay={600}
+									area="md:[grid-area:2/7/3/13] xl:[grid-area:1/8/2/13]"
+									icon={
+										<FileEdit className="h-4 w-4 text-black dark:text-neutral-400" />
+									}
+									title="Resume Builder"
+									description="The resume builder will help you create a resume that stands out from the crowd."
+								/>
 								{/* </Zoom> */}
 								{/* <Zoom delay={300}> */}
-									<GridItem
-										delay={300}
-										area="md:[grid-area:2/7/3/13] xl:[grid-area:2/8/2/13]"
-										icon={
-											<FileEdit className="h-4 w-4 text-black dark:text-neutral-400" />
-										}
-										title="Chrome Extension"
-										description="With the chrome extension, you can generate tailored resumes for job applications and auto apply to jobs on sites like LinkedIn & Indeed.  (Comming soon...!)"
-									/>
+								<GridItem
+									delay={300}
+									area="md:[grid-area:2/7/3/13] xl:[grid-area:2/8/2/13]"
+									icon={
+										<Chrome className="h-4 w-4 text-black dark:text-neutral-400" />
+									}
+									title="Chrome Extension"
+									description="With the chrome extension, you can generate tailored resumes for job applications and auto apply to jobs on sites like LinkedIn & Indeed.  (Comming soon...!)"
+								/>
 								{/* </Zoom> */}
 							</ul>
 							{/* <FeatureCard
