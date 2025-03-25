@@ -3,6 +3,7 @@
 import {
 	type Control,
 	useFieldArray,
+	UseFieldArrayAppend,
 	useForm,
 	type UseFormReturn,
 } from "react-hook-form";
@@ -30,7 +31,7 @@ import { Button } from "@/components/ui/button";
 import { Loader2, X } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { useSaveResumeEditorData } from "../../lib/mutations";
-import { useGetResumeEditorData } from "../../lib/queries";
+import { getResumeEditorData, useGetResumeEditorData } from "../../lib/queries";
 
 const workExperienceSchema = z.object({
 	company: z.string().min(3, {
@@ -50,7 +51,10 @@ const workExperienceSchema = z.object({
 	current: z.boolean(),
 });
 
-const editorSchema = z.object({
+export const editorSchema = z.object({
+	title: z.string().min(3, {
+		message: "Title must be at least 3 characters long",
+	}),
 	firstName: z.string().min(3, {
 		message: "First name must be at least 3 characters long",
 	}),
@@ -84,9 +88,7 @@ const editorSchema = z.object({
 				title: z.string().min(3, {
 					message: "Title must be at least 3 characters long",
 				}),
-				summary: z.string().min(3, {
-					message: "Description must be at least 3 characters long",
-				}),
+				summary: z.array(z.object({ summaryPoint: z.string() })).optional(),
 				startDate: z.string(),
 				endDate: z.string().optional(),
 				location: z.string().min(3, {
@@ -157,6 +159,29 @@ const editorSchema = z.object({
 export default function Editor() {
 	const { user } = useUser();
 	const { data: resumeEditorData, isLoading } = useGetResumeEditorData("");
+	const { mutate: saveResumeEditorData } = useSaveResumeEditorData("");
+
+	useEffect(() => {
+		const main = async () => {
+			if (user) {
+				const localResumeEditorData = await getResumeEditorData("");
+				console.log(localResumeEditorData);
+				if (Object.keys(localResumeEditorData).length === 0) {
+					saveResumeEditorData({
+						fileKey: "",
+						data: JSON.stringify({
+							firstName: user.firstName,
+							lastName: user.lastName,
+							email: user.emailAddresses[0].emailAddress,
+							github: user.externalAccounts[0].username,
+						}),
+					});
+				}
+			}
+		};
+		main();
+	}, [user, saveResumeEditorData]);
+
 	if (!user || isLoading)
 		return (
 			<div className="flex text-white mt-2 font-bold justify-center items-center w-full">
@@ -190,8 +215,6 @@ function EditorForm({
 }) {
 	const { mutate: saveResumeEditorData } = useSaveResumeEditorData("");
 
-	useEffect(() => console.log(resumeData), [resumeData]);
-
 	const form = useForm<z.infer<typeof editorSchema>>({
 		resolver: zodResolver(editorSchema),
 		defaultValues: {
@@ -203,8 +226,8 @@ function EditorForm({
 			linkedin: resumeData?.linkedin || "",
 			website: resumeData?.website || "",
 			twitter: resumeData?.twitter || "",
-			location: resumeData?.location!,
-			summary: resumeData?.summary || "",
+			location: resumeData?.location || "",
+			summary: resumeData?.summary || [],
 			workExperience: resumeData?.workExperience || [],
 			education: resumeData?.education || [],
 			skills: resumeData?.skills || "",
@@ -268,7 +291,13 @@ function EditorForm({
 	return (
 		<Form {...form}>
 			<form className="pt-8" onSubmit={form.handleSubmit(onSubmit)}>
-				<div className="grid grid-cols-2 gap-4 ">
+				<EditorInput
+					name="tile"
+					label="Title"
+					placeholder="Updated resume"
+					control={form.control}
+				/>
+				<div className="grid mt-8 grid-cols-2 gap-4 ">
 					<EditorInput
 						name="firstName"
 						label="First Name"
@@ -282,6 +311,13 @@ function EditorForm({
 						control={form.control}
 					/>
 				</div>
+				<EditorInput
+					className="mt-8"
+					name="summary"
+					label="Summary"
+					placeholder="I'm a passionate software engineer who's eager to learn and grow. While I'm still early in my career, I've already had some exciting opportunities to work on real-world projects that make a difference."
+					control={form.control}
+				/>
 				<div className="grid mt-8 grid-cols-2 gap-4">
 					<EditorInput
 						name="email"
@@ -300,7 +336,7 @@ function EditorForm({
 					name="website"
 					className="mt-8"
 					label="Website"
-					placeholder="myresume.guru"
+					placeholder="www.example.com"
 					control={form.control}
 				/>
 				<div className="grid mt-8 grid-cols-2 gap-4">
@@ -321,13 +357,13 @@ function EditorForm({
 					<EditorInput
 						name="linkedin"
 						label="Linkedin url"
-						placeholder="https://www.linkedin.com/in/helixhex"
+						placeholder="linkedin.com/in/eliaswambugu"
 						control={form.control}
 					/>
 					<EditorInput
 						name="twitter"
 						label="Twitter Username"
-						placeholder="@username"
+						placeholder="@eliasdevs"
 						control={form.control}
 					/>
 				</div>
@@ -340,7 +376,7 @@ function EditorForm({
 									appendWorkExperience({
 										title: "",
 										company: "",
-										summary: "",
+										summary: [{ summaryPoint: "" }],
 										startDate: "",
 										endDate: "",
 										location: "",
@@ -355,11 +391,14 @@ function EditorForm({
 								<div key={workExperienceField.id} className="pt-10">
 									<div className="flex justify-between">
 										<p className="font-bold pb-4 text-lg text-blue-800 sm:text-white">
-											Experience {index + 1}
+											{resumeData?.workExperience[index]?.company ||
+											resumeData?.workExperience[index]?.title
+												? `${resumeData?.workExperience[index]?.title}${resumeData?.workExperience[index]?.company && resumeData?.workExperience[index]?.title ? ", " : ""}${resumeData?.workExperience[index]?.company}`
+												: `Experience ${index + 1}`}
 										</p>
 										<X
 											onClick={() => removeWorkExperience(index)}
-											className="cursor-pointer hover:text-red-600 text-white"
+											className="cursor-pointer hover:text-red-400 text-white"
 											width={18}
 											height={18}
 										/>
@@ -392,42 +431,27 @@ function EditorForm({
 											control={form.control}
 										/>
 									</div>
-									<EditorTextarea
-										className="mt-8"
-										name={`workExperience.${index}.summary`}
-										label={"Summary"}
-										placeholder="I was responsible for..."
+									<EditorWorkExperienceBulletPoints
 										control={form.control}
+										index={index}
+										placeholder="I was responsible for..."
+										appendWorkExperience={appendWorkExperience}
 									/>
 								</div>
 							))}
 						</EditorSection>
 						<EditorSection value="education" title="Education">
-							<Button
-								onClick={() =>
-									appendEducation({
-										school: "",
-										degree: "",
-										fieldOfStudy: "",
-										startDate: "",
-										endDate: "",
-										location: "",
-										current: false,
-									})
-								}
-								className="sm:bg-white rounded-none  sm:text-blue-800 sm:hover:bg-gray-300 sm:hover:text-blue-800 bg-blue-800 text-white hover:bg-blue-900 font-bold cursor-pointer"
-							>
-								Add Education
-							</Button>
 							{educationFields.map((educationField, index) => (
 								<div key={educationField.id}>
 									<div className="flex justify-between pt-8 pb-4">
 										<p className="font-bold pb-4 text-lg text-white">
-											Education {index + 1}
+											{resumeData?.education[index]?.school
+												? resumeData?.education[index]?.school
+												: `Education ${index + 1}`}
 										</p>
 										<X
 											onClick={() => removeEducation(index)}
-											className="cursor-pointer hover:text-red-600 text-white"
+											className="cursor-pointer hover:text-red-400 text-white"
 											width={18}
 											height={18}
 										/>
@@ -448,7 +472,7 @@ function EditorForm({
 										<EditorInput
 											name={`education.${index}.degree`}
 											label={"Degree"}
-											placeholder="Computer Science"
+											placeholder="Bachelors"
 											control={form.control}
 										/>
 									</div>
@@ -475,23 +499,27 @@ function EditorForm({
 									/>
 								</div>
 							))}
+							<div className="flex justify-end">
+								<Button
+									size="sm"
+									onClick={() =>
+										appendEducation({
+											school: "",
+											degree: "",
+											fieldOfStudy: "",
+											startDate: "",
+											endDate: "",
+											location: "",
+											current: false,
+										})
+									}
+									className="sm:bg-white mt-4 justify-self-end rounded-none h-[30px] sm:text-blue-800 sm:hover:bg-gray-300 sm:hover:text-blue-800 bg-blue-800 text-white hover:bg-blue-900 font-bold cursor-pointer"
+								>
+									Add Education
+								</Button>
+							</div>
 						</EditorSection>
 						<EditorSection value="projects" title="Projects">
-							<Button
-								onClick={() =>
-									appendProjects({
-										name: "",
-										description: "",
-										startDate: "",
-										endDate: "",
-										location: "",
-										url: "",
-									})
-								}
-								className="sm:bg-white rounded-none  sm:text-blue-800 sm:hover:bg-gray-300 sm:hover:text-blue-800 bg-blue-800 text-white hover:bg-blue-900 font-bold cursor-pointer"
-							>
-								Add Project
-							</Button>
 							{projectsFields.map((projectField, index) => (
 								<div key={projectField.id} className="pt-10">
 									<div className="flex text-lg justify-between">
@@ -500,7 +528,7 @@ function EditorForm({
 										</p>
 										<X
 											onClick={() => removeProjects(index)}
-											className="cursor-pointer hover:text-red-600 text-white"
+											className="cursor-pointer hover:text-red-400 text-white"
 											width={18}
 											height={18}
 										/>
@@ -550,19 +578,26 @@ function EditorForm({
 									/>
 								</div>
 							))}
+							<div className="flex justify-end">
+								<Button
+									size="sm"
+									onClick={() =>
+										appendProjects({
+											name: "",
+											description: "",
+											startDate: "",
+											endDate: "",
+											location: "",
+											url: "",
+										})
+									}
+									className="sm:bg-white mt-4 justify-self-end rounded-none h-[30px] sm:text-blue-800 sm:hover:bg-gray-300 sm:hover:text-blue-800 bg-blue-800 text-white hover:bg-blue-900 font-bold cursor-pointer"
+								>
+									Add Project
+								</Button>
+							</div>
 						</EditorSection>
 						<EditorSection value="certications" title="Certifications">
-							<Button
-								onClick={() =>
-									appendCertifications({
-										name: "",
-										date: "",
-									})
-								}
-								className="sm:bg-white rounded-none  sm:text-blue-800 sm:hover:bg-gray-300 sm:hover:text-blue-800 bg-blue-800 text-white hover:bg-blue-900 font-bold cursor-pointer"
-							>
-								Add Certification
-							</Button>
 							{certificationsFields.map((certificationField, index) => (
 								<div key={certificationField.id}>
 									<div className="flex justify-between pt-8 pb-4">
@@ -571,7 +606,7 @@ function EditorForm({
 										</p>
 										<X
 											onClick={() => removeCertifications(index)}
-											className="cursor-pointer hover:text-red-600 text-white"
+											className="cursor-pointer hover:text-red-400 text-white"
 											width={18}
 											height={18}
 										/>
@@ -593,11 +628,101 @@ function EditorForm({
 									</div>
 								</div>
 							))}
+							<div className="flex justify-end">
+								<Button
+									size="sm"
+									onClick={() =>
+										appendCertifications({
+											name: "",
+											date: "",
+										})
+									}
+									className="sm:bg-white mt-4 justify-self-end rounded-none h-[30px] sm:text-blue-800 sm:hover:bg-gray-300 sm:hover:text-blue-800 bg-blue-800 text-white hover:bg-blue-900 font-bold cursor-pointer"
+								>
+									Add Certification
+								</Button>
+							</div>
+						</EditorSection>
+						<EditorSection value="skills" title="Skills">
+							<EditorInput
+								name={"skills"}
+								label={""}
+								placeholder="Microsoft Office, Photoshop, etc."
+								control={form.control}
+							/>
 						</EditorSection>
 					</Accordion>
 				</div>
 			</form>
 		</Form>
+	);
+}
+
+function EditorWorkExperienceBulletPoints({
+	control,
+	index,
+	placeholder,
+	appendWorkExperience,
+}: {
+	control: Control<z.infer<typeof editorSchema>>;
+	index: number;
+	placeholder: string;
+	appendWorkExperience: UseFieldArrayAppend<z.infer<typeof editorSchema>>;
+}) {
+	const { fields, append, remove } = useFieldArray({
+		control,
+		name: `workExperience.${index}.summary`,
+	});
+	return (
+		<div className="mt-8">
+			<div className="flex justify-between">
+				<p className="self-center font-bold text-white">Summary</p>
+			</div>
+			{/* {fields.length} */}
+			{fields.map((field, summaryIndex) => (
+				<div className="flex w-full" key={field.id}>
+					<EditorInput
+						name={`workExperience.${index}.summary.${summaryIndex}.summaryPoint`}
+						label={""}
+						className="mr-2 w-full "
+						placeholder="I was responsible for..."
+						control={control}
+					/>
+					<X
+						onClick={() => remove(summaryIndex)}
+						className="cursor-pointer self-center hover:text-red-400 text-white"
+						width={18}
+						height={18}
+					/>
+				</div>
+			))}
+			<div className="mt-6 flex justify-between">
+				<Button
+					size="sm"
+					onClick={() =>
+						appendWorkExperience({
+							title: "",
+							company: "",
+							// summary: [{ summaryPoint: "" }],
+							startDate: "",
+							endDate: "",
+							location: "",
+							current: false,
+						})
+					}
+					className="sm:bg-white rounded-none h-[30px] sm:text-blue-800 sm:hover:bg-gray-300 sm:hover:text-blue-800 bg-blue-800 text-white hover:bg-blue-900 font-bold cursor-pointer"
+				>
+					Add Work Experience
+				</Button>
+				<Button
+					size="sm"
+					onClick={() => append({ summaryPoint: "" })}
+					className="sm:bg-white rounded-none h-[30px] sm:text-blue-800 sm:hover:bg-gray-300 sm:hover:text-blue-800 bg-blue-800 text-white hover:bg-blue-900 font-bold cursor-pointer"
+				>
+					New Summary Point
+				</Button>
+			</div>
+		</div>
 	);
 }
 

@@ -17,6 +17,9 @@ export const useGetResume = (fileKey: string, refetchInterval: number) => {
 
 export const getResumeEditorData = async (fileKey: string) => {
   const data = localStorage.getItem(`resume:${fileKey}`);
+  if (!data) {
+    return {};
+  }
   return JSON.parse(data || "{}");
 }
 

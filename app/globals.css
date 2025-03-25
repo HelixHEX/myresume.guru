@@ -121,3 +121,24 @@
         @apply bg-background text-foreground;
     }
 }
+
+@media print {
+    #resumePreviewContent {
+        zoom: 1 !important;
+        padding: 0;
+    }
+}
+
+#resumePreviewContent {
+    font-family: Manrope, sans-serif;
+}
+
+#resumePreviewContent ul {
+    list-style-type: disc;
+    padding-left: 20px;
+}
+
+@page {
+    size: A4;
+    margin: 0.6cm;
+}

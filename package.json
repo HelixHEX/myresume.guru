@@ -67,6 +67,7 @@
     "react-pdftotext": "^1.2.0",
     "react-reveal": "^1.2.2",
     "react-swift-reveal": "^1.1.0",
+    "react-to-print": "^3.0.5",
     "remark-gfm": "^4.0.1",
     "sonner": "^1.4.41",
     "tailwind-merge": "^2.6.0",

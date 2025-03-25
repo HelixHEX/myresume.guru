@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 
 const generateFeedback = async () => {
@@ -48,8 +48,12 @@ const saveResumeEditorData = async ({ fileKey, data }: { fileKey: string, data: 
 }
 
 export const useSaveResumeEditorData = (fileKey: string) => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["save_resume_editor_data", fileKey],
     mutationFn: saveResumeEditorData,
-  });
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["resume_editor_data", fileKey] });
+    }
+  })
 }
