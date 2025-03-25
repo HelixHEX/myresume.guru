@@ -34,7 +34,7 @@ export default function Home() {
 				<div className="flex flex-col lg:w-[1000px] w-full self-center">
 					<div className="p-4 lg:p-8  self-center bg-cover bg-[url('/images/hero1-bg.png')] bg-center   bg-no-repeat rounded-lg w-full h-[480px] text-white flex flex-col justify-end">
 						<h1 className="text-2xl lg:text-4xl font-bold lg:w-96">
-							Land your dream job with myresume.guru
+							Land your dream job with MyResume.<span className="text-blue-800 font-bold">guru</span>
 						</h1>
 						<p className="mt-8 w-full md:w-[500px]">
 							Upload your resume and receive instant, personalized feedback
@@ -50,7 +50,7 @@ export default function Home() {
           </div> */}
 						<Button
 							onClick={() => router.push("/sign-up")}
-							className="w-44 mt-8 bg-blue-800 text-white"
+							className="w-44 mt-8 bg-blue-800 cursor-pointer hover:bg-blue-900 text-white"
 						>
 							Try now!
 						</Button>
