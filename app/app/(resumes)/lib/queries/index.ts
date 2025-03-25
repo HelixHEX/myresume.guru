@@ -15,6 +15,17 @@ export const useGetResume = (fileKey: string, refetchInterval: number) => {
   });
 };
 
+export const getResumeEditorData = async (fileKey: string) => {
+  const data = localStorage.getItem(`resume:${fileKey}`);
+  return JSON.parse(data || "{}");
+}
+
+export const useGetResumeEditorData = (fileKey: string) => {
+  return useQuery({
+    queryKey: ["resume_editor_data", fileKey],
+    queryFn: () => getResumeEditorData(fileKey),
+  });
+};
 export const getResumes = async () => {
   const res = await axios.get("/api/resume");
   return res.data;

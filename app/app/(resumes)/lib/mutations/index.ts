@@ -42,3 +42,14 @@ export const useUpdateResume = (fileKey: string) => {
     mutationFn: updateResume,
   });
 }
+
+const saveResumeEditorData = async ({ fileKey, data }: { fileKey: string, data: string }) => {
+  localStorage.setItem(`resume:${fileKey}`, data);
+}
+
+export const useSaveResumeEditorData = (fileKey: string) => {
+  return useMutation({
+    mutationKey: ["save_resume_editor_data", fileKey],
+    mutationFn: saveResumeEditorData,
+  });
+}

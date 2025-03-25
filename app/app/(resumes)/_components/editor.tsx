@@ -27,8 +27,10 @@ import {
 	AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
-import { X } from "lucide-react";
+import { Loader2, X } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
+import { useSaveResumeEditorData } from "../lib/mutations";
+import { useGetResumeEditorData } from "../lib/queries";
 
 const workExperienceSchema = z.object({
 	company: z.string().min(3, {
@@ -154,10 +156,17 @@ const editorSchema = z.object({
 
 export default function Editor() {
 	const { user } = useUser();
-	if (!user) return null;
+	const { data: resumeEditorData, isLoading } = useGetResumeEditorData("");
+	if (!user || isLoading)
+		return (
+			<div className="flex text-white mt-2 font-bold justify-center items-center w-full">
+				Loading <Loader2 className="ml-2 animate-spin" />
+			</div>
+		);
 	const { firstName, lastName } = user;
 	return (
 		<EditorForm
+			resumeData={resumeEditorData}
 			firstName={firstName || ""}
 			lastName={lastName || ""}
 			email={user.emailAddresses[0].emailAddress || ""}
@@ -171,25 +180,36 @@ function EditorForm({
 	lastName,
 	email,
 	github,
-}: { firstName: string; lastName?: string; email?: string; github?: string }) {
+	resumeData,
+}: {
+	firstName: string;
+	lastName?: string;
+	email?: string;
+	github?: string;
+	resumeData: any;
+}) {
+	const { mutate: saveResumeEditorData } = useSaveResumeEditorData("");
+
+	useEffect(() => console.log(resumeData), [resumeData]);
+
 	const form = useForm<z.infer<typeof editorSchema>>({
 		resolver: zodResolver(editorSchema),
 		defaultValues: {
-			firstName: firstName,
-			lastName: lastName,
-			phone: "",
-			email: email,
-			github: github,
-			linkedin: "",
-			website: "",
-			twitter: "",
-			location: "",
-			summary: "",
-			workExperience: [],
-			education: [],
-			skills: "",
-			certifications: [],
-			projects: [],
+			firstName: resumeData?.firstName || firstName,
+			lastName: resumeData?.lastName || lastName,
+			phone: resumeData?.phone || "",
+			email: resumeData?.email || email,
+			github: resumeData?.github || github,
+			linkedin: resumeData?.linkedin || "",
+			website: resumeData?.website || "",
+			twitter: resumeData?.twitter || "",
+			location: resumeData?.location!,
+			summary: resumeData?.summary || "",
+			workExperience: resumeData?.workExperience || [],
+			education: resumeData?.education || [],
+			skills: resumeData?.skills || "",
+			certifications: resumeData?.certifications || [],
+			projects: resumeData?.projects || [],
 		},
 	});
 
@@ -233,6 +253,18 @@ function EditorForm({
 		name: "certifications",
 	});
 
+	useEffect(() => {
+		const { unsubscribe } = form.watch(async (data) => {
+			console.log(data);
+			saveResumeEditorData({
+				fileKey: "",
+				data: JSON.stringify(data),
+			});
+		});
+
+		return unsubscribe;
+	}, [form, saveResumeEditorData]);
+
 	return (
 		<Form {...form}>
 			<form className="pt-8" onSubmit={form.handleSubmit(onSubmit)}>
@@ -264,11 +296,18 @@ function EditorForm({
 						control={form.control}
 					/>
 				</div>
+				<EditorInput
+					name="website"
+					className="mt-8"
+					label="Website"
+					placeholder="myresume.guru"
+					control={form.control}
+				/>
 				<div className="grid mt-8 grid-cols-2 gap-4">
 					<EditorInput
-						name="website"
-						label="Website"
-						placeholder="myresume.guru"
+						name="github"
+						label="Github Username"
+						placeholder="HelixHEX"
 						control={form.control}
 					/>
 					<EditorInput
@@ -288,7 +327,7 @@ function EditorForm({
 					<EditorInput
 						name="twitter"
 						label="Twitter Username"
-						placeholder="@eliasdevs"
+						placeholder="@username"
 						control={form.control}
 					/>
 				</div>
@@ -525,35 +564,34 @@ function EditorForm({
 								Add Certification
 							</Button>
 							{certificationsFields.map((certificationField, index) => (
-									<div key={certificationField.id} >
-										<div className="flex justify-between pt-8 pb-4">
-											<p className="font-bold text-lg text-white">
-												Certification {index + 1}
-											</p>
-											<X
-												onClick={() => removeCertifications(index)}
-												className="cursor-pointer hover:text-red-600 text-white"
-												width={18}
-												height={18}
-											/>
-										</div>
-
-										<div className=" grid grid-cols-2 gap-4">
-											<EditorInput
-												name={`certifications.${index}.name`}
-												label={"Certification Name"}
-												placeholder="Cybersecurity Fundamentals"
-												control={form.control}
-											/>
-											<EditorInput
-												name={`certifications.${index}.date`}
-												label={"Date"}
-												placeholder="Awarded on 2024-08-01"
-												control={form.control}
-											/>
-										</div>
+								<div key={certificationField.id}>
+									<div className="flex justify-between pt-8 pb-4">
+										<p className="font-bold text-lg text-white">
+											Certification {index + 1}
+										</p>
+										<X
+											onClick={() => removeCertifications(index)}
+											className="cursor-pointer hover:text-red-600 text-white"
+											width={18}
+											height={18}
+										/>
 									</div>
 
+									<div className=" grid grid-cols-2 gap-4">
+										<EditorInput
+											name={`certifications.${index}.name`}
+											label={"Certification Name"}
+											placeholder="Cybersecurity Fundamentals"
+											control={form.control}
+										/>
+										<EditorInput
+											name={`certifications.${index}.date`}
+											label={"Date"}
+											placeholder="Awarded on 2024-08-01"
+											control={form.control}
+										/>
+									</div>
+								</div>
 							))}
 						</EditorSection>
 					</Accordion>
