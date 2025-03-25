@@ -354,7 +354,7 @@ function EditorForm({
 							{workExperienceFields.map((workExperienceField, index) => (
 								<div key={workExperienceField.id} className="pt-10">
 									<div className="flex justify-between">
-										<p className="font-bold pb-4 text-lg text-white">
+										<p className="font-bold pb-4 text-lg text-blue-800 sm:text-white">
 											Experience {index + 1}
 										</p>
 										<X
