@@ -17,8 +17,8 @@ export default async function Page() {
 	});
 
 	return (
-		<>
-			<div className="flex px-4 flex-row h-12 justify-between sm:justify-start">
+		<div className="p-4 px-8">
+			<div className="flex  flex-row h-12 justify-between sm:justify-start">
 				<h1 className="text-2xl md:text-4xl mr-2 font-bold self-center text-black">
 					My Resumes
 				</h1>
@@ -32,6 +32,6 @@ export default async function Page() {
 				<Resumes />
 			</HydrationBoundary>
 			{/* <Resumes /> */}
-		</>
+		</div>
 	);
 }

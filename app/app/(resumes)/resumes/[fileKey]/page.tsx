@@ -14,7 +14,7 @@ export default async function Page(props: {
 	const messages = chat ? await getMessagesFromDB(chat) : ([] as any[]);
 	return (
 		<>
-			<div className="px-4">
+			<div className="p-4">
 				<h1 className=" text-4xl font-bold text-black">Suggested Improvements</h1>
 				<div className="mt-8 md:mt-0 w-full flex flex-col">
 					<p className="text-[#525252] mt-2 text-sm w-full md:w-3/5">

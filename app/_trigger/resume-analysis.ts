@@ -4,6 +4,7 @@ import { generateObject } from "ai";
 import { openai } from "@ai-sdk/openai";
 import prisma from "@/lib/prisma";
 import { getFile } from "@/lib/utils";
+import { anthropic } from '@ai-sdk/anthropic';
 
 // Schema for resume analysis
 const ResumeAnalysisSchema = z.object({
@@ -131,7 +132,7 @@ export const analyzeResume = task({
 
     if (subscription) {
       if (subscription.status !== 'active') {
-        if (improvements >= 3) {
+        if (improvements >= 6) {
           await prisma.resume.update({
             where: { fileKey },
             data: { status: "Limit Reached" },
@@ -140,7 +141,7 @@ export const analyzeResume = task({
         }
       }
     } else {
-      if (improvements >= 3) {
+      if (improvements >= 6) {
         await prisma.resume.update({
           where: { fileKey },
           data: { status: "Limit Reached" },
@@ -152,9 +153,13 @@ export const analyzeResume = task({
     // Get the PDF data
     const pdfData = await getFile(fileKey);
 
+    await prisma.resume.update({
+      where: { fileKey },
+      data: { status: "Analyzing resume" },
+    });
     // Analyze the resume
     const result = await generateObject({
-      model: openai.responses("gpt-4o"),
+      model: anthropic("claude-3-5-sonnet-20241022"),
       messages: [
         {
           role: "system",
@@ -234,7 +239,7 @@ export const analyzeResume = task({
     }).catch((error) => {
       logger.error("Error analyzing resume", { error });
     });
-
+    console.log(result)
     if (!result?.object) {
       logger.error("Failed to analyze resume - no result object");
       throw new Error("Failed to analyze resume");
@@ -269,7 +274,6 @@ export const analyzeResume = task({
         companies: result.object.workExperience?.map(exp => exp.company) || [],
         jobTitles: result.object.workExperience?.map(exp => exp.title) || [],
         education: result.object.education?.map(edu => edu.institution) || [],
-        status: "JSON Generated"
       },
     });
 
@@ -312,13 +316,18 @@ export const generateFeedback = task({
 
     const pdfData = await getFile(resume.fileKey);
 
+    await prisma.resume.update({
+      where: { id: resumeId },
+      data: { status: "Generating feedback" },
+    });
+
     // Generate feedback
     const result = await generateObject({
-      model: openai.responses("gpt-4o"),
+      model: anthropic("claude-3-5-sonnet-20241022"),
       messages: [
         {
           role: "system",
-          content: `You are an expert resume reviewer and career coach. Analyze the resume and provide EXACTLY ${length} actionable feedback for improvements.
+          content: `You are an expert resume reviewer. Analyze the resume and provide EXACTLY ${length} actionable feedback for improvements.
 
           IMPORTANT GUIDELINES:
           1. Focus on providing clear, actionable improvements

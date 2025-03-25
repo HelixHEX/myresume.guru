@@ -21,11 +21,11 @@ export function BreadcrumbListComp() {
 			<BreadcrumbList className="w-full">
 				{paths.map((path, index) => (
 					<div className="flex flex-row items-center gap-2" key={index}>
-						<BreadcrumbItem  className="hidden md:block">
+						<BreadcrumbItem  className="hidden text-white md:block">
 							{path}
 						</BreadcrumbItem>
 						{index !== paths.length - 1 && (
-							<BreadcrumbSeparator className="hidden md:block" />
+							<BreadcrumbSeparator className="hidden text-white md:block" />
 						)}
 					</div>
 				))}

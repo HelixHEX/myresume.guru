@@ -31,7 +31,10 @@ export default function ResumeDetails({
 				toast.error(
 					"You have reached the daily limit of resumes you can get feedback on. Please upgrade to continue.",
 				);
-			} else if (resume.status === "JSON Generated") {
+				setRefetchInterval(0);
+			} else if (resume.status === "Analyzed") {
+				setRefetchInterval(0);
+			} else if (resume.status !== "Analyzed") {
 				setRefetchInterval(1000);
 			}
 		}
@@ -45,7 +48,7 @@ export default function ResumeDetails({
 			toast.error(result.error as string);
 			setRefetchInterval(0);
 		} else {
-			toast.success("Analysis started! This may take a minute or two.");
+			toast.success("Analysis started! This only takes 30 seconds");
 		}
 	};
 
@@ -77,7 +80,7 @@ export default function ResumeDetails({
 							: resume?.status === "JSON Generated" && resume?.status}
 					</Button>
 				)} */}
-				{resume?.status === "Not Started" && !isLoading && (
+				{resume?.status === "Not Started" || resume?.status === "Limit Reached" && !isLoading && (
 					<Button className="w-fit mb-4" onClick={() => handleGenerateFeed()}>
 						Generate Feedback
 					</Button>
@@ -101,6 +104,9 @@ export default function ResumeDetails({
 							</p>
 						</AlertDescription>
 					</Alert>
+				)}
+				{(resume?.status.includes("Analyzing") || resume?.status.includes("Generating")) && (
+					<p className="text-blue-800 font-bold">{resume.status}...</p>
 				)}
 			</div>
 
