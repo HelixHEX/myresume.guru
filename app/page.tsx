@@ -125,7 +125,7 @@ export default function Home() {
 						</Zoom>
 					</div>
 
-					<div className="items-center md:items-start py-44 w-full flex flex-col md:flex-row justify-between">
+					<div className="items-center md:items-start py	-44 w-full flex flex-col md:flex-row justify-between">
 						{/* <div className="md:w-[400px] self-center flex flex-col items-center md:h-[300px] h-[400px] w-full">
 							<Image
 								src="/images/hero2.png"
