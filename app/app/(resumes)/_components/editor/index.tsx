@@ -184,20 +184,21 @@ export default function Editor({ resumeId }: { resumeId?: string }) {
 		main();
 	}, [user, saveResumeEditorData]);
 
-	if (!user || isLoading)
+	if (isLoading)
 		return (
 			<div className="flex text-white mt-2 font-bold justify-center items-center w-full">
 				Loading <Loader2 className="ml-2 animate-spin" />
 			</div>
 		);
-	const { firstName, lastName } = user;
+	const { firstName, lastName } = user ?? { firstName: "", lastName: "" };
+
 	return (
 		<EditorForm
 			resumeData={resumeEditorData}
 			firstName={firstName || ""}
 			lastName={lastName || ""}
-			email={user.emailAddresses[0].emailAddress || ""}
-			github={user.externalAccounts[0].username || ""}
+			email={user?.emailAddresses[0].emailAddress || ""}
+			github={user?.externalAccounts[0].username || ""}
 		/>
 	);
 }

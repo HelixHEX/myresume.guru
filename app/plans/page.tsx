@@ -27,7 +27,10 @@ export default function Plans() {
 							<h3 className="text-xl font-bold sm:text-2xl">
 								What&apos;s included in the Free plan
 							</h3>
-							<ul className="grid gap-3 text-sm text-muted-foreground sm:grid-cols-2">
+							<ul className="grid gap-3 text-sm text-muted-foreground font-bold sm:grid-cols-2">
+							<li className="flex items-center">
+									<Check className="mr-2 h-4 w-4" /> Resume editor
+								</li>
 								<li className="flex items-center">
 									<Check className="mr-2 h-4 w-4" /> Unlimited Job applications
 									tracking
@@ -38,9 +41,7 @@ export default function Plans() {
 								<li className="flex items-center">
 									<Check className="mr-2 h-4 w-4" /> Chrome extension(Coming Soon!)
 								</li>
-								<li className="flex items-center">
-									<Check className="mr-2 h-4 w-4" /> Resume editor (Coming Soon!)
-								</li>
+								
 							</ul>
 						</div>
 						<div className="flex flex-col gap-4 text-center">
@@ -70,7 +71,10 @@ export default function Plans() {
 							<h3 className="text-xl font-bold sm:text-2xl">
 								What&apos;s included in the Plus plan
 							</h3>
-							<ul className="grid gap-3 text-sm text-muted-foreground sm:grid-cols-2">
+							<ul className="grid gap-3 text-sm text-muted-foreground font-bold sm:grid-cols-2">
+							<li className="flex items-center">
+									<Check className="mr-2 h-4 w-4" /> Everything in the free plan
+								</li>
 								<li className="flex items-center">
 									<Check className="mr-2 h-4 w-4" /> Acess to AI Guru
 								</li>
@@ -78,11 +82,7 @@ export default function Plans() {
 									<Check className="mr-2 h-4 w-4" /> Unlimited resume feedbacks
 								</li>
 								<li className="flex items-center">
-									<Check className="mr-2 h-4 w-4" /> Unlimited Job applications
-									tracking
-								</li>
-								<li className="flex items-center">
-									<Check className="mr-2 h-4 w-4" /> AI resume editor (Coming Soon!)
+									<Check className="mr-2 h-4 w-4" /> AI suggestions in editor
 								</li>
 								<li className="flex items-center">
 									<Check className="mr-2 h-4 w-4" /> Premium Support
