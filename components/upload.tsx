@@ -20,9 +20,9 @@ export default function UploadButton({
       endpoint={endpoint}
       appearance={{
         button:
-          "w-1/2 p-4 ut-uploading:cursor-not-allowed ut-uploading:bg-black text-sm rounded-lg flex justify-center items-center text-white h-10 bg-black",
+          "w-1/2 p-4 ut-uploading:cursor-not-allowed bg-blue-800 ut-uploading:bg-black text-sm rounded-lg flex justify-center items-center text-white h-10",
       }}
-      className="ut-label:text-black mt-8 border-2 border-gray-300 border-dashed rounded-lg w-full h-64 hover:bg-gray-50"
+      className="ut-label:text-black mt-8 cursor-pointer border-2 border-gray-300 border-dashed rounded-lg w-full h-64 hover:bg-gray-50"
       onClientUploadComplete={(res) => {
         // Do something with the response
         toast("File uploaded successfully!");

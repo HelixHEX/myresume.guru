@@ -17,15 +17,15 @@ export function BreadcrumbListComp() {
 		.map((path) => path.charAt(0).toUpperCase() + path.slice(1));
 
 	return (
-		<Breadcrumb>
-			<BreadcrumbList className="w-full">
+		<Breadcrumb className="self-start">
+			<BreadcrumbList className="w-full mt-1">
 				{paths.map((path, index) => (
-					<div className="flex flex-row items-center gap-2" key={index}>
-						<BreadcrumbItem  className="hidden text-white md:block">
+					<div className="flex flex-row justify-center gap-2" key={index}>
+						<BreadcrumbItem  className="hidden items-center  text-white md:block">
 							{path}
 						</BreadcrumbItem>
 						{index !== paths.length - 1 && (
-							<BreadcrumbSeparator className="hidden text-white md:block" />
+							<BreadcrumbSeparator className="hidden self-center text-white md:block" />
 						)}
 					</div>
 				))}
