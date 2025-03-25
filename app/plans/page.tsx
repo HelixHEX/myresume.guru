@@ -16,7 +16,7 @@ export default function Plans() {
 				<div className="flex flex-col gap-4 pt-[80px] sm:pt-[30px]">
 					<div className="mx-auto flex w-full flex-col gap-4 md:max-w-[58rem]">
 						<h2 className="font-heading text-3xl leading-[1.1] sm:text-3xl md:text-6xl">
-							Guru Free
+							Guru <span className="text-blue-800 font-bold">Free</span>
 						</h2>
 						<p className="max-w-[85%] leading-normal text-muted-foreground sm:text-lg sm:leading-7">
 							Get a feel of the app with limited features.
@@ -50,7 +50,7 @@ export default function Plans() {
 							</div>
 							<Link
 								href="/sign-up"
-								className={cn(buttonVariants({ size: "lg" }), "bg-dark-gray")}
+								className={cn(buttonVariants({ size: "lg" }), "bg-blue-800 hover:bg-blue-900 cursor-pointer")}
 							>
 								Get Started for Free
 							</Link>
@@ -59,8 +59,8 @@ export default function Plans() {
 				</div>
 				<div className="flex flex-col gap-4">
 					<div className="mx-auto flex w-full flex-col gap-4 md:max-w-[58rem]">
-						<h2 className="font-heading text-3xl leading-[1.1] sm:text-3xl md:text-6xl">
-							Guru Plus+
+						<h2 className="font-light text-3xl leading-[1.1] sm:text-3xl md:text-6xl">
+							Guru <span className="text-blue-800 font-bold">Plus+</span>
 						</h2>
 						<p className="max-w-[85%] leading-normal text-muted-foreground sm:text-lg sm:leading-7">
 							Unlock all features including unlimited AI usage.
@@ -102,7 +102,7 @@ export default function Plans() {
 							<SignedOut>
 								<Link
 									href="/sign-up"
-									className={cn(buttonVariants({ size: "lg" }), "bg-dark-gray")}
+									className={cn(buttonVariants({ size: "lg" }), "bg-blue-800 hover:bg-blue-900 cursor-pointer")}
 								>
 									Get Started
 								</Link>

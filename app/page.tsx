@@ -38,7 +38,7 @@ export default function Home() {
 						</h1>
 						<p className="mt-8 w-full md:w-[500px]">
 							Upload your resume and receive instant, personalized feedback
-							powered by AI. Our gurus will help you craft a resume that stands
+							powered by AI. Our service will help you craft a resume that stands
 							out.
 						</p>
 						{/* <div className="mt-8 rounded-md flex flex-row bg-white md:w-96 p-4">
@@ -50,7 +50,7 @@ export default function Home() {
           </div> */}
 						<Button
 							onClick={() => router.push("/sign-up")}
-							className="w-44 mt-8"
+							className="w-44 mt-8 bg-blue-800 text-white"
 						>
 							Try now!
 						</Button>
@@ -68,7 +68,7 @@ export default function Home() {
 								</p>
 								<Button
 									onClick={() => router.push("/sign-up")}
-									className="mt-4"
+									className="mt-4 bg-blue-800 text-white hover:bg-blue-900 cursor-pointer "
 								>
 									Upload your resume
 								</Button>
