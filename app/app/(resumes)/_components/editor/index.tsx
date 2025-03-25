@@ -29,8 +29,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Loader2, X } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
-import { useSaveResumeEditorData } from "../lib/mutations";
-import { useGetResumeEditorData } from "../lib/queries";
+import { useSaveResumeEditorData } from "../../lib/mutations";
+import { useGetResumeEditorData } from "../../lib/queries";
 
 const workExperienceSchema = z.object({
 	company: z.string().min(3, {
@@ -632,7 +632,7 @@ function EditorInput({
 						<FormLabel>{label}</FormLabel>
 						<FormControl>
 							<Input
-								className="text-blue-800 sm:text-white font-bold"
+								className="text-blue-800 font-bold"
 								placeholder={placeholder}
 								{...field}
 							/>
