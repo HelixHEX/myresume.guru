@@ -35,6 +35,12 @@ export default function Plans() {
 								<li className="flex items-center">
 									<Check className="mr-2 h-4 w-4" /> 3 resume feedbacks a day
 								</li>
+								<li className="flex items-center">
+									<Check className="mr-2 h-4 w-4" /> Chrome extension(Coming Soon!)
+								</li>
+								<li className="flex items-center">
+									<Check className="mr-2 h-4 w-4" /> Resume editor (Coming Soon!)
+								</li>
 							</ul>
 						</div>
 						<div className="flex flex-col gap-4 text-center">
@@ -74,6 +80,9 @@ export default function Plans() {
 								<li className="flex items-center">
 									<Check className="mr-2 h-4 w-4" /> Unlimited Job applications
 									tracking
+								</li>
+								<li className="flex items-center">
+									<Check className="mr-2 h-4 w-4" /> AI resume editor (Coming Soon!)
 								</li>
 								<li className="flex items-center">
 									<Check className="mr-2 h-4 w-4" /> Premium Support
