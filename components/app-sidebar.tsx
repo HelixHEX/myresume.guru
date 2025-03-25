@@ -61,10 +61,6 @@ const data = {
       isActive: true,
       items: [
         {
-          title: "New Resume",
-          url: "/app/resumes/new",
-        },
-        {
           title: "Upload Resume",
           url: "/app/resumes/upload",
         },

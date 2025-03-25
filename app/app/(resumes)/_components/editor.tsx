@@ -1,6 +1,11 @@
 "use client";
 
-import { type Control, useForm } from "react-hook-form";
+import {
+	type Control,
+	useFieldArray,
+	useForm,
+	type UseFormReturn,
+} from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useUser } from "@clerk/nextjs";
@@ -13,6 +18,35 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
+import { useEffect, useState } from "react";
+import {
+	Accordion,
+	AccordionContent,
+	AccordionItem,
+	AccordionTrigger,
+} from "@/components/ui/accordion";
+import { Button } from "@/components/ui/button";
+import { X } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+
+const workExperienceSchema = z.object({
+	company: z.string().min(3, {
+		message: "Company must be at least 3 characters long",
+	}),
+	title: z.string().min(3, {
+		message: "Title must be at least 3 characters long",
+	}),
+	summary: z.string().min(3, {
+		message: "Summary must be at least 3 characters long",
+	}),
+	startDate: z.string(),
+	endDate: z.string().optional(),
+	location: z.string().min(3, {
+		message: "Location must be at least 3 characters long",
+	}),
+	current: z.boolean(),
+});
 
 const editorSchema = z.object({
 	firstName: z.string().min(3, {
@@ -27,42 +61,12 @@ const editorSchema = z.object({
 			message: "Invalid email address",
 		})
 		.optional(),
-	phone: z
-		.string()
-		.min(10, {
-			message: "Phone number must be at least 10 characters long",
-		})
-		.optional(),
-	github: z
-		.string()
-		.min(3, {
-			message: "Github username must be at least 3 characters long",
-		})
-		.optional(),
-	linkedin: z
-		.string()
-		.min(3, {
-			message: "Linkedin username must be at least 3 characters long",
-		})
-		.optional(),
-	website: z
-		.string()
-		.min(3, {
-			message: "Website must be at least 3 characters long",
-		})
-		.optional(),
-	twitter: z
-		.string()
-		.min(3, {
-			message: "Twitter username must be at least 3 characters long",
-		})
-		.optional(),
-	location: z
-		.string()
-		.min(3, {
-			message: "Location must be at least 3 characters long",
-		})
-		.optional(),
+	phone: z.string().optional(),
+	github: z.string().optional(),
+	linkedin: z.string().optional(),
+	website: z.string().optional(),
+	twitter: z.string().optional(),
+	location: z.string().optional(),
 	summary: z
 		.string()
 		.min(3, {
@@ -81,8 +85,8 @@ const editorSchema = z.object({
 				summary: z.string().min(3, {
 					message: "Description must be at least 3 characters long",
 				}),
-				startDate: z.date(),
-				endDate: z.date().optional(),
+				startDate: z.string(),
+				endDate: z.string().optional(),
 				location: z.string().min(3, {
 					message: "Location must be at least 3 characters long",
 				}),
@@ -102,29 +106,17 @@ const editorSchema = z.object({
 				fieldOfStudy: z.string().min(3, {
 					message: "Field of study must be at least 3 characters long",
 				}),
-				startDate: z.date(),
-				endDate: z.date().optional(),
+				startDate: z.string(),
+				endDate: z.string().optional(),
 				location: z.string().min(3, {
 					message: "Location must be at least 3 characters long",
 				}),
+				achievements: z.string().optional(),
 				current: z.boolean(),
 			}),
 		)
 		.optional(),
-	skillCategories: z
-		.array(
-			z.object({
-				title: z.string().min(3, {
-					message: "Skill category must be at least 3 characters long",
-				}),
-				skills: z.array(
-					z.string().min(3, {
-						message: "Skill must be at least 3 characters long",
-					}),
-				),
-			}),
-		)
-		.optional(),
+	skills: z.string().optional(),
 	projects: z
 		.array(
 			z.object({
@@ -134,8 +126,8 @@ const editorSchema = z.object({
 				description: z.string().min(3, {
 					message: "Description must be at least 3 characters long",
 				}),
-				startDate: z.date(),
-				endDate: z.date().optional(),
+				startDate: z.string(),
+				endDate: z.string().optional(),
 				location: z.string().min(3, {
 					message: "Location must be at least 3 characters long",
 				}),
@@ -150,8 +142,11 @@ const editorSchema = z.object({
 		.optional(),
 	certifications: z
 		.array(
-			z.string().min(3, {
-				message: "Certification must be at least 3 characters long",
+			z.object({
+				name: z.string().min(3, {
+					message: "Certification must be at least 3 characters long",
+				}),
+				date: z.string(),
 			}),
 		)
 		.optional(),
@@ -192,9 +187,9 @@ function EditorForm({
 			summary: "",
 			workExperience: [],
 			education: [],
-			skillCategories: [],
-			projects: [],
+			skills: "",
 			certifications: [],
+			projects: [],
 		},
 	});
 
@@ -202,10 +197,46 @@ function EditorForm({
 		console.log(values);
 	}
 
+	const {
+		fields: workExperienceFields,
+		append: appendWorkExperience,
+		remove: removeWorkExperience,
+	} = useFieldArray({
+		control: form.control,
+		name: "workExperience",
+	});
+
+	const {
+		fields: educationFields,
+		append: appendEducation,
+		remove: removeEducation,
+	} = useFieldArray({
+		control: form.control,
+		name: "education",
+	});
+
+	const {
+		fields: projectsFields,
+		append: appendProjects,
+		remove: removeProjects,
+	} = useFieldArray({
+		control: form.control,
+		name: "projects",
+	});
+
+	const {
+		fields: certificationsFields,
+		append: appendCertifications,
+		remove: removeCertifications,
+	} = useFieldArray({
+		control: form.control,
+		name: "certifications",
+	});
+
 	return (
 		<Form {...form}>
 			<form className="pt-8" onSubmit={form.handleSubmit(onSubmit)}>
-				<div className="grid grid-cols-2 gap-4">
+				<div className="grid grid-cols-2 gap-4 ">
 					<EditorInput
 						name="firstName"
 						label="First Name"
@@ -241,11 +272,291 @@ function EditorForm({
 						control={form.control}
 					/>
 					<EditorInput
-						name="github"
-						label="Github Username"
-						placeholder="HelixHEX"
+						name="location"
+						label="Location"
+						placeholder="San Francisco, CA"
 						control={form.control}
 					/>
+				</div>
+				<div className="grid mt-8 grid-cols-2 gap-4">
+					<EditorInput
+						name="linkedin"
+						label="Linkedin url"
+						placeholder="https://www.linkedin.com/in/helixhex"
+						control={form.control}
+					/>
+					<EditorInput
+						name="twitter"
+						label="Twitter Username"
+						placeholder="@eliasdevs"
+						control={form.control}
+					/>
+				</div>
+
+				<div className="mt-8">
+					<Accordion type="multiple">
+						<EditorSection value="work-experience" title="Work Experience">
+							<Button
+								onClick={() =>
+									appendWorkExperience({
+										title: "",
+										company: "",
+										summary: "",
+										startDate: "",
+										endDate: "",
+										location: "",
+										current: false,
+									})
+								}
+								className="bg-white rounded-none text-blue-800 font-bold cursor-pointer hover:bg-gray-300 hover:text-blue-800"
+							>
+								Add Work Experience
+							</Button>
+							{workExperienceFields.map((workExperienceField, index) => (
+								<div key={workExperienceField.id} className="pt-10">
+									<div className="flex justify-between">
+										<p className="font-bold pb-4 text-lg text-white">
+											Experience {index + 1}
+										</p>
+										<X
+											onClick={() => removeWorkExperience(index)}
+											className="cursor-pointer hover:text-red-600 text-white"
+											width={18}
+											height={18}
+										/>
+									</div>
+									<div className="grid grid-cols-2 gap-4">
+										<EditorInput
+											name={`workExperience.${index}.title`}
+											label={"Job Title"}
+											placeholder="Software Engineer"
+											control={form.control}
+										/>
+										<EditorInput
+											name={`workExperience.${index}.company`}
+											label={"Company"}
+											placeholder="Google"
+											control={form.control}
+										/>
+									</div>
+									<div className="grid pt-4 grid-cols-2 gap-4">
+										<EditorInput
+											name={`workExperience.${index}.startDate`}
+											label={"Start Date"}
+											placeholder="Aug 2024"
+											control={form.control}
+										/>
+										<EditorInput
+											name={`workExperience.${index}.endDate`}
+											label={"End Date"}
+											placeholder="Present"
+											control={form.control}
+										/>
+									</div>
+									<EditorTextarea
+										className="mt-8"
+										name={`workExperience.${index}.summary`}
+										label={"Summary"}
+										placeholder="I was responsible for..."
+										control={form.control}
+									/>
+								</div>
+							))}
+						</EditorSection>
+						<EditorSection value="education" title="Education">
+							<Button
+								onClick={() =>
+									appendEducation({
+										school: "",
+										degree: "",
+										fieldOfStudy: "",
+										startDate: "",
+										endDate: "",
+										location: "",
+										current: false,
+									})
+								}
+								className="bg-white rounded-none text-blue-800 font-bold cursor-pointer hover:bg-gray-300 hover:text-blue-800"
+							>
+								Add Education
+							</Button>
+							{educationFields.map((educationField, index) => (
+								<div key={educationField.id}>
+									<div className="flex justify-between pt-8 pb-4">
+										<p className="font-bold pb-4 text-lg text-white">
+											Education {index + 1}
+										</p>
+										<X
+											onClick={() => removeEducation(index)}
+											className="cursor-pointer hover:text-red-600 text-white"
+											width={18}
+											height={18}
+										/>
+									</div>
+									<EditorInput
+										name={`education.${index}.school`}
+										label={"School"}
+										placeholder="University of California, Berkeley"
+										control={form.control}
+									/>
+									<div className="mt-8 grid grid-cols-2 gap-4">
+										<EditorInput
+											name={`education.${index}.fieldOfStudy`}
+											label={"Field of Study"}
+											placeholder="Software Engineer"
+											control={form.control}
+										/>
+										<EditorInput
+											name={`education.${index}.degree`}
+											label={"Degree"}
+											placeholder="Computer Science"
+											control={form.control}
+										/>
+									</div>
+									<div className="grid pt-4 grid-cols-2 gap-4">
+										<EditorInput
+											name={`education.${index}.startDate`}
+											label={"Start Date"}
+											placeholder="Aug 2024"
+											control={form.control}
+										/>
+										<EditorInput
+											name={`education.${index}.endDate`}
+											label={"End Date"}
+											placeholder="Present"
+											control={form.control}
+										/>
+									</div>
+									<EditorInput
+										className="mt-8"
+										name={`education.${index}.location`}
+										label={"Location"}
+										placeholder="San Francisco, CA"
+										control={form.control}
+									/>
+								</div>
+							))}
+						</EditorSection>
+						<EditorSection value="projects" title="Projects">
+							<Button
+								onClick={() =>
+									appendProjects({
+										name: "",
+										description: "",
+										startDate: "",
+										endDate: "",
+										location: "",
+										url: "",
+									})
+								}
+								className="bg-white rounded-none text-blue-800 font-bold cursor-pointer hover:bg-gray-300 hover:text-blue-800"
+							>
+								Add Project
+							</Button>
+							{projectsFields.map((projectField, index) => (
+								<div key={projectField.id} className="pt-10">
+									<div className="flex text-lg justify-between">
+										<p className="font-bold text-lg pb-4 text-white">
+											Project {index + 1}
+										</p>
+										<X
+											onClick={() => removeProjects(index)}
+											className="cursor-pointer hover:text-red-600 text-white"
+											width={18}
+											height={18}
+										/>
+									</div>
+									<EditorInput
+										className="mt-8"
+										name={`projects.${index}.name`}
+										label={"Project Name"}
+										placeholder="My Resume Guru"
+										control={form.control}
+									/>
+									<div className="mt-8 grid grid-cols-2 gap-4">
+										<EditorInput
+											name={`projects.${index}.url`}
+											label={"URL"}
+											placeholder="https://myresumeguru.com"
+											control={form.control}
+										/>
+										<EditorInput
+											className=""
+											name={`projects.${index}.location`}
+											label={"Location"}
+											placeholder="San Francisco, CA"
+											control={form.control}
+										/>
+									</div>
+									<div className="grid pt-4 grid-cols-2 gap-4">
+										<EditorInput
+											name={`projects.${index}.startDate`}
+											label={"Start Date"}
+											placeholder="Aug 2024"
+											control={form.control}
+										/>
+										<EditorInput
+											name={`projects.${index}.endDate`}
+											label={"End Date"}
+											placeholder="Present"
+											control={form.control}
+										/>
+									</div>
+									<EditorTextarea
+										className="mt-8"
+										name={`projects.${index}.description`}
+										label={"Description"}
+										placeholder="I built..."
+										control={form.control}
+									/>
+								</div>
+							))}
+						</EditorSection>
+						<EditorSection value="certications" title="Certifications">
+							<Button
+								onClick={() =>
+									appendCertifications({
+										name: "",
+										date: "",
+									})
+								}
+								className="bg-white rounded-none text-blue-800 font-bold cursor-pointer hover:bg-gray-300 hover:text-blue-800"
+							>
+								Add Certification
+							</Button>
+							{certificationsFields.map((certificationField, index) => (
+									<div key={certificationField.id} >
+										<div className="flex justify-between pt-8 pb-4">
+											<p className="font-bold text-lg text-white">
+												Certification {index + 1}
+											</p>
+											<X
+												onClick={() => removeCertifications(index)}
+												className="cursor-pointer hover:text-red-600 text-white"
+												width={18}
+												height={18}
+											/>
+										</div>
+
+										<div className=" grid grid-cols-2 gap-4">
+											<EditorInput
+												name={`certifications.${index}.name`}
+												label={"Certification Name"}
+												placeholder="Cybersecurity Fundamentals"
+												control={form.control}
+											/>
+											<EditorInput
+												name={`certifications.${index}.date`}
+												label={"Date"}
+												placeholder="Awarded on 2024-08-01"
+												control={form.control}
+											/>
+										</div>
+									</div>
+
+							))}
+						</EditorSection>
+					</Accordion>
 				</div>
 			</form>
 		</Form>
@@ -257,30 +568,103 @@ function EditorInput({
 	label,
 	placeholder,
 	control,
+	className,
+	onChange,
 }: {
-	name: keyof z.infer<typeof editorSchema>;
+	name: string;
+	onChange?: (value: string) => void;
 	label: string;
 	placeholder: string;
 	control: Control<z.infer<typeof editorSchema>>;
+	className?: string;
 }) {
 	return (
 		<FormField
 			control={control}
-			name={name}
-      // biome-ignore lint:
-			render={({ field }: { field: any }) => (
-				<FormItem className="col-span-1 text-white">
-					<FormLabel>{label}</FormLabel>
-					<FormControl>
-						<Input
-							className="text-blue-800 font-bold"
-							placeholder={placeholder}
-							{...field}
-						/>
-					</FormControl>
-					<FormMessage />
+			//biome-ignore lint:
+			name={name as any}
+			render={({ field }) => (
+				<FormItem
+					className={cn(
+						"col-span-1 text-white flex justify-between flex-col",
+						className,
+					)}
+				>
+					<div className="flex flex-col gap-2">
+						<FormLabel>{label}</FormLabel>
+						<FormControl>
+							<Input
+								className="text-blue-800 font-bold"
+								placeholder={placeholder}
+								{...field}
+							/>
+						</FormControl>
+					</div>
+					<FormMessage className="text-white" />
 				</FormItem>
 			)}
 		/>
+	);
+}
+
+function EditorTextarea({
+	name,
+	label,
+	placeholder,
+	control,
+	className,
+	onChange,
+}: {
+	name: string;
+	onChange?: (value: string) => void;
+	label: string;
+	placeholder: string;
+	control: Control<z.infer<typeof editorSchema>>;
+	className?: string;
+}) {
+	return (
+		<FormField
+			control={control}
+			name={name as any}
+			render={({ field }) => (
+				<FormItem
+					className={cn(
+						"col-span-1 text-white flex justify-between flex-col",
+						className,
+					)}
+				>
+					<div className="flex flex-col gap-2">
+						<FormLabel>{label}</FormLabel>
+						<FormControl>
+							<Textarea
+								className="text-blue-800 rounded-none font-bold"
+								placeholder={placeholder}
+								{...field}
+							/>
+						</FormControl>
+					</div>
+					<FormMessage className="text-white" />
+				</FormItem>
+			)}
+		/>
+	);
+}
+
+export function EditorSection({
+	title,
+	children,
+	value,
+}: {
+	title: string;
+	children: React.ReactNode;
+	value: string;
+}) {
+	return (
+		<AccordionItem value={value}>
+			<AccordionTrigger className="font-bold cursor-pointer text-md text-white">
+				{title}
+			</AccordionTrigger>
+			<AccordionContent>{children}</AccordionContent>
+		</AccordionItem>
 	);
 }
