@@ -189,9 +189,9 @@ export const analyzeResume = task({
         - name
         - date`,
       },
-    ] as any[]
+    ] as any
 
-    if (resume.fileKey && pdfData) {
+    if (resume.fileKey) {
       messages.push({
         role: "user",
         content: [
@@ -207,6 +207,7 @@ export const analyzeResume = task({
         ]
       })
     }
+    logger.info('messages', messages as any)
     // Analyze the resume
     const result = await generateObject({
       model: anthropic("claude-3-5-sonnet-20241022"),
