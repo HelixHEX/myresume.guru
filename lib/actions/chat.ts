@@ -45,6 +45,9 @@ export async function getMessagesFromDB(chatId: number): Promise<any[]> {
 }
 
 export async function getChat(resumeId: string) {
+  if (Number.isNaN(Number.parseInt(resumeId))) {
+    return null;
+  }
   const resume = await prisma.resume.findUnique({
     where: {
       id: Number.parseInt(resumeId),

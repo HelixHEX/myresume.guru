@@ -9,19 +9,11 @@ export async function saveResume(resume: z.infer<typeof editorSchema>, resumeId:
 	if (!user) {
 		return { error: "User not found" };
 	}
-	if (resumeId) {
-		const resumeDb = await prisma.resume.findUnique({
-			where: {
-				id: Number.parseInt(resumeId),
-			},
-		});
-		if (!resumeDb) {
-			return { error: "Resume not found" };
-		}
-		const updatedResume = await prisma.resume.update({
-			where: { id: Number.parseInt(resumeId) },
+
+	if (Number.isNaN(Number.parseInt(resumeId))) {
+		const resumeDB = await prisma.resume.create({
 			data: {
-				name: resume.name,
+				name: resume.name ?? "",
 				firstName: resume.firstName,
 				lastName: resume.lastName,
 				email: resume.email,
@@ -37,17 +29,28 @@ export async function saveResume(resume: z.infer<typeof editorSchema>, resumeId:
 				skills: resume.skills,
 				certifications: resume.certifications,
 				projects: resume.projects,
-			},
-		});
-
-		return { success: "Resume saved", resumeId: updatedResume.id };
+				userId: user.id
+			}
+		})
+		return { success: "Resume created", resumeId: resumeDB.id };
 	}
 
-	const newResume = await prisma.resume.create({
+	const exists = await prisma.resume.findUnique({
+		where: {
+			id: Number.parseInt(resumeId)
+		},
+	})
+
+	if (!exists || exists.userId !== user.id) {
+		return { error: "Resume not found" };
+	}
+
+	const resumeDb = await prisma.resume.update({
+		where: {
+			id: Number.parseInt(resumeId)
+		},
 		data: {
 			name: resume.name ?? "",
-			userId: user.id,
-			fileKey: "",
 			firstName: resume.firstName,
 			lastName: resume.lastName,
 			email: resume.email,
@@ -63,8 +66,12 @@ export async function saveResume(resume: z.infer<typeof editorSchema>, resumeId:
 			skills: resume.skills,
 			certifications: resume.certifications,
 			projects: resume.projects,
-		},
-	});
+		}
+	})
 
-	return { success: "Resume created", resumeId: newResume.id };
+	if (!resumeDb) {
+		return { error: "Resume not found" };
+	}
+
+	return { success: "Resume created", resumeId: 21 };
 }

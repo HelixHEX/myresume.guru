@@ -35,7 +35,7 @@ import { saveResume } from "../../lib/actions";
 import { useRouter } from "next/navigation";
 
 export const editorSchema = z.object({
-	name: z.string().optional(),
+	name: z.string().min(3, { message: "Name must be at least 3 characters" }),
 	firstName: z.string().optional(),
 	lastName: z.string().optional(),
 	email: z.string().optional(),
@@ -226,11 +226,6 @@ function EditorForm({
 		},
 	});
 
-	async function onSubmit(values: z.infer<typeof editorSchema>) {
-		const res = await saveResume(values, resumeId);
-		console.log(res);
-		// router.push(`/app/resumes/${res.resumeId}`);
-	}
 
 	const {
 		fields: workExperienceFields,
@@ -281,12 +276,19 @@ function EditorForm({
 		return unsubscribe;
 	}, [form, saveResumeEditorData, resumeId]);
 
+	async function onSubmit(values: z.infer<typeof editorSchema>) {
+		const res = await saveResume(values, resumeId);
+		router.push(`/app/resumes/${res.resumeId}`);
+		localStorage.removeItem("resume:");
+	}
+
 	return (
 		<Form {...form}>
 			<form className="pt-8" onSubmit={form.handleSubmit(onSubmit)}>
 				<div className="grid mt-8 grid-cols-2 gap-4 ">
 					<EditorInput
 						name="name"
+						className="self-end"
 						label="Name"
 						placeholder="Updated resume"
 						control={form.control}
