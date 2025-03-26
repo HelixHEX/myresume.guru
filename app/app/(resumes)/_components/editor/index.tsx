@@ -44,9 +44,6 @@ export const editorSchema = z.object({
 	linkedin: z.string().optional(),
 	website: z
 		.string()
-		.url({
-			message: "Invalid URL",
-		})
 		.optional(),
 	twitter: z.string().optional(),
 	location: z.string().optional(),
@@ -89,9 +86,6 @@ export const editorSchema = z.object({
 				location: z.string().optional(),
 				url: z
 					.string()
-					.url({
-						message: "Invalid URL",
-					})
 					.optional(),
 			}),
 		)
