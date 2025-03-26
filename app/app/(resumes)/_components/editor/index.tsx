@@ -32,7 +32,7 @@ import {
 } from "../../lib/queries";
 import SaveResume from "../save-resume";
 import { saveResume } from "../../lib/actions";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 export const editorSchema = z.object({
 	name: z.string().min(3, { message: "Name must be at least 3 characters" }),
@@ -108,11 +108,14 @@ export const editorSchema = z.object({
 
 export default function Editor({ resumeId }: { resumeId?: string }) {
 	const router = useRouter();
+	const pathname = usePathname()
 	const { user } = useUser();
 	const { data: resumeData, isLoading: resumeLoading } = useGetResume(
 		resumeId ?? "",
 		0,
 	);
+	const isHomePage = pathname === "/" || pathname === "";
+
 	const { data: resumeEditorData, isLoading: resumeEditorLoading } =
 		useGetResumeEditorData(resumeId ?? "");
 	const { mutate: saveResumeEditorData } = useSaveResumeEditorData(
@@ -177,7 +180,7 @@ export default function Editor({ resumeId }: { resumeId?: string }) {
 			</div>
 		);
 
-	if (!resumeData) router.push("/app/resumes");
+	if (!isHomePage && !resumeData) router.push("/app/resumes");
 
 	const { firstName, lastName } = user ?? { firstName: "", lastName: "" };
 
