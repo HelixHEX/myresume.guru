@@ -176,7 +176,7 @@ export default function Editor({ resumeId }: { resumeId?: string }) {
 			</div>
 		);
 
-	if ((!resumeData || !resumeData.message) && !isHomePage && !isNewResumePage)
+	if ((!resumeData || resumeData?.message?.length === 0) && !isHomePage && !isNewResumePage)
 		router.push("/app/resumes");
 
 	const { firstName, lastName } = user ?? { firstName: "", lastName: "" };
