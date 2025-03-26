@@ -30,7 +30,7 @@ export default function CheckoutButton() {
 			<SignedIn>
 				<Button
 					onClick={handleCheckout}
-					className={cn(buttonVariants({ size: "lg" }), "bg-blue-800 hover:bg-blue-900")}
+					className={cn(buttonVariants({ size: "lg" }), "bg-blue-800 cursor-pointer hover:bg-blue-900")}
 					disabled={loading}
 				>
 					{loading ? <Loader2 className="animate-spin" /> : "Upgrade Plan"}
@@ -41,7 +41,7 @@ export default function CheckoutButton() {
 					onClick={() => {
 						openSignUp({ forceRedirectUrl: "/plans?startCheckout=true" })
 					}}
-					className={cn(buttonVariants({ size: "lg" }), "bg-blue-800 hover:bg-blue-900")}
+					className={cn(buttonVariants({ size: "lg" }), "bg-blue-800 cursor-pointer hover:bg-blue-900")}
 					disabled={loading}
 				>
 					Get Started

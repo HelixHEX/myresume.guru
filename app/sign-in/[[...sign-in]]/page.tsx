@@ -1,4 +1,4 @@
-import Footer from "@/components/fooer";
+import Footer from "@/components/footer";
 import Header from "@/components/header";
 import { SignIn } from "@clerk/nextjs";
 import Image from "next/image";

@@ -17,7 +17,7 @@ export default async function Page() {
 	});
 
 	return (
-		<div className="">
+		<div className="mb-[24px]">
 			<div className="flex p-8 bg-blue-800 flex-row h-12 justify-between sm:justify-start">
 				<h1 className="text-2xl md:text-4xl mr-2 font-bold self-center text-white">
 					My Resumes

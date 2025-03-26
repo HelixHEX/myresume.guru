@@ -6,7 +6,7 @@ import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
 import { ourFileRouter } from "./api/uploadthing/core";
 import { Toaster } from "@/components/ui/sonner";
-import Footer from "@/components/fooer";
+import Footer from "@/components/footer";
 
 export const metadata: Metadata = {
 	title: "myresume.guru",

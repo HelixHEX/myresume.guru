@@ -6,7 +6,7 @@ import { Check } from "lucide-react";
 import Header from "@/components/header";
 import CheckoutButton from "@/components/checkout-button";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
-import Footer from "@/components/fooer";
+import Footer from "@/components/footer";
 
 export default function Plans() {
 	return (

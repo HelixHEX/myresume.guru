@@ -1,11 +1,6 @@
-import { Download } from "lucide-react";
 import Editor from "../../_components/editor";
 import PDFPreview from "../../_components/editor/preview";
-import { useRef } from "react";
-import { useReactToPrint } from "react-to-print";
-import DownloadResume from "../../_components/downloadResume";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import Footer from "@/components/fooer";
 
 export default function NewResumePage() {
 	return (
@@ -52,7 +47,6 @@ export default function NewResumePage() {
 					<PDFPreview />
 				</div>
 			</div>
-			<Footer />
 		</div>
 	);
 }

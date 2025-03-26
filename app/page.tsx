@@ -1,5 +1,5 @@
 "use client";
-import Footer from "@/components/fooer";
+import Footer from "@/components/footer";
 import Header from "@/components/header";
 import FeatureCard from "@/components/home/featureCard";
 import { Button } from "@/components/ui/button";
