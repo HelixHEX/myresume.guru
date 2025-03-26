@@ -35,7 +35,7 @@ import { saveResume } from "../../lib/actions";
 import { usePathname, useRouter } from "next/navigation";
 
 export const editorSchema = z.object({
-	name: z.string().optional(),
+	name: z.string(),
 	firstName: z.string().optional(),
 	lastName: z.string().optional(),
 	email: z.string().optional(),
@@ -178,12 +178,11 @@ export default function Editor({ resumeId }: { resumeId?: string }) {
 			</div>
 		);
 
-		if (resumeData?.message && resumeData.message.length > 0) {
-			router.push("/app/resumes");
-		}
-		
 	if (!resumeData && isEditorPage) router.push("/app/resumes");
 
+	if (resumeData?.message && resumeData.message.length > 0 && !isHomePage) {
+		router.push("/app/resumes");
+	}
 
 	const { firstName, lastName } = user ?? { firstName: "", lastName: "" };
 
