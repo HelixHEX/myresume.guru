@@ -35,7 +35,7 @@ export const GET = async (_request: NextRequest, props: { params: Promise<{ resu
     tasks.trigger('analyze-resume', {
       resumeId: resume.id,
       userId,
-      FREE_GEN: true,
+      FREE_GEN: true, 
     })
   }
 
