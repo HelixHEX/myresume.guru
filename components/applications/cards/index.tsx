@@ -15,7 +15,7 @@ type Props = {
 export default function ApplicationCard({ id, title, company, score }: Props) {
 	const router = useRouter();
 	return (
-		<Card className="w-full flex items-center md:w-[270px] lg:w-[320px] h-auto  min-h-[100px]">
+		<Card className="w-full flex items-center h-auto  min-h-[100px]">
 			<CardContent className="flex mt-6 justify-between flex-row h-full w-full self-center relative items-center">
 				<h2 className="text-md font-medium">{title}</h2>
 				<Button

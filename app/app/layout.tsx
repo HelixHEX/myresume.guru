@@ -22,7 +22,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 							<div className="flex md:hidden "> 
 								<Logo />
 							</div>
-							<BreadcrumbListComp />
+							{/* <BreadcrumbListComp /> */}
 						</div>
 						<UserButton />
 					</div>

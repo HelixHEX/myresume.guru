@@ -44,7 +44,7 @@ export default function Applications() {
 	return (
 		<>
 			{data.applications.length > 0 ? (
-				<div className="h-full w-full  mt-4 gap-4 md:20 lg:gap-8 m-auto grid grid-cols-1 md:grid-cols-2 self-center ">
+				<div className="grid mt-8 grid-cols-1 md:grid-cols-3  gap-4">
 					<CreateApplicationCard />
 					{data.applications.map((application, index) => (
 						<ApplicationCard
