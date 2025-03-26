@@ -3,7 +3,7 @@
 import { type Control, useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useUser } from "@clerk/nextjs";
+import { SignedIn, useUser } from "@clerk/nextjs";
 import {
 	Form,
 	FormControl,
@@ -199,6 +199,7 @@ function EditorForm({
 		resumeId ?? "",
 	);
 	const router = useRouter();
+	const { user } = useUser();
 	useEffect(() => {
 		console.log("resume", resume);
 	}, [resume]);
@@ -225,7 +226,6 @@ function EditorForm({
 			projects: resume?.projects || resumeData?.projects || [],
 		},
 	});
-
 
 	const {
 		fields: workExperienceFields,
@@ -288,12 +288,14 @@ function EditorForm({
 				<div className="grid mt-8 grid-cols-2 gap-4 ">
 					<EditorInput
 						name="name"
-						className="self-end"
+						className={`self-end ${user ? "" : "col-span-2"}`}
 						label="Name"
 						placeholder="Updated resume"
 						control={form.control}
 					/>
-					<SaveResume className="self-end" />
+					<SignedIn>
+						<SaveResume className="self-end" />
+					</SignedIn>
 				</div>
 				<div className="grid mt-8 grid-cols-2 gap-4 ">
 					<EditorInput
