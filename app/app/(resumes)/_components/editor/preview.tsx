@@ -50,12 +50,15 @@ export default function PDFPreview({ resumeId }: { resumeId?: string }) {
 							<div className="flex flex-col gap-2 items-center  ">
 								<div className="flex max-w-[600px] gap-4">
 									{resume.website && resume.website.length && (
-										<a href={resume.website} target="_blank">
+										<a href={`${resume.website}`} target="_blank">
 											<Globe className="w-[20px] h-[20px] self-center" />
 										</a>
 									)}
 									{resume.github && resume.github.length && (
-										<a href={resume.github} target="_blank">
+										<a
+											href={`https://github.com/${resume.github}`}
+											target="_blank"
+										>
 											<Github className="w-[20px] h-[20px] self-center" />
 										</a>
 									)}
@@ -68,7 +71,10 @@ export default function PDFPreview({ resumeId }: { resumeId?: string }) {
 										</a>
 									)}
 									{resume.linkedin && resume.linkedin.length && (
-										<a href={resume.linkedin} target="_blank">
+										<a
+											href={`https://linkedin.com${resume.linkedin}`}
+											target="_blank"
+										>
 											<Linkedin className="w-[20px] h-[20px] self-center" />
 										</a>
 									)}
@@ -119,11 +125,15 @@ export default function PDFPreview({ resumeId }: { resumeId?: string }) {
 													</div>
 													<ul className="list-disc pl-4">
 														{work.summary.length > 0 &&
-															work.summary.map(({ summaryPoint }: any, index: number) => (
-																<li className="list-disc" key={index}>
-																	<p className="text-[12px]">{summaryPoint}</p>
-																</li>
-															))}
+															work.summary.map(
+																({ summaryPoint }: any, index: number) => (
+																	<li className="list-disc" key={index}>
+																		<p className="text-[12px]">
+																			{summaryPoint}
+																		</p>
+																	</li>
+																),
+															)}
 													</ul>
 												</div>
 											))}
@@ -160,7 +170,9 @@ export default function PDFPreview({ resumeId }: { resumeId?: string }) {
 															{education.fieldOfStudy}
 														</p>
 													</div>
-													<p className="text-[12px]">{education.achievements}</p>
+													<p className="text-[12px]">
+														{education.achievements}
+													</p>
 												</div>
 											))}
 										</div>

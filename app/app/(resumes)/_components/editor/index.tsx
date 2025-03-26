@@ -287,7 +287,7 @@ function EditorForm({
 
 	return (
 		<Form {...form}>
-			<form className="pt-8" onSubmit={form.handleSubmit(onSubmit)}>
+			<form className="pt-8 " onSubmit={form.handleSubmit(onSubmit)}>
 				<div className="grid mt-8 grid-cols-2 gap-4 ">
 					<EditorInput
 						name="name"
@@ -339,7 +339,7 @@ function EditorForm({
 					name="website"
 					className="mt-8"
 					label="Website"
-					placeholder="www.example.com"
+					placeholder="https://www.example.com"
 					control={form.control}
 				/>
 				<div className="grid mt-8 grid-cols-2 gap-4">
@@ -359,8 +359,8 @@ function EditorForm({
 				<div className="grid mt-8 grid-cols-2 gap-4">
 					<EditorInput
 						name="linkedin"
-						label="Linkedin url"
-						placeholder="linkedin.com/in/eliaswambugu"
+						label="LinkedIn"
+						placeholder="/in/eliaswambugu"
 						control={form.control}
 					/>
 					<EditorInput
