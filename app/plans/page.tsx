@@ -28,20 +28,28 @@ export default function Plans() {
 								What&apos;s included in the Free plan
 							</h3>
 							<ul className="grid gap-3 text-sm text-muted-foreground font-bold sm:grid-cols-2">
-							<li className="flex items-center">
-									<Check className="mr-2 h-4 w-4" /> Resume editor
+								<li className="flex items-center">
+									<Check className="mr-2 h-4 w-4" /> Resume builder
 								</li>
 								<li className="flex items-center">
-									<Check className="mr-2 h-4 w-4" /> Unlimited Job applications
+									<Check className="mr-2 h-4 w-4" /> Unlimited resume uploads
+								</li>
+								<li className="flex items-center">
+									<Check className="mr-2 h-4 w-4" /> Unlimited application
 									tracking
 								</li>
 								<li className="flex items-center">
-									<Check className="mr-2 h-4 w-4" /> 3 resume feedbacks a day
+									<Check className="mr-2 h-4 w-4" /> 2 AI improvements per
+									resume
 								</li>
 								<li className="flex items-center">
-									<Check className="mr-2 h-4 w-4" /> Chrome extension(Coming Soon!)
+									<Check className="mr-2 h-4 w-4" /> 3 sets of improvements per
+									day
 								</li>
-								
+								<li className="flex items-center">
+									<Check className="mr-2 h-4 w-4" /> Chrome extension (coming
+									soon)
+								</li>
 							</ul>
 						</div>
 						<div className="flex flex-col gap-4 text-center">
@@ -50,7 +58,10 @@ export default function Plans() {
 							</div>
 							<Link
 								href="/sign-up"
-								className={cn(buttonVariants({ size: "lg" }), "bg-blue-800 hover:bg-blue-900 cursor-pointer")}
+								className={cn(
+									buttonVariants({ size: "lg" }),
+									"bg-blue-800 hover:bg-blue-900 cursor-pointer",
+								)}
 							>
 								Get Started for Free
 							</Link>
@@ -72,20 +83,23 @@ export default function Plans() {
 								What&apos;s included in the Plus plan
 							</h3>
 							<ul className="grid gap-3 text-sm text-muted-foreground font-bold sm:grid-cols-2">
-							<li className="flex items-center">
+								<li className="flex items-center">
 									<Check className="mr-2 h-4 w-4" /> Everything in the free plan
 								</li>
 								<li className="flex items-center">
-									<Check className="mr-2 h-4 w-4" /> Acess to AI Guru
+									<Check className="mr-2 h-4 w-4" /> Unlimited sets of
+									improvements per day
 								</li>
 								<li className="flex items-center">
-									<Check className="mr-2 h-4 w-4" /> Unlimited resume feedbacks
+									<Check className="mr-2 h-4 w-4" /> 5 AI improvements per
+									resume
 								</li>
 								<li className="flex items-center">
-									<Check className="mr-2 h-4 w-4" /> AI suggestions in editor
+									<Check className="mr-2 h-4 w-4" /> AI suggestions in the
+									resume builder (coming soon)
 								</li>
 								<li className="flex items-center">
-									<Check className="mr-2 h-4 w-4" /> Premium Support
+									<Check className="mr-2 h-4 w-4" /> AI Resume Guru Chat Feature
 								</li>
 							</ul>
 						</div>
@@ -102,7 +116,10 @@ export default function Plans() {
 							<SignedOut>
 								<Link
 									href="/sign-up"
-									className={cn(buttonVariants({ size: "lg" }), "bg-blue-800 hover:bg-blue-900 cursor-pointer")}
+									className={cn(
+										buttonVariants({ size: "lg" }),
+										"bg-blue-800 hover:bg-blue-900 cursor-pointer",
+									)}
 								>
 									Get Started
 								</Link>
@@ -111,7 +128,7 @@ export default function Plans() {
 					</div>
 				</div>
 			</div>
-				<Footer />
+			<Footer />
 		</>
 	);
 }
