@@ -13,7 +13,7 @@ export async function saveResume(resume: z.infer<typeof editorSchema>, resumeId:
 	if (Number.isNaN(Number.parseInt(resumeId))) {
 		const resumeDB = await prisma.resume.create({
 			data: {
-				name: resume.name ?? "",
+				name: resume.resumeName ?? "",
 				firstName: resume.firstName,
 				lastName: resume.lastName,
 				email: resume.email,
@@ -51,7 +51,7 @@ export async function saveResume(resume: z.infer<typeof editorSchema>, resumeId:
 			id: Number.parseInt(resumeId)
 		},
 		data: {
-			name: resume.name ?? "",
+			name: resume.resumeName ?? "",
 			firstName: resume.firstName,
 			lastName: resume.lastName,
 			email: resume.email,

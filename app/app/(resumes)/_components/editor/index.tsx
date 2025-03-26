@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
 	Accordion,
 	AccordionContent,
@@ -35,7 +35,7 @@ import { saveResume } from "../../lib/actions";
 import { usePathname, useRouter } from "next/navigation";
 
 export const editorSchema = z.object({
-	name: z.string(),
+	resumeName: z.string(),
 	firstName: z.string().optional(),
 	lastName: z.string().optional(),
 	email: z.string().optional(),
@@ -116,7 +116,8 @@ export default function Editor({ resumeId }: { resumeId?: string }) {
 	);
 	const isHomePage = pathname === "/" || pathname === "";
 	const isNewResumePage = pathname.includes("/resumes/new");
-	const isEditorPage = pathname.includes("/app/resumes") && pathname !== "/app/resumes/new";
+	const isEditorPage =
+		pathname.includes("/app/resumes") && pathname !== "/app/resumes/new";
 
 	useEffect(() => {
 		console.log("editorPage", isEditorPage.toString());
@@ -243,7 +244,7 @@ function EditorForm({
 	const form = useForm<z.infer<typeof editorSchema>>({
 		resolver: zodResolver(editorSchema),
 		defaultValues: {
-			name: resume?.name,
+			resumeName: resume?.name,
 			firstName: resume?.firstName || resumeData?.firstName || firstName,
 			lastName: resume?.lastName || resumeData?.lastName || lastName,
 			phone: resume?.phone || resumeData?.phone || "",
@@ -313,10 +314,13 @@ function EditorForm({
 		return unsubscribe;
 	}, [form, saveResumeEditorData, resumeId]);
 
+	const [isSubmitting, setIsSubmitting] = useState(false);
 	async function onSubmit(values: z.infer<typeof editorSchema>) {
+		setIsSubmitting(true);
 		const res = await saveResume(values, resumeId);
-		router.push(`/app/resumes/${res.resumeId}`);
 		localStorage.removeItem("resume:");
+		router.push(`/app/resumes/${res.resumeId}`);
+		setIsSubmitting(false);
 	}
 
 	return (
@@ -324,14 +328,14 @@ function EditorForm({
 			<form className="pt-8 " onSubmit={form.handleSubmit(onSubmit)}>
 				<div className="grid mt-8 grid-cols-2 gap-4 ">
 					<EditorInput
-						name="name"
+						name="resumeName"
 						className={`self-end ${user ? "" : "col-span-2"}`}
 						label="Name"
 						placeholder="Updated resume"
 						control={form.control}
 					/>
 					<SignedIn>
-						<SaveResume className="self-end" />
+						<SaveResume className="self-end" isSubmitting={isSubmitting} />
 					</SignedIn>
 				</div>
 				<div className="grid mt-8 grid-cols-2 gap-4 ">
