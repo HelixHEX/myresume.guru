@@ -116,8 +116,7 @@ export default function Editor({ resumeId }: { resumeId?: string }) {
 	);
 	const isHomePage = pathname === "/" || pathname === "";
 	const isNewResumePage = pathname.includes("/resumes/new");
-	const isEditorPage =
-		pathname !== "/app/resumes" && pathname !== "/app/resumes/new";
+	const isEditorPage = pathname.includes("/app/resumes") && pathname !== "/app/resumes/new";
 
 	useEffect(() => {
 		console.log("editorPage", isEditorPage.toString());
