@@ -87,6 +87,9 @@ export default function Plans() {
 									<Check className="mr-2 h-4 w-4" /> Everything in the free plan
 								</li>
 								<li className="flex items-center">
+									<Check className="mr-2 h-4 w-4" /> AI Resume Guru Chat Feature
+								</li>
+								<li className="flex items-center">
 									<Check className="mr-2 h-4 w-4" /> Unlimited sets of
 									improvements per day
 								</li>
@@ -97,9 +100,6 @@ export default function Plans() {
 								<li className="flex items-center">
 									<Check className="mr-2 h-4 w-4" /> AI suggestions in the
 									resume builder (coming soon)
-								</li>
-								<li className="flex items-center">
-									<Check className="mr-2 h-4 w-4" /> AI Resume Guru Chat Feature
 								</li>
 							</ul>
 						</div>
