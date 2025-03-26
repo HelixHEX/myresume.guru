@@ -173,7 +173,7 @@ export default function Editor({ resumeId }: { resumeId?: string }) {
 			</div>
 		);
 
-	if (resumeData?.message === "Unauthorized") router.push("/apps/resumes");
+	if (!resumeData) router.push("/apps/resumes");
 
 	const { firstName, lastName } = user ?? { firstName: "", lastName: "" };
 
