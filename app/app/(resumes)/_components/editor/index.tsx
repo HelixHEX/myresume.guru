@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import {
 	Accordion,
 	AccordionContent,
@@ -128,7 +128,7 @@ export default function Editor({ resumeId }: { resumeId?: string }) {
 		const main = async () => {
 			if (user) {
 				const localResumeEditorData = await getResumeEditorData(resumeId ?? "");
-				if (resume) {
+				if (resume && resume.userId === user.id) {
 					saveResumeEditorData({
 						resumeId: resumeId ?? "",
 						data: JSON.stringify({
@@ -150,7 +150,11 @@ export default function Editor({ resumeId }: { resumeId?: string }) {
 							projects: resume?.projects,
 						}),
 					});
-				} else if (Object.keys(localResumeEditorData).length === 0) {
+				} else if (
+					Object.keys(localResumeEditorData).length === 0 &&
+					resume &&
+					resume.userId === user.id
+				) {
 					saveResumeEditorData({
 						resumeId: resumeId ?? "",
 						data: JSON.stringify({
@@ -173,7 +177,7 @@ export default function Editor({ resumeId }: { resumeId?: string }) {
 			</div>
 		);
 
-	if (!resumeData) router.push("/apps/resumes");
+	if (!resumeData) router.push("/app/resumes");
 
 	const { firstName, lastName } = user ?? { firstName: "", lastName: "" };
 
