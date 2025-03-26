@@ -116,6 +116,8 @@ export default function Editor({ resumeId }: { resumeId?: string }) {
 	);
 	const isHomePage = pathname === "/" || pathname === "";
 	const isNewResumePage = pathname.includes("/resumes/new");
+	const isEditorPage =
+		pathname !== "/app/resumes" && pathname !== "/app/resumes/new";
 
 	const { data: resumeEditorData, isLoading: resumeEditorLoading } =
 		useGetResumeEditorData(resumeId ?? "");
@@ -176,16 +178,12 @@ export default function Editor({ resumeId }: { resumeId?: string }) {
 			</div>
 		);
 
-	if (
-		(!resumeData) &&
-		!isHomePage &&
-		!isNewResumePage
-	)
-		router.push("/app/resumes");
+		if (resumeData?.message && resumeData.message.length > 0) {
+			router.push("/app/resumes");
+		}
+		
+	if (!resumeData && isEditorPage) router.push("/app/resumes");
 
-	if (resumeData?.message && resumeData.message.length > 0) {
-		router.push("/app/resumes");
-	}
 
 	const { firstName, lastName } = user ?? { firstName: "", lastName: "" };
 
