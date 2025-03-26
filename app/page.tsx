@@ -77,6 +77,8 @@ export default function Home() {
 							</Zoom>
 						</div>
 					</div>
+
+					{/* EDITOR SECTION */}
 					<div className="flex pb-8 gap-4 items-center justify-center">
 						<Sparkles />
 						<h1 className=" text-center font-bold text-4xl">
@@ -84,6 +86,7 @@ export default function Home() {
 						</h1>
 						<Sparkles />
 					</div>
+					
 					<div className="w-full shadow-lg bg-[#F6F6F6] rounded-lg flex h-full max-h-screen overflow-y-auto">
 						<div className="h-full p-4 px-4 sm:px-8 transition-all duration-300 w-full lg:w-[700px] bg-white sm:bg-blue-800">
 							<div className="md:hidden h-full w-full pt-4">
@@ -125,81 +128,8 @@ export default function Home() {
 							<PDFPreview />
 						</div>
 					</div>
-					<div className="mt-44 flex flex-col w-full self-center">
-						<Zoom duration={1000}>
-							<h1 className="text-4xl  font-bold">
-								{"Get resume feedback that's actually meaningful."}
-							</h1>
-						</Zoom>
-						<Zoom delay={100}>
-							<p className="mt-8 ">
-								{
-									"Your resume is often the first thing a potential employer sees, so it's important to make a good impression. MyResume Guru makes it easy to get feedback on your resume, so you can feel confident that you're putting your best foot forward."
-								}
-							</p>
-						</Zoom>
-					</div>
-
-					<div className="flex mt-4 flex-col w-full py-40 self-center">
-						<Zoom>
-							<h1 className="text-2xl text-center  font-bold">
-								Example Improvements
-							</h1>
-						</Zoom>
-						<Zoom delay={100}>
-							<Card className="p-6 rounded-none mt-4">
-								<div className="flex items-start justify-between gap-4">
-									<div className="flex-1">
-										<div className="flex items-center gap-3 mb-3">
-											<Fade out delay={100}>
-												<h3 className="text-xl font-bold">
-													Enhance Personal Summary
-												</h3>
-											</Fade>
-										</div>
-										<div className="text-[#373737] text-left whitespace-pre-wrap">
-											<Fade out delay={200}>
-												The resume currently lacks a personal summary, which is
-												a crucial section that provides a snapshot of your
-												professional identity and career goals. A well-crafted
-												summary can immediately capture the attention of hiring
-												managers and set the tone for the rest of the resume.
-											</Fade>
-											<br />
-											<br />
-											<Fade out delay={300}>
-												**Actionable Steps:**
-											</Fade>
-											<br />
-											<Fade out delay={400}>
-												{`1. **Write a Concise Summary:** Start with a strong opening that highlights your key skills and experiences. For example, "Dynamic Front-End Developer with over 5 years of experience in building scalable web applications using React and Next.js."`}
-											</Fade>
-											<br />
-											<Fade out delay={500}>
-												{`2. **Include Career Goals:** Mention your career aspirations and how they align with the roles you are applying for. For example, "Seeking to leverage expertise in UI/UX design to contribute to innovative projects at a forward-thinking tech company."`}
-											</Fade>
-											<br />
-											<Fade out delay={600}>
-												{" "}
-												{`3. **Highlight Key Achievements:** Briefly mention one or two significant accomplishments that demonstrate your impact, such as "Led a team to increase app performance by 30%, enhancing user experience."`}
-											</Fade>
-											<br />
-											<br />
-											<Fade out delay={700}>
-												**Example Summary:**
-											</Fade>
-											<br />
-											<Fade out delay={800}>
-												{`"Innovative Front-End Developer with 5+ years of experience in creating user-centric applications using React and Next.js. Proven track record of improving app performance and user satisfaction. Passionate about leveraging technology to solve real-world problems and eager to contribute to cutting-edge projects in a dynamic tech environment."`}
-											</Fade>
-										</div>
-									</div>
-								</div>
-							</Card>
-						</Zoom>
-					</div>
-
-					<div className="flex flex-col pt-40 w-full sm:self-center ">
+						{/* FEATURES SECTION */}
+						<div className="flex flex-col pt-40 w-full sm:self-center ">
 						<h1 className="text-4xl  font-bold">Features</h1>
 						<div className="flex w-full items-center h-full justify-between flex-col lg:flex-row mt-8">
 							<ul className="grid grid-cols-1 grid-rows-none gap-4 md:grid-cols-12 md:grid-rows-3 lg:gap-4 xl:max-h-[34rem] xl:grid-rows-2">
@@ -285,6 +215,81 @@ export default function Home() {
 								delay={900}
 							/> */}
 						</div>
+					</div>
+
+					{/* FEEDBACK SECTION */}
+					<div className="mt-44 flex flex-col w-full self-center">
+						<Zoom duration={1000}>
+							<h1 className="text-4xl  font-bold">
+								{"Get resume feedback that's actually meaningful."}
+							</h1>
+						</Zoom>
+						<Zoom delay={100}>
+							<p className="mt-8 ">
+								{
+									"Your resume is often the first thing a potential employer sees, so it's important to make a good impression. MyResume Guru makes it easy to get feedback on your resume, so you can feel confident that you're putting your best foot forward."
+								}
+							</p>
+						</Zoom>
+					</div>
+
+					<div className="flex mt-4 flex-col w-full py-40 self-center">
+						<Zoom>
+							<h1 className="text-2xl text-center  font-bold">
+								Example Improvements
+							</h1>
+						</Zoom>
+						<Zoom delay={100}>
+							<Card className="p-6 rounded-none mt-4">
+								<div className="flex items-start justify-between gap-4">
+									<div className="flex-1">
+										<div className="flex items-center gap-3 mb-3">
+											<Fade out delay={100}>
+												<h3 className="text-xl font-bold">
+													Enhance Personal Summary
+												</h3>
+											</Fade>
+										</div>
+										<div className="text-[#373737] text-left whitespace-pre-wrap">
+											<Fade out delay={200}>
+												The resume currently lacks a personal summary, which is
+												a crucial section that provides a snapshot of your
+												professional identity and career goals. A well-crafted
+												summary can immediately capture the attention of hiring
+												managers and set the tone for the rest of the resume.
+											</Fade>
+											<br />
+											<br />
+											<Fade out delay={300}>
+												**Actionable Steps:**
+											</Fade>
+											<br />
+											<Fade out delay={400}>
+												{`1. **Write a Concise Summary:** Start with a strong opening that highlights your key skills and experiences. For example, "Dynamic Front-End Developer with over 5 years of experience in building scalable web applications using React and Next.js."`}
+											</Fade>
+											<br />
+											<Fade out delay={500}>
+												{`2. **Include Career Goals:** Mention your career aspirations and how they align with the roles you are applying for. For example, "Seeking to leverage expertise in UI/UX design to contribute to innovative projects at a forward-thinking tech company."`}
+											</Fade>
+											<br />
+											<Fade out delay={600}>
+												{" "}
+												{`3. **Highlight Key Achievements:** Briefly mention one or two significant accomplishments that demonstrate your impact, such as "Led a team to increase app performance by 30%, enhancing user experience."`}
+											</Fade>
+											<br />
+											<br />
+											<Fade out delay={700}>
+												**Example Summary:**
+											</Fade>
+											<br />
+											<Fade out delay={800}>
+												{`"Innovative Front-End Developer with 5+ years of experience in creating user-centric applications using React and Next.js. Proven track record of improving app performance and user satisfaction. Passionate about leveraging technology to solve real-world problems and eager to contribute to cutting-edge projects in a dynamic tech environment."`}
+											</Fade>
+										</div>
+									</div>
+								</div>
+							</Card>
+						</Zoom>
 					</div>
 
 					{/* <h1 className="mt-44 font-bold text-4xl text-center">
