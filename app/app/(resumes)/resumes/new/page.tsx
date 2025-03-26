@@ -13,21 +13,25 @@ export default function NewResumePage() {
 				<div className="flex w-full gap-2">
 					<div className="md:hidden  w-full pt-4">
 						<Tabs defaultValue="edit" className="w-full">
-							<h1 className=" text-4xl font-bold text-blue-800">New Resume</h1>
-							<TabsList>
-								<TabsTrigger
-									className="cursor-pointer text-blue-800 data-[state=active]:text-white data-[state=active]:bg-blue-800 bg-white rounded-none border-none"
-									value="edit"
-								>
-									Edit
-								</TabsTrigger>
-								<TabsTrigger
-									className="cursor-pointer text-blue-800 data-[state=active]:bg-blue-800 bg-white data-[state=active]:text-white rounded-none border-none"
-									value="preview"
-								>
-									Preview
-								</TabsTrigger>
-							</TabsList>
+							<div className="flex gap-4">
+								<h1 className=" text-4xl font-bold text-blue-800">
+									New Resume
+								</h1>
+								<TabsList className="self-center">
+									<TabsTrigger
+										className="cursor-pointer text-blue-800 data-[state=active]:text-white data-[state=active]:bg-blue-800 bg-white rounded-none border-none"
+										value="edit"
+									>
+										Edit
+									</TabsTrigger>
+									<TabsTrigger
+										className="cursor-pointer text-blue-800 data-[state=active]:bg-blue-800 bg-white data-[state=active]:text-white rounded-none border-none"
+										value="preview"
+									>
+										Preview
+									</TabsTrigger>
+								</TabsList>
+							</div>
 							<TabsContent value="edit">
 								<Editor resumeId={""} />
 							</TabsContent>

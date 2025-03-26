@@ -22,6 +22,7 @@ import { useRouter } from "next/navigation";
 import { Fade, Jello, Tada, Zoom } from "react-swift-reveal";
 import Editor from "./app/(resumes)/_components/editor";
 import PDFPreview from "./app/(resumes)/_components/editor/preview";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const text = `The resume currently lacks a personal summary, which is a crucial section that provides a snapshot of your professional identity and career goals. A well-crafted summary can capture the attention of hiring managers and set the tone for the rest of the resume.**Actionable Steps:**1. Write a concise summary (3-4 sentences) that highlights your key skills, experiences, and career objectives.2. Focus on your strengths in software development and project management.3. Mention any unique qualities or achievements that differentiate you from other candidates.**Example:**"Dynamic software engineer with over 5 years of experience in developing scalable web applications and leading project management initiatives. Proven track record in enhancing user engagement and satisfaction through innovative solutions. Passionate about leveraging AI to improve user experiences and drive business growth."`;
 
@@ -84,6 +85,35 @@ export default function Home() {
 					</div>
 					<div className="w-full shadow-lg bg-[#F6F6F6] rounded-lg flex h-full max-h-screen overflow-y-auto">
 						<div className="h-full p-4 px-4 sm:px-8 transition-all duration-300 w-full lg:w-[700px] bg-white sm:bg-blue-800">
+						<div className="md:hidden  w-full pt-4">
+								<Tabs defaultValue="edit" className="w-full">
+									<div className="flex gap-4">
+										<h1 className=" text-4xl font-bold text-blue-800">
+											New Resume
+										</h1>
+										<TabsList className="self-center">
+											<TabsTrigger
+												className="cursor-pointer text-blue-800 data-[state=active]:text-white data-[state=active]:bg-blue-800 bg-white rounded-none border-none"
+												value="edit"
+											>
+												Edit
+											</TabsTrigger>
+											<TabsTrigger
+												className="cursor-pointer text-blue-800 data-[state=active]:bg-blue-800 bg-white data-[state=active]:text-white rounded-none border-none"
+												value="preview"
+											>
+												Preview
+											</TabsTrigger>
+										</TabsList>
+									</div>
+									<TabsContent value="edit">
+										<Editor resumeId={""} />
+									</TabsContent>
+									<TabsContent className="w-full md:flex" value="preview">
+										<PDFPreview />
+									</TabsContent>
+								</Tabs>
+							</div>
 							<div className="flex gap-2">
 								<h1 className=" text-4xl font-bold text-blue-800 sm:text-white">
 									New Resume
