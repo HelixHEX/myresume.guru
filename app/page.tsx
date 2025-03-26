@@ -35,12 +35,13 @@ export default function Home() {
 				<div className="flex flex-col lg:w-[1000px] w-full self-center">
 					<div className="p-4 lg:p-8  self-center bg-cover bg-[url('/images/hero1-bg.png')] bg-center   bg-no-repeat rounded-lg w-full h-[480px] text-white flex flex-col justify-end">
 						<h1 className="text-2xl lg:text-4xl font-bold lg:w-96">
-							Land your dream job with MyResume.<span className="text-blue-800 font-bold">guru</span>
+							Land your dream job with MyResume.
+							<span className="text-blue-800 font-bold">guru</span>
 						</h1>
 						<p className="mt-8 w-full md:w-[500px]">
 							Upload your resume and receive instant, personalized feedback
-							powered by AI. Our service will help you craft a resume that stands
-							out.
+							powered by AI. Our service will help you craft a resume that
+							stands out.
 						</p>
 						{/* <div className="mt-8 rounded-md flex flex-row bg-white md:w-96 p-4">
             <Input
@@ -85,12 +86,9 @@ export default function Home() {
 					</div>
 					<div className="w-full shadow-lg bg-[#F6F6F6] rounded-lg flex h-full max-h-screen overflow-y-auto">
 						<div className="h-full p-4 px-4 sm:px-8 transition-all duration-300 w-full lg:w-[700px] bg-white sm:bg-blue-800">
-						<div className="md:hidden  w-full pt-4">
+							<div className="md:hidden  w-full pt-4">
 								<Tabs defaultValue="edit" className="w-full">
-									<div className="flex gap-4">
-										<h1 className=" text-4xl font-bold text-blue-800">
-											New Resume
-										</h1>
+									<div className="flex justify-center gap-4">
 										<TabsList className="self-center">
 											<TabsTrigger
 												className="cursor-pointer text-blue-800 data-[state=active]:text-white data-[state=active]:bg-blue-800 bg-white rounded-none border-none"
@@ -114,12 +112,14 @@ export default function Home() {
 									</TabsContent>
 								</Tabs>
 							</div>
-							<div className="flex gap-2">
-								<h1 className=" text-4xl font-bold text-blue-800 sm:text-white">
-									New Resume
-								</h1>
+							<div className="hidden md:block">
+								<div className="flex gap-2 ">
+									<h1 className=" text-4xl font-bold text-blue-800 sm:text-white">
+										New Resume
+									</h1>
+								</div>
+								<Editor resumeId={""} />
 							</div>
-							<Editor resumeId={""} />
 						</div>
 						<div className="hidden bg-[#F6F6F6] w-full md:flex">
 							<PDFPreview />
