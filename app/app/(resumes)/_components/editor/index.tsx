@@ -168,7 +168,7 @@ export default function Editor({ resumeId }: { resumeId?: string }) {
 
 	if (resumeLoading || resumeEditorLoading)
 		return (
-			<div className="flex text-white mt-2 font-bold justify-center items-center w-full">
+			<div className="flex text-blue-800 sm:text-white mt-2 font-bold justify-center items-center w-full">
 				Loading <Loader2 className="ml-2 animate-spin" />
 			</div>
 		);

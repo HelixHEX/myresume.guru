@@ -12,6 +12,7 @@ export const useGetResume = (resumeId: string, refetchInterval: number) => {
     queryKey: ["resume", resumeId],
     queryFn: () => getResume(resumeId),
     refetchInterval: refetchInterval || 0,
+    enabled: !!resumeId,
   });
 };
 
