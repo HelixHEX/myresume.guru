@@ -115,6 +115,7 @@ export default function Editor({ resumeId }: { resumeId?: string }) {
 		0,
 	);
 	const isHomePage = pathname === "/" || pathname === "";
+	const isNewResumePage = pathname.includes("/resumes/new")
 
 	const { data: resumeEditorData, isLoading: resumeEditorLoading } =
 		useGetResumeEditorData(resumeId ?? "");
@@ -180,7 +181,7 @@ export default function Editor({ resumeId }: { resumeId?: string }) {
 			</div>
 		);
 
-	if (!isHomePage && !resumeData) router.push("/app/resumes");
+	if (!isHomePage && !resumeData && !isNewResumePage) router.push("/app/resumes");
 
 	const { firstName, lastName } = user ?? { firstName: "", lastName: "" };
 
@@ -189,7 +190,7 @@ export default function Editor({ resumeId }: { resumeId?: string }) {
 		resume?.status === "Generating feedback"
 	) {
 		return (
-			<div className="flex text-white mt-2 font-bold justify-center items-center w-full">
+			<div className="flex text-blue-800 sm:text-white mt-2 font-bold justify-center items-center w-full">
 				{resume?.status} <Loader2 className="ml-2 animate-spin" />
 			</div>
 		);

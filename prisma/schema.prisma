@@ -38,15 +38,17 @@ model Chat {
 }
 
 model Resume {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-  name      String
-  userId    String
-  fileKey   String?   @unique
-  status    String   @default("Not analyzed")
-  text      String?
-  analysis  Json?    @map("analysis_json")
+  id           Int      @id @default(autoincrement())
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+  name         String
+  userId       String
+  fileKey      String?  @unique
+  status       String   @default("Not analyzed")
+  text         String?
+  analysis     Json?    @map("analysis_json")
+  v2Conversion Boolean  @default(false)
+  v2Started    Boolean  @default(false)
 
   candidateName     String?  @map("candidate_name")
   candidateEmail    String?  @map("candidate_email")
@@ -57,21 +59,21 @@ model Resume {
   jobTitles         String[] @map("job_titles")
   education         String[] @map("education_institutions")
 
-  firstName      String? 
-  lastName       String? 
-  email          String? 
-  phone          String? 
-  location       String? 
-  website        String? 
-  github         String? 
+  firstName      String?
+  lastName       String?
+  email          String?
+  phone          String?
+  location       String?
+  website        String?
+  github         String?
   linkedin       String?
-  twitter        String? 
-  summary        String? 
+  twitter        String?
+  summary        String?
   skills         String?
-  workExperience Json[] @map("work_experience")
-  education_new  Json[] @map("education")
-  projects       Json[] @map("projects")
-  certifications Json[] @map("certifications")
+  workExperience Json[]  @map("work_experience")
+  education_new  Json[]  @map("education")
+  projects       Json[]  @map("projects")
+  certifications Json[]  @map("certifications")
 
   applications        Application[]        @relation("ApplicationToResume")
   activeApplications  Application[]        @relation("CurrentResume")

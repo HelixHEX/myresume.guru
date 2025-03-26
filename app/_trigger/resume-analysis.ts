@@ -102,7 +102,7 @@ const FeedbackSchema = z.object({
 // Task 1: Analyze Resume
 export const analyzeResume = task({
   id: "analyze-resume",
-  run: async ({ resumeId, userId }: { resumeId: string, userId: string }) => {
+  run: async ({ resumeId, userId, FREE_GEN }: { resumeId: string, userId: string, FREE_GEN?: boolean }) => {
     logger.info("Starting resume analysis", { resumeId });
 
     // Get the resume from the database
@@ -122,7 +122,7 @@ export const analyzeResume = task({
 
     await prisma.resume.update({
       where: { id: Number.parseInt(resumeId) },
-      data: { status: "Analyzing resume" },
+      data: { status: "Analyzing resume", v2Started: true },
     });
 
     const messages = [
@@ -251,19 +251,12 @@ export const analyzeResume = task({
       }
     })
 
-    if (subscription) {
-      await generateFeedback.trigger({
-        resumeId: resume.id,
-        userId: resume.userId,
-        length: 5,
-      })
-    } else {
-      await generateFeedback.trigger({
-        resumeId: resume.id,
-        userId: resume.userId,
-        length: 2,
-      });
-    }
+    await generateFeedback.trigger({
+      resumeId: resume.id,
+      userId: resume.userId,
+      length: subscription || FREE_GEN ? 5 : 2,
+      FREE_GEN,
+    });
 
 
     return { resumeId: resume.id, userId: resume.userId };
@@ -273,7 +266,7 @@ export const analyzeResume = task({
 // Task 2: Generate Feedback
 export const generateFeedback = task({
   id: "generate-feedback",
-  run: async ({ resumeId, userId, length }: { resumeId: number; userId: string, length: number }) => {
+  run: async ({ resumeId, userId, length, FREE_GEN }: { FREE_GEN?: boolean, resumeId: number; userId: string, length: number }) => {
     logger.info("Starting feedback generation", { resumeId });
 
     const resume = await prisma.resume.findUnique({
@@ -301,8 +294,8 @@ export const generateFeedback = task({
     });
 
     if (subscription) {
-      if (subscription.status !== 'active') {
-        if (improvements >= 6) {
+      if (subscription?.status !== 'active' && !FREE_GEN) {
+        if (improvements >= 6 && !FREE_GEN) {
           await prisma.resume.update({
             where: { id: resumeId },
             data: { status: "Limit Reached" },
@@ -311,7 +304,7 @@ export const generateFeedback = task({
         }
       }
     } else {
-      if (improvements >= 6) {
+      if (improvements >= 6 && !FREE_GEN) {
         await prisma.resume.update({
           where: { id: resumeId },
           data: { status: "Limit Reached" },
@@ -319,6 +312,11 @@ export const generateFeedback = task({
         throw new Error("Daily Limit Reached");
       }
     }
+
+    await prisma.resume.update({
+      where: { id: resumeId },
+      data: { v2Started: true },
+    });
 
 
     const pdfData = resume.fileKey ? await getFile(resume.fileKey) : null;
@@ -409,7 +407,8 @@ export const generateFeedback = task({
     // Update final status
     await prisma.resume.update({
       where: { id: resumeId },
-      data: { status: "Analyzed" },
+      data: { status: "Analyzed", v2Conversion: true, v2Started: true },
+      
     });
 
     logger.info("Feedback generation complete", { resumeId });
