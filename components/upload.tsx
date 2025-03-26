@@ -2,7 +2,7 @@
 // import { UploadDropzone as Upload } from "@/lib/uploadthing";
 import { toast } from "sonner";
 import { UploadDropzone as UploadThingDropzone } from "@uploadthing/react";
-import { OurFileRouter } from "@/app/api/uploadthing/core";
+import type { OurFileRouter } from "@/app/api/uploadthing/core";
 import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import { useContext } from "react";
@@ -26,7 +26,7 @@ export default function UploadButton({
       onClientUploadComplete={(res) => {
         // Do something with the response
         toast("File uploaded successfully!");
-        router.push(`/app/resumes/${res[0].serverData.fileKey.toString()}`);
+        router.push(`/app/resumes/${res[0].serverData.resumeId.toString()}`);
       }}
       onUploadError={(error: Error ) => {
         // Do something with the error.

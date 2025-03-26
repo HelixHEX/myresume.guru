@@ -191,7 +191,7 @@ export const analyzeResume = task({
       },
     ] as any[]
 
-    if (resume.fileKey) {
+    if (resume.fileKey && pdfData) {
       messages.push({
         role: "user",
         content: [
@@ -201,7 +201,7 @@ export const analyzeResume = task({
           },
           {
             type: 'file',
-            data: pdfData!,
+            data: pdfData,
             mimeType: "application/pdf",
           }
         ]
@@ -243,7 +243,6 @@ export const analyzeResume = task({
       },
     });
 
-
     logger.info("Resume analysis complete", { resumeId: resume.id });
 
     const subscription = await prisma.subscription.findUnique({
@@ -281,7 +280,8 @@ export const generateFeedback = task({
       where: { id: resumeId },
     });
 
-    if (!resume || !resume.analysis) {
+
+    if (!resume) {
       throw new Error("Resume or analysis not found");
     }
 
@@ -353,7 +353,7 @@ export const generateFeedback = task({
           },
           {
             type: 'text',
-            text: JSON.stringify(resume.analysis)
+            text: JSON.stringify(resumeData)
           },
         ],
       },

@@ -42,7 +42,12 @@ export const editorSchema = z.object({
 	phone: z.string().optional(),
 	github: z.string().optional(),
 	linkedin: z.string().optional(),
-	website: z.string().optional(),
+	website: z
+		.string()
+		.url({
+			message: "Invalid URL",
+		})
+		.optional(),
 	twitter: z.string().optional(),
 	location: z.string().optional(),
 	summary: z.string().optional(),
@@ -114,22 +119,16 @@ export default function Editor({ resumeId }: { resumeId?: string }) {
 		resumeId ?? "",
 	);
 
+	useEffect(() => {
+		console.log("resumeData", resumeData);
+	}, [resumeData]);
+
 	const resume = resumeData?.resume;
 	useEffect(() => {
 		const main = async () => {
 			if (user) {
 				const localResumeEditorData = await getResumeEditorData(resumeId ?? "");
-				if (Object.keys(localResumeEditorData).length === 0) {
-					saveResumeEditorData({
-						resumeId: resumeId ?? "",
-						data: JSON.stringify({
-							firstName: resume?.firstName || user.firstName,
-							lastName: resume?.lastName || user.lastName,
-							email: resume?.email || user.emailAddresses[0].emailAddress,
-							github: resume?.github || user.externalAccounts[0].username,
-						}),
-					});
-				} else if (resume) {
+				if (resume) {
 					saveResumeEditorData({
 						resumeId: resumeId ?? "",
 						data: JSON.stringify({
@@ -151,22 +150,43 @@ export default function Editor({ resumeId }: { resumeId?: string }) {
 							projects: resume?.projects,
 						}),
 					});
+				} else if (Object.keys(localResumeEditorData).length === 0) {
+					saveResumeEditorData({
+						resumeId: resumeId ?? "",
+						data: JSON.stringify({
+							firstName: user.firstName,
+							lastName: user.lastName,
+							email: user.emailAddresses[0].emailAddress,
+							github: user.externalAccounts[0].username,
+						}),
+					});
 				}
 			}
 		};
 		main();
 	}, [user, saveResumeEditorData, resumeId, resume]);
 
-	
 	if (resumeLoading || resumeEditorLoading)
 		return (
 			<div className="flex text-white mt-2 font-bold justify-center items-center w-full">
 				Loading <Loader2 className="ml-2 animate-spin" />
 			</div>
 		);
-	if (resumeData?.message === "Unauthorized") router.push('/apps/resumes')
+
+	if (resumeData?.message === "Unauthorized") router.push("/apps/resumes");
 
 	const { firstName, lastName } = user ?? { firstName: "", lastName: "" };
+
+	if (
+		resume?.status === "Analyzing resume" ||
+		resume?.status === "Generating feedback"
+	) {
+		return (
+			<div className="flex text-white mt-2 font-bold justify-center items-center w-full">
+				{resume?.status} <Loader2 className="ml-2 animate-spin" />
+			</div>
+		);
+	}
 
 	return (
 		<EditorForm
@@ -222,7 +242,7 @@ function EditorForm({
 			summary: resume?.summary || resumeData?.summary || "",
 			workExperience:
 				resume?.workExperience || resumeData?.workExperience || [],
-			education: resume?.education || resumeData?.education || [],
+			education: resume?.education_new || resumeData?.education || [],
 			skills: resume?.skills || resumeData?.skills || "",
 			certifications:
 				resume?.certifications || resumeData?.certifications || [],
@@ -449,14 +469,14 @@ function EditorForm({
 							{educationFields.map((educationField, index) => (
 								<div key={educationField.id}>
 									<div className="flex justify-between pt-8 pb-4">
-										<p className="font-bold pb-4 text-lg text-white">
+										<p className="font-bold pb-4 text-lg text-blue-800 sm:text-white">
 											{educationField.school
 												? educationField.school
 												: `Education ${index + 1}`}
 										</p>
 										<X
 											onClick={() => removeEducation(index)}
-											className="cursor-pointer hover:text-red-400 text-white"
+											className="cursor-pointer hover:text-red-400 sm:text-white text-blue-800"
 											width={18}
 											height={18}
 										/>
@@ -528,12 +548,12 @@ function EditorForm({
 							{projectsFields.map((projectField, index) => (
 								<div key={projectField.id} className="pt-10">
 									<div className="flex text-lg justify-between">
-										<p className="font-bold text-lg pb-4 text-white">
+										<p className="font-bold pb-4 text-lg text-blue-800 sm:text-white">
 											Project {index + 1}
 										</p>
 										<X
 											onClick={() => removeProjects(index)}
-											className="cursor-pointer hover:text-red-400 text-white"
+											className="cursor-pointer hover:text-red-400 sm:text-white text-blue-800"
 											width={18}
 											height={18}
 										/>
@@ -606,12 +626,12 @@ function EditorForm({
 							{certificationsFields.map((certificationField, index) => (
 								<div key={certificationField.id}>
 									<div className="flex justify-between pt-8 pb-4">
-										<p className="font-bold text-lg text-white">
+										<p className="font-bold pb-4 text-lg text-blue-800 sm:text-white">
 											Certification {index + 1}
 										</p>
 										<X
 											onClick={() => removeCertifications(index)}
-											className="cursor-pointer hover:text-red-400 text-white"
+											className="cursor-pointer hover:text-red-400 sm:text-white text-blue-800"
 											width={18}
 											height={18}
 										/>
@@ -780,7 +800,7 @@ function EditorTextarea({
 			render={({ field }) => (
 				<FormItem
 					className={cn(
-						"col-span-1 text-white flex justify-between flex-col",
+						"col-span-1 text-blue-800 sm:text-white flex justify-between flex-col",
 						className,
 					)}
 				>

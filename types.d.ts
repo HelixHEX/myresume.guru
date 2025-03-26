@@ -21,6 +21,8 @@ type Resume = {
   skills: string;
   workExperience: WorkExperience[];
   education: Education[];
+  education_new?: Education[];
+  
   projects: Project[];
   certifications: Certification[];
   applications?: Application[];

@@ -67,11 +67,13 @@ export default function ResumeDetails({
 					resume?.status === "Not Analyzed" ||
 					resume?.status === "Limit Reach") &&
 					!isLoading && (
-						<Button className="w-fit rounded-none text-blue-800 hover:bg-gray-200 cursor-pointer mb-4 bg-white" onClick={() => handleGenerateFeed()}>
+						<Button
+							className="w-fit rounded-none text-blue-800 hover:bg-gray-200 cursor-pointer mb-4 bg-white"
+							onClick={() => handleGenerateFeed()}
+						>
 							Generate Feedback
 						</Button>
 					)}
-
 
 				{resume?.status === "Limit Reached" && !isLoading && (
 					<Alert variant="destructive" className="w-[400px]">
@@ -98,9 +100,12 @@ export default function ResumeDetails({
 				)}
 			</div>
 
-			<div className="flex flex-col mt-4">
+			<div className="flex flex-col gap-20 mt-4">
 				{resume?.improvements?.map((improvement, index) => (
-					<ImprovementCard key={index} {...improvement} />
+					<div key={index} className="flex w-full flex-col gap-2">
+						<p className="text-2xl font-bold text-white">{index + 1}.</p>
+						<ImprovementCard key={index} {...improvement} />
+					</div >
 				))}
 			</div>
 		</>
