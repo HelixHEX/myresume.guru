@@ -180,9 +180,9 @@ export default function Editor({ resumeId }: { resumeId?: string }) {
 
 	if (!resumeData && isEditorPage) router.push("/app/resumes");
 
-	if (resumeData?.message && resumeData.message.length > 0 && !isHomePage) {
-		router.push("/app/resumes");
-	}
+	// if (resumeData?.message && resumeData.message.length > 0 && !isHomePage) {
+	// 	router.push("/app/resumes");
+	// }
 
 	const { firstName, lastName } = user ?? { firstName: "", lastName: "" };
 
