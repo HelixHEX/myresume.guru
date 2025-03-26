@@ -9,7 +9,7 @@ export default async function Page(props: { params: Promise<{ slug: string }> })
   const params = await props.params;
   
   return (
-      <div className="px-4 flex flex-col w-full h-full ">
+      <div className="p-8 flex flex-col w-full h-full ">
         <div className="flex mt-2">
           {/* {params.slug} */}
           <ApplicationTitle id={params.slug} />

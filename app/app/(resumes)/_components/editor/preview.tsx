@@ -24,13 +24,13 @@ export default function PDFPreview() {
 			<div className="flex justify-end pb-4">
 				<Download
 					onClick={() => reactToPrint()}
-					className="text-blue-800 sm:text-black cursor-pointer  hover:text-blue-800"
+					className="text-blue-800 sm:text-blue-800 cursor-pointer  hover:text-black hover:translate-y-[-3px] transition-all duration-300"
 				/>
 			</div>
 			<div
 				ref={containerRef}
 				className={
-					"w-full max-w-[210mm] overflow-y-auto aspect-[210/297] bg-white shadow-md h-fit text-[8px]"
+					"w-full  overflow-y-auto aspect-[210/297] bg-white shadow-md h-fit text-[8px]"
 				}
 			>
 				<div
