@@ -119,6 +119,12 @@ export default function Editor({ resumeId }: { resumeId?: string }) {
 	const isEditorPage =
 		pathname !== "/app/resumes" && pathname !== "/app/resumes/new";
 
+	useEffect(() => {
+		console.log("editorPage", isEditorPage.toString());
+		console.log("isHomePage", isHomePage.toString());
+		console.log("isNewResumePage", isNewResumePage.toString());
+	}, [isEditorPage, isHomePage, isNewResumePage]);
+
 	const { data: resumeEditorData, isLoading: resumeEditorLoading } =
 		useGetResumeEditorData(resumeId ?? "");
 	const { mutate: saveResumeEditorData } = useSaveResumeEditorData(
