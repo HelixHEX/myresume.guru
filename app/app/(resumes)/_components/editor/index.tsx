@@ -102,6 +102,7 @@ export const editorSchema = z.object({
 });
 
 export default function Editor({ resumeId }: { resumeId?: string }) {
+	const router = useRouter();
 	const { user } = useUser();
 	const { data: resumeData, isLoading: resumeLoading } = useGetResume(
 		resumeId ?? "",
@@ -114,7 +115,6 @@ export default function Editor({ resumeId }: { resumeId?: string }) {
 	);
 
 	const resume = resumeData?.resume;
-
 	useEffect(() => {
 		const main = async () => {
 			if (user) {
@@ -157,12 +157,15 @@ export default function Editor({ resumeId }: { resumeId?: string }) {
 		main();
 	}, [user, saveResumeEditorData, resumeId, resume]);
 
+	
 	if (resumeLoading || resumeEditorLoading)
 		return (
 			<div className="flex text-white mt-2 font-bold justify-center items-center w-full">
 				Loading <Loader2 className="ml-2 animate-spin" />
 			</div>
 		);
+	if (resumeData?.message === "Unauthorized") router.push('/apps/resumes')
+
 	const { firstName, lastName } = user ?? { firstName: "", lastName: "" };
 
 	return (
