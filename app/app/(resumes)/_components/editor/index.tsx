@@ -35,7 +35,7 @@ import { saveResume } from "../../lib/actions";
 import { usePathname, useRouter } from "next/navigation";
 
 export const editorSchema = z.object({
-	name: z.string().min(3, { message: "Name must be at least 3 characters" }),
+	name: z.string().optional(),
 	firstName: z.string().optional(),
 	lastName: z.string().optional(),
 	email: z.string().optional(),
@@ -108,14 +108,14 @@ export const editorSchema = z.object({
 
 export default function Editor({ resumeId }: { resumeId?: string }) {
 	const router = useRouter();
-	const pathname = usePathname()
+	const pathname = usePathname();
 	const { user } = useUser();
 	const { data: resumeData, isLoading: resumeLoading } = useGetResume(
 		resumeId ?? "",
 		0,
 	);
 	const isHomePage = pathname === "/" || pathname === "";
-	const isNewResumePage = pathname.includes("/resumes/new")
+	const isNewResumePage = pathname.includes("/resumes/new");
 
 	const { data: resumeEditorData, isLoading: resumeEditorLoading } =
 		useGetResumeEditorData(resumeId ?? "");
@@ -148,7 +148,7 @@ export default function Editor({ resumeId }: { resumeId?: string }) {
 							location: resume?.location,
 							summary: resume?.summary,
 							workExperience: resume?.workExperience,
-							education: resume?.education,
+							education: resume?.education_new,
 							skills: resume?.skills,
 							certifications: resume?.certifications,
 							projects: resume?.projects,
@@ -161,12 +161,7 @@ export default function Editor({ resumeId }: { resumeId?: string }) {
 				) {
 					saveResumeEditorData({
 						resumeId: resumeId ?? "",
-						data: JSON.stringify({
-							firstName: user.firstName,
-							lastName: user.lastName,
-							email: user.emailAddresses[0].emailAddress,
-							github: user.externalAccounts[0].username,
-						}),
+						data: JSON.stringify({ ...localResumeEditorData }),
 					});
 				}
 			}
@@ -181,7 +176,8 @@ export default function Editor({ resumeId }: { resumeId?: string }) {
 			</div>
 		);
 
-	if (!isHomePage && !resumeData && !isNewResumePage) router.push("/app/resumes");
+	if ((!resumeData || !resumeData.message) && !isHomePage && !isNewResumePage)
+		router.push("/app/resumes");
 
 	const { firstName, lastName } = user ?? { firstName: "", lastName: "" };
 
