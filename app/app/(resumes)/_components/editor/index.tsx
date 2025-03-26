@@ -176,8 +176,16 @@ export default function Editor({ resumeId }: { resumeId?: string }) {
 			</div>
 		);
 
-	if ((!resumeData || resumeData?.message?.length === 0) && !isHomePage && !isNewResumePage)
+	if (
+		(!resumeData) &&
+		!isHomePage &&
+		!isNewResumePage
+	)
 		router.push("/app/resumes");
+
+	if (resumeData?.message && resumeData.message.length > 0) {
+		router.push("/app/resumes");
+	}
 
 	const { firstName, lastName } = user ?? { firstName: "", lastName: "" };
 
