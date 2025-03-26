@@ -13,15 +13,15 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Info, Loader2 } from "lucide-react";
 
 export default function ResumeDetails({
-	fileKey,
+	resumeId,
 }: {
-	fileKey: Resume["fileKey"];
+	resumeId: string;
 }) {
 	const router = useRouter();
 	const { user } = useUser();
 	const [refetchInterval, setRefetchInterval] = useState(0);
 	const { data: resumeData, isLoading } = useGetResume(
-		fileKey,
+		resumeId.toString(),
 		refetchInterval,
 	);
 	const resume = resumeData?.resume;
@@ -62,29 +62,16 @@ export default function ResumeDetails({
 	}
 	return (
 		<>
-			<div className="p-4 flex flex-col gap-2">
-				<Link
-					href={`${process.env.NEXT_PUBLIC_UPLOAD_THING_FILE_URL}/${resume?.fileKey}`}
-					className="text-[#373737] text-lg hover:underline hover:text-blue-800 font-bold"
-				>
-					{resume?.name}
-				</Link>
-				{/* {resume?.status !== "Analyzed" && !isLoading && (
-					<Button
-						disabled={resume?.status === "Limit Reached" || isLoading}
-						className="w-fit mb-4"
-						onClick={() => handleGenerateFeed()}
-					>
-						{resume?.status === "Not Started"
-							? "Generate Feedback"
-							: resume?.status === "JSON Generated" && resume?.status}
-					</Button>
-				)} */}
-				{resume?.status === "Not Started" || resume?.status === "Limit Reached" && !isLoading && (
-					<Button className="w-fit mb-4" onClick={() => handleGenerateFeed()}>
-						Generate Feedback
-					</Button>
-				)}
+			<div className="py-4 flex flex-col gap-2">
+				{(resume?.status === "Not Started" ||
+					resume?.status === "Not Analyzed" ||
+					resume?.status === "Limit Reach") &&
+					!isLoading && (
+						<Button className="w-fit rounded-none text-blue-800 hover:bg-gray-200 cursor-pointer mb-4 bg-white" onClick={() => handleGenerateFeed()}>
+							Generate Feedback
+						</Button>
+					)}
+
 
 				{resume?.status === "Limit Reached" && !isLoading && (
 					<Alert variant="destructive" className="w-[400px]">
@@ -105,7 +92,8 @@ export default function ResumeDetails({
 						</AlertDescription>
 					</Alert>
 				)}
-				{(resume?.status.includes("Analyzing") || resume?.status.includes("Generating")) && (
+				{(resume?.status.includes("Analyzing") ||
+					resume?.status.includes("Generating")) && (
 					<p className="text-blue-800 font-bold">{resume.status}...</p>
 				)}
 			</div>

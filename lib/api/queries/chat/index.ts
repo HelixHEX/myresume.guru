@@ -1,21 +1,21 @@
 import { getMessagesFromDb } from "@/actions";
 import { useQuery } from "@tanstack/react-query";
 
-const getMessages = async (fileKey?: Resume['fileKey']) => {
-  const {messages, resume} = await getMessagesFromDb(fileKey);
+const getMessages = async (resumeId?: Resume['id']) => {
+  const {messages, resume} = await getMessagesFromDb(resumeId);
   return {messages, resume};
 };
 
 export const useGetMessages = ({
-  fileKey,
+  resumeId,
   enabled = false,
 }: {
-  fileKey?: Resume['fileKey'];
+  resumeId?: Resume['id'];
   enabled: boolean;
 }) => {
   return useQuery({
-    queryKey: ["getMessages", fileKey],
-    queryFn: () => getMessages(fileKey),
+    queryKey: ["getMessages", resumeId],
+    queryFn: () => getMessages(resumeId),
     enabled,
   });
 };

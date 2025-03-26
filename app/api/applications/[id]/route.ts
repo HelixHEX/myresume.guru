@@ -33,7 +33,7 @@ export async function POST(request: Request) {
 
 
 export async function GET(
-  request: Request,
+  request: NextRequest,
   props: { params: Promise<{ id: Application["id"] }> }) {
   const params = await props.params;
   const { id } = params;

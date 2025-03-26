@@ -44,10 +44,10 @@ export async function getMessagesFromDB(chatId: number): Promise<any[]> {
   return formattedMessages;
 }
 
-export async function getChat(fileKey: string) {
+export async function getChat(resumeId: string) {
   const resume = await prisma.resume.findUnique({
     where: {
-      fileKey,
+      id: Number.parseInt(resumeId),
     },
   });
 

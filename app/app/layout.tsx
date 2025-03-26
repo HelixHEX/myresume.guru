@@ -27,7 +27,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 						<UserButton />
 					</div>
 				</header>
-				<div className="h-full  ">{children}</div>
+				<div className="h-full  ">
+
+					{children}
+				</div>
 				<Footer />
 			</SidebarInset>
 		</SidebarProvider>

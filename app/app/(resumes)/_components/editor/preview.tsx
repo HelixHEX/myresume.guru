@@ -7,10 +7,10 @@ import { Download, Github, Globe, Linkedin, Twitter } from "lucide-react";
 import { useContentRef } from "../downloadResume";
 import { useReactToPrint } from "react-to-print";
 
-export default function PDFPreview() {
+export default function PDFPreview({ resumeId }: { resumeId?: string }) {
 	const contentRef = useRef<HTMLDivElement>(null);
 
-	const { data: resume } = useGetResumeEditorData("");
+	const { data: resume } = useGetResumeEditorData(resumeId ?? "");
 	const containerRef = useRef<HTMLDivElement>(null);
 	const { width, height } = useDimensions(containerRef);
 

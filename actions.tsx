@@ -149,10 +149,10 @@ export async function saveMessageToDb({
 	});
 }
 
-export async function getMessagesFromDb(fileKey?: Resume["fileKey"]) {
-	if (!fileKey) return { messages: [], resume: null };
+export async function getMessagesFromDb(resumeId?: Resume["id"]) {
+	if (!resumeId) return { messages: [], resume: null };
 	const resume = await prisma.resume.findUnique({
-		where: { fileKey },
+		where: { id: resumeId },
 		include: { feedbacks: { include: { actionableFeedbacks: true } } },
 	});
 	if (!resume) {
@@ -201,7 +201,6 @@ export const AI = createAI({
 		"use server";
 		state;
 		if (done) {
-			// saveToDb();
 		}
 	},
 	initialAIState: [],
@@ -221,40 +220,6 @@ export const runThread = async () => {
 	return {
 		status: streamableStatus.value,
 	};
-};
-
-export const saveToDb = async (fileKey: string, feedbacks: Feedback[]) => {
-	const resume = await prisma.resume.findUnique({ where: { fileKey } });
-	if (!resume) {
-		console.log("hi");
-		throw new Error("Unable to find resume");
-	}
-	console.log(feedbacks);
-	for (let i = 0; i < feedbacks.length; i++) {
-		const feedback: Feedback = feedbacks[i];
-		console.log(i);
-		const feedbackDB = await prisma.feedback.create({
-			data: {
-				title: feedback.title,
-				resume: { connect: { id: resume.id } },
-				userId: resume.userId,
-			},
-		});
-
-		await prisma.actionableFeedback.createMany({
-      //biome-ignore lint:
-			data: feedback.actionableFeedbacks!.map((f) => ({
-				...f,
-				userId: resume.userId,
-				// resume: { connect: { id: resume.id } },
-				resumeId: resume.id,
-				feedbackId: feedbackDB.id,
-				// feedback: { connect: { id: feedbackDB.id } },
-			})),
-		});
-	}
-
-	return resume;
 };
 
 type ApiResponse = {

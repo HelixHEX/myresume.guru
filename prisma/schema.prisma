@@ -43,7 +43,7 @@ model Resume {
   updatedAt DateTime @updatedAt @map("updated_at")
   name      String
   userId    String
-  fileKey   String   @unique
+  fileKey   String?   @unique
   status    String   @default("Not analyzed")
   text      String?
   analysis  Json?    @map("analysis_json")

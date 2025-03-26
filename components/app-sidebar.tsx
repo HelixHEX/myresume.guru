@@ -61,6 +61,10 @@ const data = {
       isActive: true,
       items: [
         {
+          title: "My Resumes",
+          url: "/app/resumes",
+        },
+        {
           title: "New Resume",
           url: "/app/resumes/new",
         },
@@ -68,10 +72,7 @@ const data = {
           title: "Upload Resume",
           url: "/app/resumes/upload",
         },
-        {
-          title: "My Resumes",
-          url: "/app/resumes",
-        },
+      
       ],
     },
     {

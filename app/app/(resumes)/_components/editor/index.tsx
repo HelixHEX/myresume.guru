@@ -1,12 +1,6 @@
 "use client";
 
-import {
-	type Control,
-	useFieldArray,
-	UseFieldArrayAppend,
-	useForm,
-	type UseFormReturn,
-} from "react-hook-form";
+import { type Control, useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useUser } from "@clerk/nextjs";
@@ -31,92 +25,51 @@ import { Button } from "@/components/ui/button";
 import { Loader2, X } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { useSaveResumeEditorData } from "../../lib/mutations";
-import { getResumeEditorData, useGetResumeEditorData } from "../../lib/queries";
-
-const workExperienceSchema = z.object({
-	company: z.string().min(3, {
-		message: "Company must be at least 3 characters long",
-	}),
-	title: z.string().min(3, {
-		message: "Title must be at least 3 characters long",
-	}),
-	summary: z.string().min(3, {
-		message: "Summary must be at least 3 characters long",
-	}),
-	startDate: z.string(),
-	endDate: z.string().optional(),
-	location: z.string().min(3, {
-		message: "Location must be at least 3 characters long",
-	}),
-	current: z.boolean(),
-});
+import {
+	getResumeEditorData,
+	useGetResume,
+	useGetResumeEditorData,
+} from "../../lib/queries";
+import SaveResume from "../save-resume";
+import { saveResume } from "../../lib/actions";
+import { useRouter } from "next/navigation";
 
 export const editorSchema = z.object({
-	name: z.string().min(3, {
-		message: "Name must be at least 3 characters long",
-	}),
-	firstName: z.string().min(3, {
-		message: "First name must be at least 3 characters long",
-	}),
-	lastName: z.string().min(3, {
-		message: "Last name must be at least 3 characters long",
-	}),
-	email: z
-		.string()
-		.email({
-			message: "Invalid email address",
-		})
-		.optional(),
+	name: z.string().optional(),
+	firstName: z.string().optional(),
+	lastName: z.string().optional(),
+	email: z.string().optional(),
 	phone: z.string().optional(),
 	github: z.string().optional(),
 	linkedin: z.string().optional(),
 	website: z.string().optional(),
 	twitter: z.string().optional(),
 	location: z.string().optional(),
-	summary: z
-		.string()
-		.min(3, {
-			message: "Summary must be at least 3 characters long",
-		})
-		.optional(),
+	summary: z.string().optional(),
 	workExperience: z
 		.array(
 			z.object({
-				company: z.string().min(3, {
-					message: "Company must be at least 3 characters long",
-				}),
-				title: z.string().min(3, {
-					message: "Title must be at least 3 characters long",
-				}),
+				company: z.string().optional(),
+				title: z.string().optional(),
 				summary: z.array(z.object({ summaryPoint: z.string() })).optional(),
-				startDate: z.string(),
+				startDate: z.string().optional(),
 				endDate: z.string().optional(),
-				location: z.string().min(3, {
-					message: "Location must be at least 3 characters long",
-				}),
-				current: z.boolean(),
+				location: z.string().optional(),
+				current: z.boolean().optional(),
 			}),
 		)
 		.optional(),
 	education: z
 		.array(
 			z.object({
-				school: z.string().min(3, {
-					message: "School must be at least 3 characters long",
-				}),
-				degree: z.string().min(3, {
-					message: "Degree must be at least 3 characters long",
-				}),
-				fieldOfStudy: z.string().min(3, {
-					message: "Field of study must be at least 3 characters long",
-				}),
-				startDate: z.string(),
+				school: z.string().optional(),
+				degree: z.string().optional(),
+				fieldOfStudy: z.string().optional(),
+				startDate: z.string().optional(),
 				endDate: z.string().optional(),
-				location: z.string().min(3, {
-					message: "Location must be at least 3 characters long",
-				}),
+				location: z.string().optional(),
 				achievements: z.string().optional(),
-				current: z.boolean(),
+				current: z.boolean().optional(),
 			}),
 		)
 		.optional(),
@@ -124,17 +77,11 @@ export const editorSchema = z.object({
 	projects: z
 		.array(
 			z.object({
-				name: z.string().min(3, {
-					message: "Project name must be at least 3 characters long",
-				}),
-				description: z.string().min(3, {
-					message: "Description must be at least 3 characters long",
-				}),
-				startDate: z.string(),
+				name: z.string().optional(),
+				description: z.string().optional(),
+				startDate: z.string().optional(),
 				endDate: z.string().optional(),
-				location: z.string().min(3, {
-					message: "Location must be at least 3 characters long",
-				}),
+				location: z.string().optional(),
 				url: z
 					.string()
 					.url({
@@ -147,10 +94,8 @@ export const editorSchema = z.object({
 	certifications: z
 		.array(
 			z.object({
-				name: z.string().min(3, {
-					message: "Certification must be at least 3 characters long",
-				}),
-				date: z.string(),
+				name: z.string().optional(),
+				date: z.string().optional(),
 			}),
 		)
 		.optional(),
@@ -158,33 +103,61 @@ export const editorSchema = z.object({
 
 export default function Editor({ resumeId }: { resumeId?: string }) {
 	const { user } = useUser();
-	const { data: resumeEditorData, isLoading } = useGetResumeEditorData(
+	const { data: resumeData, isLoading: resumeLoading } = useGetResume(
+		resumeId ?? "",
+		0,
+	);
+	const { data: resumeEditorData, isLoading: resumeEditorLoading } =
+		useGetResumeEditorData(resumeId ?? "");
+	const { mutate: saveResumeEditorData } = useSaveResumeEditorData(
 		resumeId ?? "",
 	);
-	const { mutate: saveResumeEditorData } = useSaveResumeEditorData("");
+
+	const resume = resumeData?.resume;
 
 	useEffect(() => {
 		const main = async () => {
 			if (user) {
-				const localResumeEditorData = await getResumeEditorData("");
-				console.log(localResumeEditorData);
+				const localResumeEditorData = await getResumeEditorData(resumeId ?? "");
 				if (Object.keys(localResumeEditorData).length === 0) {
 					saveResumeEditorData({
-						fileKey: "",
+						resumeId: resumeId ?? "",
 						data: JSON.stringify({
-							firstName: user.firstName,
-							lastName: user.lastName,
-							email: user.emailAddresses[0].emailAddress,
-							github: user.externalAccounts[0].username,
+							firstName: resume?.firstName || user.firstName,
+							lastName: resume?.lastName || user.lastName,
+							email: resume?.email || user.emailAddresses[0].emailAddress,
+							github: resume?.github || user.externalAccounts[0].username,
+						}),
+					});
+				} else if (resume) {
+					saveResumeEditorData({
+						resumeId: resumeId ?? "",
+						data: JSON.stringify({
+							name: resume?.name,
+							firstName: resume?.firstName,
+							lastName: resume?.lastName,
+							email: resume?.email,
+							phone: resume?.phone,
+							github: resume?.github,
+							linkedin: resume?.linkedin,
+							website: resume?.website,
+							twitter: resume?.twitter,
+							location: resume?.location,
+							summary: resume?.summary,
+							workExperience: resume?.workExperience,
+							education: resume?.education,
+							skills: resume?.skills,
+							certifications: resume?.certifications,
+							projects: resume?.projects,
 						}),
 					});
 				}
 			}
 		};
 		main();
-	}, [user, saveResumeEditorData]);
+	}, [user, saveResumeEditorData, resumeId, resume]);
 
-	if (isLoading)
+	if (resumeLoading || resumeEditorLoading)
 		return (
 			<div className="flex text-white mt-2 font-bold justify-center items-center w-full">
 				Loading <Loader2 className="ml-2 animate-spin" />
@@ -199,6 +172,8 @@ export default function Editor({ resumeId }: { resumeId?: string }) {
 			lastName={lastName || ""}
 			email={user?.emailAddresses[0].emailAddress || ""}
 			github={user?.externalAccounts[0].username || ""}
+			resumeId={resumeId ?? ""}
+			resume={resume}
 		/>
 	);
 }
@@ -209,39 +184,52 @@ function EditorForm({
 	email,
 	github,
 	resumeData,
+	resumeId,
+	resume,
 }: {
 	firstName: string;
 	lastName?: string;
 	email?: string;
 	github?: string;
 	resumeData: any;
+	resumeId: string;
+	resume?: Resume;
 }) {
-	const { mutate: saveResumeEditorData } = useSaveResumeEditorData("");
-
+	const { mutate: saveResumeEditorData } = useSaveResumeEditorData(
+		resumeId ?? "",
+	);
+	const router = useRouter();
+	useEffect(() => {
+		console.log("resume", resume);
+	}, [resume]);
 	const form = useForm<z.infer<typeof editorSchema>>({
 		resolver: zodResolver(editorSchema),
 		defaultValues: {
-			name: resumeData?.name || "",
-			firstName: resumeData?.firstName || firstName,
-			lastName: resumeData?.lastName || lastName,
-			phone: resumeData?.phone || "",
-			email: resumeData?.email || email,
-			github: resumeData?.github || github,
-			linkedin: resumeData?.linkedin || "",
-			website: resumeData?.website || "",
-			twitter: resumeData?.twitter || "",
-			location: resumeData?.location || "",
-			summary: resumeData?.summary || [],
-			workExperience: resumeData?.workExperience || [],
-			education: resumeData?.education || [],
-			skills: resumeData?.skills || "",
-			certifications: resumeData?.certifications || [],
-			projects: resumeData?.projects || [],
+			name: resume?.name,
+			firstName: resume?.firstName || resumeData?.firstName || firstName,
+			lastName: resume?.lastName || resumeData?.lastName || lastName,
+			phone: resume?.phone || resumeData?.phone || "",
+			email: resume?.email || resumeData?.email || email,
+			github: resume?.github || resumeData?.github || github,
+			linkedin: resume?.linkedin || resumeData?.linkedin || "",
+			website: resume?.website || resumeData?.website || "",
+			twitter: resume?.twitter || resumeData?.twitter || "",
+			location: resume?.location || resumeData?.location || "",
+			summary: resume?.summary || resumeData?.summary || "",
+			workExperience:
+				resume?.workExperience || resumeData?.workExperience || [],
+			education: resume?.education || resumeData?.education || [],
+			skills: resume?.skills || resumeData?.skills || "",
+			certifications:
+				resume?.certifications || resumeData?.certifications || [],
+			projects: resume?.projects || resumeData?.projects || [],
 		},
 	});
 
-	function onSubmit(values: z.infer<typeof editorSchema>) {
-		console.log(values);
+	async function onSubmit(values: z.infer<typeof editorSchema>) {
+		const res = await saveResume(values, resumeId);
+		console.log(res);
+		// router.push(`/app/resumes/${res.resumeId}`);
 	}
 
 	const {
@@ -282,25 +270,29 @@ function EditorForm({
 
 	useEffect(() => {
 		const { unsubscribe } = form.watch(async (data) => {
-			console.log(data);
+			const isValid = await form.trigger();
+			if (!isValid) return;
 			saveResumeEditorData({
-				fileKey: "",
+				resumeId: resumeId ?? "",
 				data: JSON.stringify(data),
 			});
 		});
 
 		return unsubscribe;
-	}, [form, saveResumeEditorData]);
+	}, [form, saveResumeEditorData, resumeId]);
 
 	return (
 		<Form {...form}>
 			<form className="pt-8" onSubmit={form.handleSubmit(onSubmit)}>
-				<EditorInput
-					name="name"
-					label="Name"
-					placeholder="Updated resume"
-					control={form.control}
-				/>
+				<div className="grid mt-8 grid-cols-2 gap-4 ">
+					<EditorInput
+						name="name"
+						label="Name"
+						placeholder="Updated resume"
+						control={form.control}
+					/>
+					<SaveResume className="self-end" />
+				</div>
 				<div className="grid mt-8 grid-cols-2 gap-4 ">
 					<EditorInput
 						name="firstName"
@@ -379,9 +371,8 @@ function EditorForm({
 								<div key={workExperienceField.id} className="pt-10">
 									<div className="flex justify-between">
 										<p className="font-bold pb-4 text-lg text-blue-800 sm:text-white">
-											{resumeData?.workExperience[index]?.company ||
-											resumeData?.workExperience[index]?.title
-												? `${resumeData?.workExperience[index]?.title}${resumeData?.workExperience[index]?.company && resumeData?.workExperience[index]?.title ? ", " : ""}${resumeData?.workExperience[index]?.company}`
+											{workExperienceField.company || workExperienceField.title
+												? `${workExperienceField.title}${workExperienceField.company && workExperienceField.title ? ", " : ""}${workExperienceField.company}`
 												: `Experience ${index + 1}`}
 										</p>
 										<X
@@ -427,14 +418,33 @@ function EditorForm({
 									/>
 								</div>
 							))}
+							<div className="mt-6 w-full flex justify-end">
+								<Button
+									size="sm"
+									onClick={() =>
+										appendWorkExperience({
+											title: "",
+											company: "",
+											summary: [{ summaryPoint: "" }],
+											startDate: "",
+											endDate: "",
+											location: "",
+											current: false,
+										})
+									}
+									className="sm:bg-white rounded-none h-[30px] sm:text-blue-800 sm:hover:bg-gray-300 sm:hover:text-blue-800 bg-blue-800 text-white hover:bg-blue-900 font-bold cursor-pointer"
+								>
+									Add Work Experience
+								</Button>
+							</div>
 						</EditorSection>
 						<EditorSection value="education" title="Education">
 							{educationFields.map((educationField, index) => (
 								<div key={educationField.id}>
 									<div className="flex justify-between pt-8 pb-4">
 										<p className="font-bold pb-4 text-lg text-white">
-											{resumeData?.education[index]?.school
-												? resumeData?.education[index]?.school
+											{educationField.school
+												? educationField.school
 												: `Education ${index + 1}`}
 										</p>
 										<X
@@ -684,24 +694,7 @@ function EditorWorkExperienceBulletPoints({
 					/>
 				</div>
 			))}
-			<div className="mt-6 flex justify-between">
-				<Button
-					size="sm"
-					onClick={() =>
-						appendWorkExperience({
-							title: "",
-							company: "",
-							// summary: [{ summaryPoint: "" }],
-							startDate: "",
-							endDate: "",
-							location: "",
-							current: false,
-						})
-					}
-					className="sm:bg-white rounded-none h-[30px] sm:text-blue-800 sm:hover:bg-gray-300 sm:hover:text-blue-800 bg-blue-800 text-white hover:bg-blue-900 font-bold cursor-pointer"
-				>
-					Add Work Experience
-				</Button>
+			<div className="mt-6 w-full flex justify-end">
 				<Button
 					size="sm"
 					onClick={() => append({ summaryPoint: "" })}
@@ -737,7 +730,7 @@ function EditorInput({
 			render={({ field }) => (
 				<FormItem
 					className={cn(
-						"col-span-1 text-blue-800 sm:text-white flex justify-between flex-col",
+						"col-span-1 text-blue-800 md:text-white flex justify-between flex-col",
 						className,
 					)}
 				>
@@ -751,7 +744,7 @@ function EditorInput({
 							/>
 						</FormControl>
 					</div>
-					<FormMessage className="text-blue-800 sm:text-white" />
+					<FormMessage className="text-blue-800 md:text-white" />
 				</FormItem>
 			)}
 		/>

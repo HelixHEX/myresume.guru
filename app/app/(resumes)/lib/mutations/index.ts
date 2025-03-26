@@ -43,17 +43,17 @@ export const useUpdateResume = (fileKey: string) => {
   });
 }
 
-const saveResumeEditorData = async ({ fileKey, data }: { fileKey: string, data: string }) => {
-  localStorage.setItem(`resume:${fileKey}`, data);
+const saveResumeEditorData = async ({ resumeId, data }: { resumeId: string, data: string }) => {
+  localStorage.setItem(`resume:${resumeId}`, data);
 }
 
-export const useSaveResumeEditorData = (fileKey: string) => {
+export const useSaveResumeEditorData = (resumeId: string) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationKey: ["save_resume_editor_data", fileKey],
+    mutationKey: ["save_resume_editor_data", resumeId],
     mutationFn: saveResumeEditorData,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["resume_editor_data", fileKey] });
+      queryClient.invalidateQueries({ queryKey: ["resume_editor_data", resumeId] });
     }
   })
 }

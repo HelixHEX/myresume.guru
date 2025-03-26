@@ -1,6 +1,7 @@
 import Editor from "../../_components/editor";
 import PDFPreview from "../../_components/editor/preview";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import SaveResume from "../../_components/save-resume";
 
 export default function NewResumePage() {
 	return (

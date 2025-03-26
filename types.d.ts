@@ -8,12 +8,62 @@ type Resume = {
   status: string;
   text: string | null;
 
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  location: string;
+  website: string;
+  github: string;
+  linkedin: string;
+  twitter: string;
+  summary: string;
+  skills: string;
+  workExperience: WorkExperience[];
+  education: Education[];
+  projects: Project[];
+  certifications: Certification[];
   applications?: Application[];
   activeApplication?: Application[];
   feedbacks?: Feedback[];
   actionableFeedbacks?: ActionableFeedback[];
   improvements?: Improvement[];
 };
+
+type WorkExperience = {
+  company?: string;
+  title?: string;
+  summary?: string;
+  startDate?: string;
+  endDate?: string;
+  location?: string;
+  current?: boolean;
+}
+
+type Education = {
+  school?: string;
+  degree?: string;
+  fieldOfStudy?: string;
+  startDate?: string;
+  endDate?: string;
+  location?: string;
+  current?: boolean;
+}
+
+type Project = {
+  name?: string;
+  description?: string;
+  startDate?: string;
+  endDate?: string;
+  location?: string;
+  url?: string;
+}
+
+type Certification = {
+  name?: string;
+  dae?: string;
+}
+
 
 type Company = {
   id: number;
@@ -70,7 +120,7 @@ type Feedback = {
   status: string;
 
   application?: Application | null;
-  applicationId?: string | null;
+  applicationId?: number | null;
   resume?: Resume | null;
   resumeId?: number | null;
   actionableFeedbacks?: ActionableFeedback[];
@@ -104,7 +154,7 @@ type ActionableFeedback = {
 
   feedback?: Feedback | null;
   application?: Application | null;
-  applicationId?: string | null;
+  applicationId?: number | null;
   resume?: Resume | null;
   resumeId?: number | null;
 }
@@ -125,7 +175,7 @@ type Message = {
   role: string;
 
   application?: Application | null;
-  applicationId?: string | null;
+  applicationId?: number | null;
   resume?: Resume | null;
   resumeId?: number | null;
 }
