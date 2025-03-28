@@ -170,9 +170,9 @@ export default function PDFPreview({ resumeId }: { resumeId?: string }) {
 															{education.fieldOfStudy}
 														</p>
 													</div>
-													<p className="text-[12px]">
+													{/* <p className="text-[12px]">
 														{education.achievements}
-													</p>
+													</p> */}
 												</div>
 											))}
 										</div>

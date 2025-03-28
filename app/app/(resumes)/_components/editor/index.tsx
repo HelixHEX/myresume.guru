@@ -35,16 +35,14 @@ import { saveResume } from "../../lib/actions";
 import { usePathname, useRouter } from "next/navigation";
 
 export const editorSchema = z.object({
-	resumeName: z.string(),
+	resumeName: z.string().optional(),
 	firstName: z.string().optional(),
 	lastName: z.string().optional(),
 	email: z.string().optional(),
 	phone: z.string().optional(),
 	github: z.string().optional(),
 	linkedin: z.string().optional(),
-	website: z
-		.string()
-		.optional(),
+	website: z.string().optional(),
 	twitter: z.string().optional(),
 	location: z.string().optional(),
 	summary: z.string().optional(),
@@ -84,9 +82,7 @@ export const editorSchema = z.object({
 				startDate: z.string().optional(),
 				endDate: z.string().optional(),
 				location: z.string().optional(),
-				url: z
-					.string()
-					.optional(),
+				url: z.string().optional(),
 			}),
 		)
 		.optional(),
@@ -113,21 +109,11 @@ export default function Editor({ resumeId }: { resumeId?: string }) {
 	const isEditorPage =
 		pathname.includes("/app/resumes") && pathname !== "/app/resumes/new";
 
-	useEffect(() => {
-		console.log("editorPage", isEditorPage.toString());
-		console.log("isHomePage", isHomePage.toString());
-		console.log("isNewResumePage", isNewResumePage.toString());
-	}, [isEditorPage, isHomePage, isNewResumePage]);
-
 	const { data: resumeEditorData, isLoading: resumeEditorLoading } =
 		useGetResumeEditorData(resumeId ?? "");
 	const { mutate: saveResumeEditorData } = useSaveResumeEditorData(
 		resumeId ?? "",
 	);
-
-	useEffect(() => {
-		console.log("resumeData", resumeData);
-	}, [resumeData]);
 
 	const resume = resumeData?.resume;
 	useEffect(() => {
@@ -232,9 +218,7 @@ function EditorForm({
 	);
 	const router = useRouter();
 	const { user } = useUser();
-	useEffect(() => {
-		console.log("resume", resume);
-	}, [resume]);
+
 	const form = useForm<z.infer<typeof editorSchema>>({
 		resolver: zodResolver(editorSchema),
 		defaultValues: {
@@ -309,6 +293,7 @@ function EditorForm({
 	}, [form, saveResumeEditorData, resumeId]);
 
 	const [isSubmitting, setIsSubmitting] = useState(false);
+
 	async function onSubmit(values: z.infer<typeof editorSchema>) {
 		setIsSubmitting(true);
 		const res = await saveResume(values, resumeId);

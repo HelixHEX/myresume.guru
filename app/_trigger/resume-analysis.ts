@@ -320,7 +320,7 @@ export const generateFeedback = task({
     });
 
 
-    const pdfData = resume.fileKey ? await getFile(resume.fileKey) : null;
+    // const pdfData = resume.fileKey ? await getFile(resume.fileKey) : null;
 
     const { userId: clerkId, fileKey, status, text, analysis, candidateName, candidateEmail, candidatePhone, candidateLocation, technicalSkills, companies, jobTitles, education, chatId, ...resumeData } = resume
 
@@ -358,22 +358,22 @@ export const generateFeedback = task({
       },
     ] as any[]
 
-    if (resume.fileKey) {
-      messages.push({
-        role: "user",
-        content: [
-          {
-            type: 'text',
-            text: 'Here is the pdf resume'
-          },
-          {
-            type: 'file',
-            data: pdfData!,
-            mimeType: "application/pdf",
-          }
-        ]
-      })
-    }
+    // if (resume.fileKey) {
+    //   messages.push({
+    //     role: "user",
+    //     content: [
+    //       {
+    //         type: 'text',
+    //         text: 'Here is the pdf resume'
+    //       },
+    //       {
+    //         type: 'file',
+    //         data: pdfData!,
+    //         mimeType: "application/pdf",
+    //       }
+    //     ]
+    //   })
+    // }
     await prisma.resume.update({
       where: { id: resumeId },
       data: { status: "Generating feedback" },
