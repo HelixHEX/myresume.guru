@@ -32,3 +32,8 @@ export function getUrl(url: string) {
   console.log("[UTILS][GET URL]", `${process.env.URL}${url}`)
   return `${process.env.URL}${url}`
 }
+
+export const MEM_0_CONFIG = {
+  org_id: "mem0-org-id",
+  project_id: "mem0-project-id",
+}

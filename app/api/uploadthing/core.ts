@@ -33,7 +33,7 @@ export const ourFileRouter = {
             userId: metadata.userId,
             name: file.name,
             fileKey: file.key,
-            status: "Analyzing",
+            status: "Analyzing resume",
           },
         });
         if (!resume) {
@@ -47,7 +47,7 @@ export const ourFileRouter = {
         // Chain the analysis and feedback tasks
 
         waitUntil(tasks.trigger('analyze-resume', {
-          fileKey: file.key,
+          resumeId: resume.id,
           userId: metadata.userId
         }))
 
@@ -56,7 +56,7 @@ export const ourFileRouter = {
         // await generateFeedback.run(analysisResult);
 
         // !!! Whatever is returned here is sent to the clientside `onClientUploadComplete` callback
-        return { uploadedBy: metadata, fileKey: file.key };
+        return { uploadedBy: metadata, resumeId: resume.id };
       } catch (e) {
         console.error("Error in upload handler:", e);
         throw new UploadThingError(

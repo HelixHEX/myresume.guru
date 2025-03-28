@@ -37,8 +37,8 @@ export default function CreateCard({
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Card className="w-full min-h-[180px] h-full flex items-center border-gray-200 hover:cursor-pointer border-dashed border-2 md:w-[270px] lg:w-[320px]">
-          <Button className="hover:bg-white h-full w-full self-center bg-white">
+        <Card className="w-full min-h-[180px] h-full flex items-center border-gray-200 hover:cursor-pointer border-dashed border-2">
+          <Button className="hover:bg-white hover:cursor-pointer h-full w-full self-center bg-white">
             <CardContent className="flex w-full flex-col ">
               <h1 className="text-gray-400 ">{title}</h1>
             </CardContent>

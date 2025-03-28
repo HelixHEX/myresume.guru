@@ -27,7 +27,7 @@ const getPriorityColor = (priority: number) => {
 
 export default function ImprovementCard({ title, text, priority }: Props) {
   return (
-    <Card className="p-6 rounded-none">
+    <Card className="p-0 rounded-none w-full bg-blue-800 border-none shadow-none text-white">
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1">
           <div className="flex items-center gap-3 mb-3">
@@ -39,7 +39,7 @@ export default function ImprovementCard({ title, text, priority }: Props) {
               Priority {priority}
             </Badge> */}
           </div>
-          <div className="text-[#373737] whitespace-pre-wrap">
+          <div className=" whitespace-pre-wrap">
             {text}
           </div>
         </div>

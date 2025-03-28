@@ -1,6 +1,7 @@
 "use client";
 import ResumeCard from "@/components/resumes/cards";
 import { useGetResumes } from "../lib/queries";
+import { Loader2 } from "lucide-react";
 export default function Resumes() {
 	const { data: resumes, isLoading, isError } = useGetResumes();
 
@@ -22,7 +23,15 @@ export default function Resumes() {
 			</div>
 		);
 	}
-
+ 
+	if (isLoading) {
+		return ( 
+			<div className="flex items-center justify-center w-full">
+				<div className="text-gray-800">Loading</div>
+				<Loader2 className="ml-2 animate-spin text-gray-800" />
+			</div>
+		);
+	}
 	return (
 		<div className="w-full flex h-full flex-col">
 			{resumes?.map((resume, i) => (

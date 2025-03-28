@@ -2,19 +2,34 @@ import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { RESUME_ANALYSIS_STATUS } from "@/lib/actions/resume";
 
-export const getResume = async (fileKey: string) => {
-  const res = await axios.get(`/api/resume/${fileKey}`);
+export const getResume = async (resumeId: string) => {
+  const res = await axios.get(`/api/resume/${resumeId}`);
   return res.data;
 };
 
-export const useGetResume = (fileKey: string, refetchInterval: number) => {
+export const useGetResume = (resumeId: string, refetchInterval: number) => {
   return useQuery<GetResumeResponse>({
-    queryKey: ["resume", fileKey],
-    queryFn: () => getResume(fileKey),
+    queryKey: ["resume", resumeId],
+    queryFn: () => getResume(resumeId),
     refetchInterval: refetchInterval || 0,
+    enabled: !!resumeId,
   });
 };
 
+export const getResumeEditorData = async (resumeId: string) => {
+  const data = localStorage.getItem(`resume:${resumeId}`);
+  if (!data) {
+    return {};
+  }
+  return JSON.parse(data || "{}");
+}
+
+export const useGetResumeEditorData = (resumeId: string) => {
+  return useQuery({
+    queryKey: ["resume_editor_data", resumeId],
+    queryFn: () => getResumeEditorData(resumeId),
+  });
+};
 export const getResumes = async () => {
   const res = await axios.get("/api/resume");
   return res.data;

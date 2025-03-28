@@ -56,10 +56,10 @@ export default function CreateApplicationCard({companyId}: {companyId?: number |
   return (
     <>
       <CreateCard
-        styles="w-full md:min-w-[800px] self-start"
+        styles="w-full flex-col flex self-start"
         title="+ Add Application"
         modalTitle="Add Application"
-        modalDescription="Add an application to see how well your resume matches to the job description"
+        modalDescription="Add an application to keep track of all the places you've applied to."
         actionText="Add Application"
         action={handleSubmit}
         close={complete}

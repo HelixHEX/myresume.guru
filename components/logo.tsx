@@ -12,12 +12,11 @@ export default function Logo({ size }: { size?: number | string }) {
     <>
       <SignedIn>
         <div className="flex self-center flex-row">
-          <FileText />
           <Link
             href={user ? "/app/resumes" : "/"}
             className="font-bold ml-1 sm:ml-2 text-sm sm:text-md  self-center h-full hover:cursor-pointer"
           >
-            myresume.guru
+            Myresume.Guru
           </Link>
         </div>
       </SignedIn>

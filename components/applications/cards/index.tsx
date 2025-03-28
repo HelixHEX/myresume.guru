@@ -6,33 +6,25 @@ import { MoveRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 type Props = {
-  id: number;
-  title: string;
-  score: number;
-  company?: string;
+	id: string;
+	title: string;
+	score: number;
+	company?: string;
 };
 
 export default function ApplicationCard({ id, title, company, score }: Props) {
-  const router = useRouter();
-  return (
-    <Card className="w-full md:w-[270px] lg:w-[320px] min-h-[180px] h-full">
-      <CardHeader className="flex  flex-col">
-        <h2 className="text-lg font-medium">{title}</h2>
-        {company && (
-          <p className="text-sm  text-gray-800">Company: {company}</p>
-        )}
-        <p className=" text-sm text-gray-800">Match: {score}%</p>
-      </CardHeader>
-      <CardContent>
-        <div className="flex flex-row justify-end">
-          <Button
-            onClick={() => router.push(`/app/applications/${id}`)}
-            className="bg-white rounded-full text-black text-xl hover:bg-gray-800 hover:border-gray-800 hover:text-white w-12 h-12 border-2 border-black"
-          >
-            <MoveRight />
-          </Button>
-        </div>
-      </CardContent>
-    </Card>
-  );
+	const router = useRouter();
+	return (
+		<Card className="w-full flex items-center h-auto  min-h-[100px]">
+			<CardContent className="flex mt-6 justify-between flex-row h-full w-full self-center relative items-center">
+				<h2 className="text-md font-medium">{title}</h2>
+				<Button
+					onClick={() => router.push(`/app/applications/${id}`)}
+					className="bg-white hover:cursor-pointer self-center rounded-full text-blue-800 text-xl hover:bg-blue-800 hover:border-blue-800 hover:text-white w-12 h-12 border-2 border-gray-300"
+				>
+					<MoveRight />
+				</Button>
+			</CardContent>
+		</Card>
+	);
 }

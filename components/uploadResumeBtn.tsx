@@ -14,7 +14,7 @@ export default function UploadResumeBtn({
   return (
     <Button
       onClick={() => router.push("/app/resumes/upload")}
-      className={`${sideNav ? "mt-4 hidden md:block" : "block self-center"} ${w}`}
+      className={`${sideNav ? "mt-4 hidden md:block" : "block self-center hover:text-white bg-white rounded-none text-blue-800 font-bold cursor-pointer hover:bg-blue-800"} ${w}`}
     >
       Upload Resume
     </Button>

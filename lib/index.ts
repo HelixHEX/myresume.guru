@@ -1,5 +1,7 @@
 import pdf from "pdf-parse";
 import prisma from "./prisma";
+import MemoryClient from 'mem0ai';
+const apiKey = process.env.MEM0_API_KEY;
 
 export async function* streamingFetch(
   input: RequestInfo | URL,
@@ -47,3 +49,4 @@ export const convertPDFToText = async (fileKey: string) => {
     throw new Error(e);
   }
 };
+

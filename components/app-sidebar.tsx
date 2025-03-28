@@ -61,13 +61,18 @@ const data = {
       isActive: true,
       items: [
         {
-          title: "Upload Resume",
-          url: "/app/resumes/upload",
-        },
-        {
           title: "My Resumes",
           url: "/app/resumes",
         },
+        {
+          title: "New Resume",
+          url: "/app/resumes/new",
+        },
+        {
+          title: "Upload Resume",
+          url: "/app/resumes/upload",
+        },
+      
       ],
     },
     {
@@ -98,7 +103,7 @@ const data = {
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
-    <Sidebar collapsible="icon" {...props}>
+    <Sidebar className="transition-all duration-300" collapsible="icon" {...props}>
       {/* <SidebarHeader>
         <TeamSwitcher teams={data.teams} />
       </SidebarHeader> */}

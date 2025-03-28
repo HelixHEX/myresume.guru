@@ -1,10 +1,12 @@
+import Footer from "@/components/footer";
 import Header from "@/components/header";
 import { SignIn } from "@clerk/nextjs";
 import Image from "next/image";
 
 export default function Page() {
 	return (
-		<div className="flex items-center p-2 sm:p-6 justify-center bg-dark-gray self-center h-screen w-full">
+		<>
+		<div className="flex items-center p-2 sm:p-6 justify-center bg-blue-800 self-center h-screen w-full">
 			<div className="bg-white transition-all duration-300 lg:gap-20 gap-8 shadow-lg rounded-2xl p-4 sm:p-8 h-full flex justify-center items-center w-full">
 				<div className="flex flex-col gap-4 h-full">
 					<div>
@@ -23,7 +25,7 @@ export default function Page() {
 						<SignIn path="/sign-in" />
 					</div>
 				</div>
-				<div className="md:w-full sm:w-3/5 hidden md:flex shadow-lg rounded-2x; h-full relative">
+				<div className="md:w-full sm:w-3/5 hidden md:flex shadow-lg rounded-2xl h-full relative">
 					<Image
 						src="/images/resume_2.jpg"
 						alt="Abstract"
@@ -33,5 +35,7 @@ export default function Page() {
 				</div>
 			</div>
 		</div>
+			<Footer />
+			</>
 	);
 }

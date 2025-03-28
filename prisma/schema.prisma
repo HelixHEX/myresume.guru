@@ -18,12 +18,12 @@ model Subscription {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  userId              String @unique
+  userId              String    @unique
   status              String
   plan                String
   priceId             String
   polarCustomerId     String
-  polarSubscriptionId String @unique
+  polarSubscriptionId String    @unique
   endsAt              DateTime?
 }
 
@@ -33,20 +33,22 @@ model Chat {
   updatedAt DateTime @updatedAt @map("updated_at")
   userId    String
 
-  messages  Message[]
-  resumes   Resume[]
+  messages Message[]
+  resumes  Resume[]
 }
 
 model Resume {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-  name      String
-  userId    String
-  fileKey   String   @unique
-  status    String   @default("Not analyzed")
-  text      String?
-  analysis  Json?    @map("analysis_json")
+  id           Int      @id @default(autoincrement())
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+  name         String
+  userId       String
+  fileKey      String?  @unique
+  status       String   @default("Not analyzed")
+  text         String?
+  analysis     Json?    @map("analysis_json")
+  v2Conversion Boolean  @default(false)
+  v2Started    Boolean  @default(false)
 
   candidateName     String?  @map("candidate_name")
   candidateEmail    String?  @map("candidate_email")
@@ -56,6 +58,22 @@ model Resume {
   companies         String[] @map("companies_worked")
   jobTitles         String[] @map("job_titles")
   education         String[] @map("education_institutions")
+
+  firstName      String?
+  lastName       String?
+  email          String?
+  phone          String?
+  location       String?
+  website        String?
+  github         String?
+  linkedin       String?
+  twitter        String?
+  summary        String?
+  skills         String?
+  workExperience Json[]  @map("work_experience")
+  education_new  Json[]  @map("education")
+  projects       Json[]  @map("projects")
+  certifications Json[]  @map("certifications")
 
   applications        Application[]        @relation("ApplicationToResume")
   activeApplications  Application[]        @relation("CurrentResume")
@@ -80,7 +98,7 @@ model Company {
 }
 
 model Application {
-  id          Int      @id @default(autoincrement())
+  id          String   @id @default(uuid())
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
   userId      String
@@ -115,7 +133,7 @@ model Feedback {
   section   String? // Which section of the resume this feedback relates to
 
   application         Application?         @relation(fields: [applicationId], references: [id])
-  applicationId       Int?
+  applicationId       String?
   resume              Resume?              @relation(fields: [resumeId], references: [id])
   resumeId            Int?
   actionableFeedbacks ActionableFeedback[]
@@ -136,7 +154,7 @@ model ApplicationScore {
   description String?
 
   application   Application? @relation(fields: [applicationId], references: [id])
-  applicationId Int?
+  applicationId String?
   resume        Resume?      @relation(fields: [resumeId], references: [id])
   resumeId      Int?
 }
@@ -156,7 +174,7 @@ model ActionableFeedback {
   feedback      Feedback?    @relation(fields: [feedbackId], references: [id])
   feedbackId    Int?
   application   Application? @relation(fields: [applicationId], references: [id])
-  applicationId Int?
+  applicationId String?
   resume        Resume?      @relation(fields: [resumeId], references: [id])
   resumeId      Int?
 
@@ -173,10 +191,10 @@ model Message {
   content   String
   role      String
 
-  chat        Chat?        @relation(fields: [chatId], references: [id])
-  chatId      Int?
+  chat          Chat?        @relation(fields: [chatId], references: [id])
+  chatId        Int?
   application   Application? @relation(fields: [applicationId], references: [id])
-  applicationId Int?
+  applicationId String?
   resume        Resume?      @relation(fields: [resumeId], references: [id])
   resumeId      Int?
 }

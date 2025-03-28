@@ -1,0 +1,16 @@
+-- AlterTable
+ALTER TABLE "Resume" ADD COLUMN     "certifications" JSONB[],
+ADD COLUMN     "education" JSONB[],
+ADD COLUMN     "email" TEXT,
+ADD COLUMN     "firstName" TEXT,
+ADD COLUMN     "github" TEXT,
+ADD COLUMN     "lastName" TEXT,
+ADD COLUMN     "linkedin" TEXT,
+ADD COLUMN     "location" TEXT,
+ADD COLUMN     "phone" TEXT,
+ADD COLUMN     "projects" JSONB[],
+ADD COLUMN     "skills" TEXT,
+ADD COLUMN     "summary" TEXT,
+ADD COLUMN     "twitter" TEXT,
+ADD COLUMN     "website" TEXT,
+ADD COLUMN     "work_experience" JSONB[];

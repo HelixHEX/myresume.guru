@@ -3,8 +3,6 @@ import prisma from "@/lib/prisma";
 import { currentUser } from "@clerk/nextjs/server";
 
 export async function GET(request: NextRequest) {
-  const searchParams = request.nextUrl.searchParams
-  const id = searchParams.get("id")
   const user = await currentUser();
   const applications = await prisma.application.findMany({
     include: { applicationScores: true },
@@ -17,24 +15,29 @@ export async function GET(request: NextRequest) {
   return NextResponse.json({ applications });
 }
 
-export async function POST(req: Request) {
+export async function POST(request: Request) {
   const user = await currentUser();
+  const application = await request.json();
 
-  const { title, url, resumeId, jobDescription, companyId } = await req.json();
-
-  const application = await prisma.application.create({
+  const newApplication = await prisma.application.create({
     data: {
+      title: application.title,
+      url: application.url,
+      description: application.jobDescription,
       userId: user!.id,
-      title,
-      url,
-      description: jobDescription,
-      currentResume: resumeId ? { connect: { id: resumeId } } : undefined,
-      resumes: resumeId ? { connect: { id: resumeId } } : undefined,
-      company: companyId ? { connect: { id: companyId } } : undefined,
+      companyId: application.companyId,
+      resumes: {
+        connect: {
+          id: application.resumeId
+        }
+      },
+      currentResume: {
+        connect: {
+          id: application.resumeId
+        }
+      }
     },
   });
 
-
-  return NextResponse.json({ application });
+  return NextResponse.json({ application: newApplication });
 }
-// export async function POST(R)
