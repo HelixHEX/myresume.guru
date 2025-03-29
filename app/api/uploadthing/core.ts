@@ -34,6 +34,7 @@ export const ourFileRouter = {
             name: file.name,
             fileKey: file.key,
             status: "Analyzing resume",
+            v2Conversion: true
           },
         });
         if (!resume) {

@@ -30,7 +30,6 @@ export async function saveResume(resume: z.infer<typeof editorSchema>, resumeId:
 				certifications: resume.certifications,
 				projects: resume.projects,
 				userId: user.id,
-				v2Conversion: true,
 			}
 		})
 		return { success: "Resume created", resumeId: resumeDB.id };

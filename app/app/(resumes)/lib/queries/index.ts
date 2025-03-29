@@ -16,6 +16,38 @@ export const useGetResume = (resumeId: string, refetchInterval: number) => {
   });
 };
 
+export const getEditorColor = async (resumeId: string) => {
+  const color = localStorage.getItem(`resume${resumeId && `:${resumeId}`}:color`);
+  if (!color) {
+    localStorage.setItem(`resume${resumeId && `:${resumeId}`}:color`, "#174BDC");
+    return "#174BDC";
+  }
+  return color;
+}
+
+export const getEditorBg = async (resumeId: string) => {
+  const bg = localStorage.getItem(`resume${resumeId && `:${resumeId}`}:bg`);
+  if (!bg) {
+    localStorage.setItem(`resume${resumeId && `:${resumeId}`}:bg`, "#174BDC");
+    return "#174BDC";
+  }
+  return bg;
+}
+
+export const useGetEditorColor = (resumeId: string) => {
+  return useQuery({
+    queryKey: ["editor_color", resumeId],
+    queryFn: () => getEditorColor(resumeId),
+  });
+}
+
+export const useGetEditorBg = (resumeId: string) => {
+  return useQuery({
+    queryKey: ["editor_bg", resumeId],
+    queryFn: () => getEditorBg(resumeId),
+  });
+}
+
 export const getResumeEditorData = async (resumeId: string) => {
   const data = localStorage.getItem(`resume:${resumeId}`);
   if (!data) {

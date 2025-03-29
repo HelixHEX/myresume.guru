@@ -27,12 +27,16 @@ import { Textarea } from "@/components/ui/textarea";
 import { useSaveResumeEditorData } from "../../lib/mutations";
 import {
 	getResumeEditorData,
+	useGetEditorColor,
 	useGetResume,
+	useGetResumeEditorColor,
 	useGetResumeEditorData,
 } from "../../lib/queries";
 import SaveResume from "../save-resume";
 import { saveResume } from "../../lib/actions";
 import { usePathname, useRouter } from "next/navigation";
+import { ColorPicker, GradientPicker } from "@/components/ui/color-picker";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const editorSchema = z.object({
 	resumeName: z.string().optional(),
@@ -301,10 +305,27 @@ function EditorForm({
 		router.push(`/app/resumes/${res.resumeId}`);
 		setIsSubmitting(false);
 	}
+	const queryClient = useQueryClient();
 
+	const { data: editorColor } = useGetEditorColor(resumeId ?? "");
+
+	const changeColor = (color: string) => {
+		localStorage.setItem(`resume${resumeId && `:${resumeId}`}:color`, color);
+		queryClient.invalidateQueries({
+			queryKey: ["editor_color", resumeId],
+		});
+	};
 	return (
 		<Form {...form}>
 			<form className="pt-8 " onSubmit={form.handleSubmit(onSubmit)}>
+				<div>
+					<p className="font-bold text-blue-800 sm:text-white">Color</p>
+					<ColorPicker
+						value={editorColor ?? "#174BDC"}
+						onChange={changeColor}
+					/>
+				</div>
+				{/* <GradientPicker background={editorColor} setBackground={changeColor} /> */}
 				<div className="grid mt-8 grid-cols-2 gap-4 ">
 					<EditorInput
 						name="resumeName"

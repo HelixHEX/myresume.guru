@@ -1,7 +1,11 @@
 "use client";
 import { cn } from "@/lib/utils";
-import { useGetResumeEditorData } from "../../lib/queries";
-import { useRef } from "react";
+import {
+	useGetEditorColor,
+	useGetEditorBg,
+	useGetResumeEditorData,
+} from "../../lib/queries";
+import { useEffect, useRef, useState } from "react";
 import useDimensions from "@/hooks/useDimensions";
 import { Download, Github, Globe, Linkedin, Twitter } from "lucide-react";
 import { useContentRef } from "../downloadResume";
@@ -13,18 +17,38 @@ export default function PDFPreview({ resumeId }: { resumeId?: string }) {
 	const { data: resume } = useGetResumeEditorData(resumeId ?? "");
 	const containerRef = useRef<HTMLDivElement>(null);
 	const { width, height } = useDimensions(containerRef);
-
+	const [editorBg, setEditorBg] = useState<string | undefined>("bg-[#174BDC]");
 	const reactToPrint = useReactToPrint({
 		contentRef,
 		documentTitle: resume?.title || "Resume",
 	});
+	const { data: editorColor, isLoading: isLoadingEditorColor } =
+		useGetEditorColor(resumeId ?? "");
+	// const { data: syncedEditorBg, isLoading: syncedEditorBgLoading } =
+	// 	useGetEditorBg(resumeId ?? "");
+
+	// useEffect(() => {
+	// 	if (syncedEditorColor && !syncedEditorBgLoading) {
+	// 		setEditorColor(syncedEditorColor);
+	// 	}
+	// }, [syncedEditorColor, syncedEditorBgLoading]);
+
+	// useEffect(() => {
+	// 	const test = "#ffffff";
+	// 	const color2 = "#76c294"
+	// 	console.log(resumeEditorColor, resumeEditorBg);
+	// 	//choose betwwen test, color2 and resumeEditorColor
+	// 	const chooseRandom = [test, color2, resumeEditorColor][Math.floor(Math.random() * 3)];
+	// 	// setEditorColor(`text-[${chooseRandom}]`);
+	// 	// setEditorBg(`bg-[${chooseRandom}]`);
+	// }, [resumeEditorColor, resumeEditorBg]);
 
 	return (
 		<div className={"flex flex-col w-full overflow-y-auto p-3 "}>
 			<div className="flex justify-end pb-4">
 				<Download
 					onClick={() => reactToPrint()}
-					className="text-blue-800 sm:text-blue-800 cursor-pointer  hover:text-black hover:translate-y-[-3px] transition-all duration-300"
+					className={`text-blue-800 sm: cursor-pointer  hover:text-black hover:translate-y-[-3px] transition-all duration-300`}
 				/>
 			</div>
 			<div
@@ -42,10 +66,13 @@ export default function PDFPreview({ resumeId }: { resumeId?: string }) {
 					id="resumePreviewContent"
 				>
 					{/* make font times new roman */}
-					<h1 className=" text-center text-[34px] font-bold h-fit w-ful text-blue-800">
+					<h1
+						style={{ color: editorColor }}
+						className={`text-center text-[34px] font-bold h-fit w-full `}
+					>
 						{resume?.firstName} {resume?.lastName}
 					</h1>
-					{resume && (
+					{resume && !isLoadingEditorColor && editorColor && (
 						<div className="flex flex-col gap-4 items-center  ">
 							<div className="flex flex-col gap-2 items-center  ">
 								<div className="flex max-w-[600px] gap-4">
@@ -93,23 +120,28 @@ export default function PDFPreview({ resumeId }: { resumeId?: string }) {
 							</div>
 							{resume.summary && resume.summary.length > 0 && (
 								<>
-									<div className="flex w-full h-[4px] bg-blue-800 " />
+									<div
+										style={{ backgroundColor: editorColor }}
+										className={"flex w-full h-[4px]"}
+									/>
 									<div className="flex flex-col text-start w-full gap-1">
-										<h2 className="text-[22px] text-blue-800 font-bold">
-											Summary
-										</h2>
+										<h2 style={{ color: editorColor }} className={"text-[22px] font-bold"}>Summary</h2>
 										<p className="text-[12px]">{resume.summary}</p>
 									</div>
 								</>
 							)}
 							{resume.workExperience && resume.workExperience.length > 0 && (
 								<>
-									<div className="flex w-full h-[4px] bg-blue-800 " />
+									<div
+										style={{ backgroundColor: editorColor }}
+										className={"flex w-full h-[4px]"}
+									/>
 									<div className="flex flex-col text-start w-full gap-1">
-										<h2 className="text-[18px] text-blue-800 font-bold">
+										<h2 style={{ color: editorColor }} className={"text-[18px]  font-bold"}>
 											Work Experience
 										</h2>
 										<div className="flex flex-col gap-2">
+											{/* biome-ignore lint: */}
 											{resume.workExperience.map((work: any) => (
 												<div key={work.id}>
 													<div className="flex justify-between">
@@ -126,7 +158,9 @@ export default function PDFPreview({ resumeId }: { resumeId?: string }) {
 													<ul className="list-disc pl-4">
 														{work.summary.length > 0 &&
 															work.summary.map(
+																// biome-ignore lint:
 																({ summaryPoint }: any, index: number) => (
+																	// biome-ignore lint:
 																	<li className="list-disc" key={index}>
 																		<p className="text-[12px]">
 																			{summaryPoint}
@@ -143,16 +177,20 @@ export default function PDFPreview({ resumeId }: { resumeId?: string }) {
 							)}
 							{resume.education && resume.education.length > 0 && (
 								<>
-									<div className="flex w-full h-[4px] bg-blue-800 " />
+									<div
+										style={{ backgroundColor: editorColor }}
+										className={"flex w-full h-[4px]"}
+									/>
 									<div className="flex flex-col text-start w-full gap-1">
-										<h2 className="text-[18px] text-blue-800 font-bold">
+										<h2 style={{ color: editorColor }} className={"text-[18px] font-bold"}>
 											Education
 										</h2>
 										<div className="flex flex-col gap-2">
+											{/* biome-ignore lint: */}
 											{resume.education.map((education: any) => (
-												<div className="flex flex-col gap-2" key={education.id}>
+												<div className="flex flex-col " key={education.id}>
 													<div className="flex justify-between">
-														<h3 className="text-[17px] font-bold">
+														<h3 className="text-[14px] font-bold">
 															{education.school}
 															{education.school && education.location && ", "}
 															{education.location}
@@ -181,15 +219,22 @@ export default function PDFPreview({ resumeId }: { resumeId?: string }) {
 							)}
 							{resume.projects && resume.projects.length > 0 && (
 								<>
-									<div className="flex w-full h-[4px] bg-blue-800 " />
+									<div
+										style={{ backgroundColor: editorColor }}
+										className={"flex w-full h-[4px]"}
+									/>
 									<div className="flex flex-col text-start w-full gap-1">
-										<h2 className="text-[18px] text-blue-800 font-bold">
+										<h2
+											style={{ color: editorColor }}
+											className={"text-[18px]  font-bold"}
+										>
 											Projects
 										</h2>
 										<div className="flex flex-col gap-2">
+											{/* biome-ignore lint: */}
 											{resume.projects.map((project: any) => (
 												<div key={project.id}>
-													<h3 className="text-[17px] font-bold">
+													<h3 className="text-[14px] font-bold">
 														{project.name}
 													</h3>
 													<p className="text-[12px]">{project.description}</p>
@@ -201,15 +246,25 @@ export default function PDFPreview({ resumeId }: { resumeId?: string }) {
 							)}
 							{resume.certifications && resume.certifications.length > 0 && (
 								<>
-									<div className="flex w-full h-[4px] bg-blue-800 " />
+									<div
+										style={{ backgroundColor: editorColor }}
+										className={"flex w-full h-[4px]"}
+									/>
 									<div className="flex flex-col text-start w-full gap-1">
-										<h2 className="text-[18px] text-blue-800 font-bold">
+										<h2
+											style={{ color: editorColor }}
+											className={"text-[18px] font-bold"}
+										>
 											Certifications
 										</h2>
 										<div className="flex flex-col gap-2">
+											{/* biome-ignore lint: */}
 											{resume.certifications.map((certification: any) => (
-												<div key={certification.id}>
-													<h3 className="text-[17px] font-bold">
+												<div
+													className="flex justify-between"
+													key={certification.id}
+												>
+													<h3 className="text-[14px] font-bold">
 														{certification.name}
 													</h3>
 													<p className="text-[12px]">{certification.date}</p>
@@ -221,9 +276,15 @@ export default function PDFPreview({ resumeId }: { resumeId?: string }) {
 							)}
 							{resume.skills && (
 								<>
-									<div className="flex w-full h-[4px] bg-blue-800 " />
+									<div
+										style={{ backgroundColor: editorColor }}
+										className={"flex w-full h-[4px]"}
+									/>
 									<div className="flex flex-col text-start w-full gap-1">
-										<h2 className="text-[18px] text-blue-800 font-bold">
+										<h2
+											style={{ color: editorColor }}
+											className={"text-[18px] font-bold"}
+										>
 											Skills
 										</h2>
 										<p className="text-[12px]">{resume.skills}</p>

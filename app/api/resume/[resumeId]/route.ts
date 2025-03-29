@@ -26,16 +26,17 @@ export const GET = async (_request: NextRequest, props: { params: Promise<{ resu
     return NextResponse.json({ message: "Resume not found" }, { status: 404 });
   }
 
-  if (resume.userId !== userId) {
+  if (process.env.NODE_ENV === "production" && resume.userId !== userId) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   }
 
   console.log(resume.v2Conversion.toString(), resume.v2Started.toString())
   if (!resume.v2Conversion && !resume.v2Started) {
+    console.log("Triggering analyze-resume")
     tasks.trigger('analyze-resume', {
       resumeId: resume.id,
       userId,
-      FREE_GEN: true, 
+      FREE_GEN: true,
     })
   }
 

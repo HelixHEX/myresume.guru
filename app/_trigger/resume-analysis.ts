@@ -408,7 +408,7 @@ export const generateFeedback = task({
     // Update final status
     await prisma.resume.update({
       where: { id: resumeId },
-      data: { status: "Analyzed", v2Conversion: true, v2Started: true },
+      data: { status: "Analyzed", v2Conversion: true, v2Started: false },
       
     });
 

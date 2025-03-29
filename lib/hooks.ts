@@ -1,7 +1,8 @@
 "use client";
 import { generateFeedback } from "@/actions";
 import { readStreamableValue } from "ai/rsc";
-import { useContext, useEffect } from "react";
+import type React from "react";
+import { useRef, useContext, useEffect } from "react";
 import { context } from "./context";
 import { toast } from "sonner";
 import posthog from "posthog-js";
@@ -29,3 +30,18 @@ export const useGenerateFeedback = async () => {
 
 
 type GenerateFeedbackResponse = ReturnType<typeof generateFeedback>;
+
+export function useForwardedRef<T>(ref: React.ForwardedRef<T>) {
+  const innerRef = useRef<T>(null);
+
+  useEffect(() => {
+    if (!ref) return;
+    if (typeof ref === 'function') {
+      ref(innerRef.current);
+    } else {
+      ref.current = innerRef.current;
+    }
+  });
+
+  return innerRef;
+}
