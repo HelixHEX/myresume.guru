@@ -29,7 +29,6 @@ import {
 	getResumeEditorData,
 	useGetEditorColor,
 	useGetResume,
-	useGetResumeEditorColor,
 	useGetResumeEditorData,
 } from "../../lib/queries";
 import SaveResume from "../save-resume";

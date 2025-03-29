@@ -160,14 +160,16 @@ export function GradientPicker({
 						</TabsTrigger>
 					</TabsList> */}
 
-				{solids.map((s) => (
-					<div
-						key={s}
-						style={{ background: s }}
-						className="rounded-md h-6 w-6 cursor-pointer active:scale-105"
-						onClick={() => setBackground(s)}
-					/>
-				))}
+				<div>
+					{solids.map((s) => (
+						<div
+							key={s}
+							style={{ background: s }}
+							className="rounded-md h-6 w-6 cursor-pointer active:scale-105"
+							onClick={() => setBackground(s)}
+						/>
+					))}
+				</div>
 
 				<Input
 					id="custom"
