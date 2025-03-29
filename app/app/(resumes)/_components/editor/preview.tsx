@@ -48,7 +48,7 @@ export default function PDFPreview({ resumeId }: { resumeId?: string }) {
 			<div className="flex justify-end pb-4">
 				<Download
 					onClick={() => reactToPrint()}
-					className={`text-blue-800 sm: cursor-pointer  hover:text-black hover:translate-y-[-3px] transition-all duration-300`}
+					className={'text-blue-800 cursor-pointer  hover:text-black hover:translate-y-[-3px] transition-all duration-300'}
 				/>
 			</div>
 			<div
@@ -145,7 +145,7 @@ export default function PDFPreview({ resumeId }: { resumeId?: string }) {
 											{resume.workExperience.map((work: any) => (
 												<div key={work.id}>
 													<div className="flex justify-between">
-														<h3 className="text-[16px] font-bold">
+														<h3 className="text-[14px] font-bold">
 															{work.title}
 															{work.title && work.company && ", "}{" "}
 															{work.company}
