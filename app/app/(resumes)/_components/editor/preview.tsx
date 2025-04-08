@@ -24,25 +24,6 @@ export default function PDFPreview({ resumeId }: { resumeId?: string }) {
 	});
 	const { data: editorColor, isLoading: isLoadingEditorColor } =
 		useGetEditorColor(resumeId ?? "");
-	// const { data: syncedEditorBg, isLoading: syncedEditorBgLoading } =
-	// 	useGetEditorBg(resumeId ?? "");
-
-	// useEffect(() => {
-	// 	if (syncedEditorColor && !syncedEditorBgLoading) {
-	// 		setEditorColor(syncedEditorColor);
-	// 	}
-	// }, [syncedEditorColor, syncedEditorBgLoading]);
-
-	// useEffect(() => {
-	// 	const test = "#ffffff";
-	// 	const color2 = "#76c294"
-	// 	console.log(resumeEditorColor, resumeEditorBg);
-	// 	//choose betwwen test, color2 and resumeEditorColor
-	// 	const chooseRandom = [test, color2, resumeEditorColor][Math.floor(Math.random() * 3)];
-	// 	// setEditorColor(`text-[${chooseRandom}]`);
-	// 	// setEditorBg(`bg-[${chooseRandom}]`);
-	// }, [resumeEditorColor, resumeEditorBg]);
-
 	return (
 		<div className={"flex flex-col w-full overflow-y-auto p-3 "}>
 			<div className="flex justify-end pb-4">

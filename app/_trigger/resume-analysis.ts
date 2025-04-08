@@ -3,7 +3,7 @@ import { z } from "zod";
 import { generateObject } from "ai";
 import { openai } from "@ai-sdk/openai";
 import prisma from "@/lib/prisma";
-import { getFile } from "@/lib/utils";
+import { getFile, getFileUrl, getUrl } from "@/lib/utils";
 import { anthropic } from '@ai-sdk/anthropic';
 import { editorSchema } from "../app/(resumes)/_components/editor";
 
@@ -197,11 +197,11 @@ export const analyzeResume = task({
         content: [
           {
             type: 'text',
-            text: 'Here is the pdf resume'
+            text: 'Here is the url for the resume pdf'
           },
           {
             type: 'file',
-            data: pdfData,
+            data: getFileUrl(resume.fileKey),
             mimeType: "application/pdf",
           }
         ]
@@ -210,7 +210,7 @@ export const analyzeResume = task({
     logger.info('messages', messages as any)
     // Analyze the resume
     const result = await generateObject({
-      model: anthropic("claude-3-5-sonnet-20241022"),
+      model: anthropic("claude-3-5-haiku-latest"),
       messages,
       schema: editorSchema.required().strict(),
     }).catch((error) => {
@@ -381,7 +381,7 @@ export const generateFeedback = task({
 
     // Generate feedback
     const result = await generateObject({
-      model: anthropic("claude-3-5-sonnet-20241022"),
+      model: anthropic("claude-3-5-haiku-latest"),
       messages,
       schema: FeedbackSchema,
     });

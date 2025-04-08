@@ -73,5 +73,5 @@ export async function saveResume(resume: z.infer<typeof editorSchema>, resumeId:
 		return { error: "Resume not found" };
 	}
 
-	return { success: "Resume created", resumeId: 21 };
+	return { success: "Resume created", resumeId };
 }

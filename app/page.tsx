@@ -86,7 +86,7 @@ export default function Home() {
 						</h1>
 						<Sparkles />
 					</div>
-					
+
 					<div className="w-full shadow-lg bg-[#F6F6F6] rounded-lg flex h-full max-h-screen overflow-y-auto">
 						<div className="h-full p-4 px-4 sm:px-8 transition-all duration-300 w-full lg:w-[700px] bg-white sm:bg-blue-800">
 							<div className="md:hidden h-full w-full pt-4">
@@ -128,8 +128,8 @@ export default function Home() {
 							<PDFPreview />
 						</div>
 					</div>
-						{/* FEATURES SECTION */}
-						<div className="flex flex-col pt-40 w-full sm:self-center ">
+					{/* FEATURES SECTION */}
+					<div className="flex flex-col pt-40 w-full sm:self-center ">
 						<h1 className="text-4xl  font-bold">Features</h1>
 						<div className="flex w-full items-center h-full justify-between flex-col lg:flex-row mt-8">
 							<ul className="grid grid-cols-1 grid-rows-none gap-4 md:grid-cols-12 md:grid-rows-3 lg:gap-4 xl:max-h-[34rem] xl:grid-rows-2">

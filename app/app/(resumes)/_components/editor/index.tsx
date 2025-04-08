@@ -103,9 +103,10 @@ export default function Editor({ resumeId }: { resumeId?: string }) {
 	const router = useRouter();
 	const pathname = usePathname();
 	const { user } = useUser();
+	const [refetchInterval, setRefetchInterval] = useState(0);
 	const { data: resumeData, isLoading: resumeLoading } = useGetResume(
 		resumeId ?? "",
-		0,
+		refetchInterval,
 	);
 	const isHomePage = pathname === "/" || pathname === "";
 	const isNewResumePage = pathname.includes("/resumes/new");
@@ -119,6 +120,14 @@ export default function Editor({ resumeId }: { resumeId?: string }) {
 	);
 
 	const resume = resumeData?.resume;
+
+	useEffect(() => {
+		if (resume?.status !== "Analyzed" && refetchInterval === 0) {
+			setRefetchInterval(1000);
+		} else if (resume?.status === "Analyzed" && refetchInterval !== 0) {
+			setRefetchInterval(0);
+		}
+	}, [resume, refetchInterval]);
 	useEffect(() => {
 		const main = async () => {
 			if (user) {

@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PDFPreview from "../../_components/editor/preview";
 import Editor from "../../_components/editor";
 import useDimensions from "@/hooks/useDimensions";
+import { useEffect } from "react";
 
 export default async function Page(props: {
 	params: Promise<{ resumeId: string }>;

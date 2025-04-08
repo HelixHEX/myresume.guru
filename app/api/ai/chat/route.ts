@@ -1,10 +1,11 @@
 import { openai } from "@ai-sdk/openai";
-import { appendClientMessage, appendResponseMessages, streamText } from "ai";
+import { appendClientMessage, appendResponseMessages, generateText, streamText } from "ai";
 import prisma from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
 import { LanguageModelV1Prompt } from "ai";
 import { addMemories } from "@mem0/vercel-ai-provider";
 import { createMem0 } from "@mem0/vercel-ai-provider";
+import { anthropic } from "@ai-sdk/anthropic";
 
 export const maxDuration = 30;
 
@@ -13,15 +14,17 @@ export async function POST(req: Request) {
     const { userId } = await auth();
     const { messages, chatId } = await req.json();
 
+
     const prevMessages = await prisma.message.findMany({
       where: {
         chatId,
       },
     })
 
-    const resume = await prisma.resume.findUnique({
+
+    const resume = await prisma.resume.findFirstOrThrow({
       where: {
-        id: chatId,
+        chatId,
       },
       include: {
         improvements: true,
@@ -63,28 +66,11 @@ export async function POST(req: Request) {
     const { userId: clerkId, fileKey, status, text, analysis, candidateName, candidateEmail, candidatePhone, candidateLocation, technicalSkills, companies, jobTitles, education, ...resumeData } = resume
 
     const result = await streamText({
-      model: openai("gpt-4o-mini"),
+      model: anthropic("claude-3-5-haiku-latest"),
       messages: [{
         role: "system",
-        content: `You are a resume guru assistant. Here is the resume text and improvements that have already been recommended. Resume in JSON format: ${resumeData} Improvements generated: ${resume?.improvements?.map((improvement) => `${improvement.title}: ${improvement.text}`).join(", ")}`
+        content: `You are a resume guru assistant. Here is the resume json format and improvements that have already been recommended. Resume in JSON format: ${JSON.stringify(resumeData)} Improvements generated: ${resume?.improvements?.map((improvement) => `${improvement.title}: ${improvement.text}`).join(", ")}`
       }, ...formattedPrevMessages, ...newMessages],
-      async onFinish({ response, text }) {
-        await appendResponseMessages({
-          messages,
-          responseMessages: response.messages,
-        })
-        await prisma.message.create({
-          data: {
-            content: text,
-            role: "assistant",
-            //biome-ignore lint:
-            userId: userId!,
-            chatId
-          },
-        });
-
-
-      }
     });
 
     return result.toDataStreamResponse();

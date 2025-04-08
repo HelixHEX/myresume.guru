@@ -4,6 +4,7 @@ import { openai } from "@ai-sdk/openai";
 import { streamText } from "ai";
 import { getMutableAIState } from "ai/rsc";
 import prisma from "@/lib/prisma";
+import { Chat } from "@prisma/client";
 
 export interface ClientMessage {
   id: string;
@@ -45,6 +46,7 @@ export async function getMessagesFromDB(chatId: number): Promise<any[]> {
 }
 
 export async function getChat(resumeId: string) {
+
   if (Number.isNaN(Number.parseInt(resumeId))) {
     return null;
   }
@@ -58,8 +60,9 @@ export async function getChat(resumeId: string) {
     return null;
   }
 
+  let chat: Chat | null = null;
   if (!resume.chatId) {
-    const chat = await prisma.chat.create({
+    chat = await prisma.chat.create({
       data: {
         userId: resume.userId,
       },
