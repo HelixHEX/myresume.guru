@@ -1,5 +1,6 @@
 "use client";
 
+import { saveMessage } from "@/lib/actions/chat";
 import {
 	type AppendMessage,
 	AssistantRuntimeProvider,
@@ -19,6 +20,10 @@ export default function AIProvider({
 		},
 		api: "/api/ai/chat",
 		initialMessages: messages,
+		onFinish: async ({ content }) => {
+			console.log(content)
+			await saveMessage(content[0].text, chatId, "assistant")
+		}
 	});
 
 

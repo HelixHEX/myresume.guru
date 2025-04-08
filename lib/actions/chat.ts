@@ -4,7 +4,8 @@ import { openai } from "@ai-sdk/openai";
 import { streamText } from "ai";
 import { getMutableAIState } from "ai/rsc";
 import prisma from "@/lib/prisma";
-import { Chat } from "@prisma/client";
+import type { Chat } from "@prisma/client";
+import { currentUser } from "@clerk/nextjs/server";
 
 export interface ClientMessage {
   id: string;
@@ -79,4 +80,25 @@ export async function getChat(resumeId: string) {
   }
 
   return resume.chatId;
+}
+
+export async function saveMessage(content: string, chatId: number, role: "user" | "assistant") {
+  try {
+    const user = await currentUser();
+    if (!user) {
+      return;
+    }
+    const message = await prisma.message.create({
+      data: {
+        content,
+        role,
+        userId: user.id,
+        chatId,
+      },
+    });
+
+    console.log(message)
+  } catch (error) {
+    console.log(error)
+  }
 }

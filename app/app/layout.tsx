@@ -1,8 +1,7 @@
 import { AppSidebar } from "@/components/app-sidebar";
 import Footer from "@/components/footer";
 import Logo from "@/components/logo";
-import { BreadcrumbListComp } from "@/components/ui/breadcrumb-list";
-import { Separator } from "@/components/ui/separator";
+
 import {
 	SidebarInset,
 	SidebarProvider,
