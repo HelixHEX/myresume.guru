@@ -6,6 +6,7 @@ import {
 	AssistantRuntimeProvider,
 	useAssistantInstructions,
 } from "@assistant-ui/react";
+
 import { useChatRuntime } from "@assistant-ui/react-ai-sdk";
 
 export default function AIProvider({
@@ -20,9 +21,11 @@ export default function AIProvider({
 		},
 		api: "/api/ai/chat",
 		initialMessages: messages,
-		onFinish: async ({ content }) => {
-			console.log(content)
-			await saveMessage(content[0].text, chatId, "assistant")
+		onFinish: async (message) => {
+			const contentPart = message.content[0];
+			if (contentPart && 'text' in contentPart) {
+				await saveMessage(contentPart.text, chatId, "assistant");
+			}
 		}
 	});
 
