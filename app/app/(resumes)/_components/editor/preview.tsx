@@ -10,6 +10,8 @@ import useDimensions from "@/hooks/useDimensions";
 import { Download, Github, Globe, Linkedin, Twitter } from "lucide-react";
 import { useContentRef } from "../downloadResume";
 import { useReactToPrint } from "react-to-print";
+import axios from "axios";
+import { toast } from "sonner";
 
 export default function PDFPreview({ resumeId }: { resumeId?: string }) {
 	const contentRef = useRef<HTMLDivElement>(null);
@@ -28,7 +30,13 @@ export default function PDFPreview({ resumeId }: { resumeId?: string }) {
 		<div className={"flex flex-col w-full overflow-y-auto p-3 "}>
 			<div className="flex justify-end pb-4">
 				<Download
-					onClick={() => reactToPrint()}
+					onClick={() => toast.promise(async () => {
+						await reactToPrint();
+					}, {
+						loading: "Loading...",
+						success: "Resume downloaded successfully",
+						error: "Failed to download resume",
+					})}
 					className={'text-blue-800 cursor-pointer  hover:text-black hover:translate-y-[-3px] transition-all duration-300'}
 				/>
 			</div>

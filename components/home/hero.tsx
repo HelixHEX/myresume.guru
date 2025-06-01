@@ -105,7 +105,7 @@ const Hero115 = ({
             <img
               src={imageSrc}
               alt={imageAlt}
-              className="mx-auto h-full max-h-[640px] w-full max-w-5xl rounded-2xl object-cover"
+              className="mx-auto h-full max-h-[800px] w-full max-w-5xl rounded-2xl object-cover"
             />
           </motion.div>
         </div>

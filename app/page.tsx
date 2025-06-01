@@ -38,26 +38,58 @@ import {
   FormLabel,
 } from "@/components/ui/form";
 import { motion } from "framer-motion";
+import axios from "axios";
+import { toast } from "sonner";
+import { useUser } from "@clerk/nextjs";
 
 const text = `The resume currently lacks a personal summary, which is a crucial section that provides a snapshot of your professional identity and career goals. A well-crafted summary can capture the attention of hiring managers and set the tone for the rest of the resume.**Actionable Steps:**1. Write a concise summary (3-4 sentences) that highlights your key skills, experiences, and career objectives.2. Focus on your strengths in software development and project management.3. Mention any unique qualities or achievements that differentiate you from other candidates.**Example:**"Dynamic software engineer with over 5 years of experience in developing scalable web applications and leading project management initiatives. Proven track record in enhancing user engagement and satisfaction through innovative solutions. Passionate about leveraging AI to improve user experiences and drive business growth."`;
 
 export default function Home() {
+  const { user } = useUser();
   const router = useRouter();
   const [email, setEmail] = useState("");
 
   const formSchema = z.object({
     email: z.string().email().min(1, { message: "Email is required" }),
+    mailingLists: z.string().min(1, { message: "Mailing list is required" }),
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: "",
+      mailingLists: "cmbdbg9160zof0j08bs697wit",
     },
   });
 
-  const onSubmit = (data: z.infer<typeof formSchema>) => {
-    console.log(data);
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    toast.promise(
+      async () => {
+        const encodedEmail = encodeURIComponent(data.email);
+        const encodedMailingLists = encodeURIComponent(data.mailingLists);
+        const encodedFirstName = encodeURIComponent(user?.firstName || "");
+        const encodedLastName = encodeURIComponent(user?.lastName || "");
+        const body = `email=${encodedEmail}&mailingLists=${encodedMailingLists}&firstName=${encodedFirstName}&lastName=${encodedLastName}`;
+        await axios
+          .post(
+            "https://app.loops.so/api/newsletter-form/cmbd7l5oo08oe2u0ivt4j73rq",
+            body,
+            {
+              headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+              },
+            }
+          )
+          .then(() => {
+            form.reset();
+          });
+      },
+      {
+        loading: "Submitting...",
+        success: "Subscribed successfully",
+        error: "Failed to subscribe",
+      }
+    );
   };
 
   return (
@@ -73,44 +105,6 @@ export default function Home() {
           button={{ text: "Try now!", url: "/sign-up" }}
         />
         <div className="pt-4 flex flex-col lg:w-[1000px] w-full self-center">
-          {/* <div className="p-4 lg:p-8  self-center bg-cover bg-[url('/images/hero1-bg.png')] bg-center   bg-no-repeat rounded-lg w-full h-[480px] text-white flex flex-col justify-end">
-            <h1 className="text-2xl lg:text-4xl font-bold lg:w-96">
-              Land your dream job with MyResume.
-              <span className="text-blue-800 font-bold">guru</span>
-            </h1>
-            <p className="mt-8 w-full md:w-[500px]">
-              Upload your resume and receive instant, personalized feedback
-              powered by AI. Our service will help you craft a resume that
-              stands out.
-            </p>
-            <Button
-              onClick={() => router.push("/sign-up")}
-              className="w-44 mt-8 bg-blue-800 cursor-pointer hover:bg-blue-900 text-white"
-            >
-              Try now!
-            </Button>
-          </div> */}
-          {/* <div className="items-center md:items-start pt-40 w-full flex flex-col md:flex-row justify-between">
-            <div className=" h-[400] md:mt-0 w-full flex flex-col">
-              <h1 className="font-bold text-4xl">
-                {"The easiest way to get your resume reviewed"}
-              </h1>
-              <Zoom>
-                <p className="mt-2 w-full md:w-[500px] ">
-                  {
-                    "Upload your resume and in seconds we'll assess your skills, experiences, and more. Also get help from our AI resume guru."
-                  }
-                </p>
-                <Button
-                  onClick={() => router.push("/sign-up")}
-                  className="mt-4 bg-blue-800 text-white hover:bg-blue-900 cursor-pointer "
-                >
-                  Upload your resume
-                </Button>
-              </Zoom>
-            </div>
-          </div> */}
-
           {/* EDITOR SECTION */}
           <div className="flex pt-20 pb-8 gap-4 items-center justify-center">
             <Sparkles />
@@ -170,64 +164,79 @@ export default function Home() {
             </Fade>
             <Fade delay={600}>
               <p className=" w-full text-muted-foreground sm:w-[600px] mt-4">
-              I know that writing a great resume is just the first step —
-              finding the right job is what truly matters.
-            </p>
+                I know that writing a great resume is just the first step —
+                finding the right job is what truly matters.
+              </p>
             </Fade>
             <Fade delay={900}>
-              <p className="mt-4 text-muted-foreground">
-              {" "}
-              That&apos;s why I launched the Guru List, a weekly job listings
-              newsletter, curated specifically for users like you.
-            </p>
+              <p className="mt-4 max-w-[600px] text-muted-foreground">
+                {" "}
+                That&apos;s why I launched the Guru List, a free (for now)
+                weekly job listings newsletter, curated specifically for users
+                like you.
+              </p>
             </Fade>
             <Fade delay={1200}>
               <p className="mt-4 text-gray-700 font-bold">
-              {" "}
-              Every week, you&apos;ll get:
-            </p>
+                {" "}
+                Every week, you&apos;ll get:
+              </p>
             </Fade>
             <Fade delay={1500}>
               <p className="text-muted-foreground">
-              ✅ Remote-friendly roles from top companies
-            </p>
-            <p className="text-muted-foreground">
-              ✅ Entry-level to senior openings based on your profile
-            </p>
-            <p className="text-muted-foreground">
-              ✅ No spam — just real opportunities
-            </p>
+                ✅ Remote-friendly roles from top companies
+              </p>
+              <p className="text-muted-foreground">
+                ✅ Entry-level to senior openings based on your profile
+              </p>
+              <p className="text-muted-foreground">
+                ✅ No spam — just real opportunities
+              </p>
             </Fade>
             <Fade delay={1800}>
-                <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-4 pt-4 flex flex-col sm:flex-row w-auto sm:gap-4"
-              >
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-col gap-2">
-                      <FormControl>
-                        <Input
-                          className="rounded-md w-[400px]"
-                          placeholder="Enter your email"
-                          {...field}
-                        />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-                <Button
-                  type="submit"
-                  variant="outline"
-                  className="rounded-md px-8 bg-linear-to-b from-white to-gray-300/30 hover:from-blue-800/50 hover:to-blue-900 text-blue-800 cursor-pointer hover:bg-blue-800 hover:text-white"
+              <Form {...form}>
+                <form
+                  onSubmit={form.handleSubmit(onSubmit)}
+                  className="space-y-4 pt-4 flex flex-col sm:flex-row w-auto sm:gap-4"
                 >
-                  Subscribe
-                </Button>
-              </form>
-            </Form>
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-col gap-2">
+                        <FormControl>
+                          <Input
+                            className="rounded-md w-[400px]"
+                            placeholder="Enter your email"
+                            {...field}
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="mailingLists"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-col gap-2">
+                        <FormControl>
+                          <Input
+                            className="rounded-md w-[400px] hidden"
+                            {...field}
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                  <Button
+                    type="submit"
+                    variant="outline"
+                    className="rounded-md px-8 bg-linear-to-b from-white to-gray-300/30 hover:from-blue-800/50 hover:to-blue-900 text-blue-800 cursor-pointer hover:bg-blue-800 hover:text-white"
+                  >
+                    Subscribe
+                  </Button>
+                </form>
+              </Form>
             </Fade>
           </div>
           {/* FEATURES SECTION */}
