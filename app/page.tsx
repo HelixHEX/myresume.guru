@@ -159,7 +159,7 @@ export default function Home() {
           <div className="flex flex-col w-full pt-30 sm:pt-60 self-center">
             <Fade delay={300}>
               <h1 className="text-2xl w-full sm:w-[600px] sm:text-5xl font-bold">
-                Subscribe to the Guru List newsletter
+                Subscribe to the Guru List <span className="text-blue-800">newsletter.</span>
               </h1>
             </Fade>
             <Fade delay={600}>
