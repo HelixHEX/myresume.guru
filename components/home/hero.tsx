@@ -48,6 +48,16 @@ const Hero115 = ({
             {/* <span className="mx-auto flex size-16 items-center justify-center rounded-full border md:size-20">
               {icon}
             </span> */}
+            {trustText && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.5, delay: 0.5 }}
+                  className="self-center"
+                >
+                  <div className=" self-center text-blue-800">{trustText}</div>
+                </motion.div>
+              )}
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -86,15 +96,7 @@ const Hero115 = ({
                 </Button>
               </motion.div>
 
-              {trustText && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.5, delay: 0.5 }}
-                >
-                  <div className="text-sm text-blue-800">{trustText}</div>
-                </motion.div>
-              )}
+              
             </div>
           </div>
           <motion.div
