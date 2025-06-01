@@ -103,7 +103,7 @@ export default function Home() {
             <Sparkles className="h-4 w-4 text-black dark:text-neutral-400" />
           }
           heading="Land your dream job with MyResume.guru"
-          description="Upload your resume and receive instant, personalized feedback powered by AI. Craft a resume that stands out."
+          description="Craft a resume that stands out."
           button={{ text: "Try now!", url: "/sign-up" }}
         />
         <div className="pt-4 flex flex-col lg:w-[1000px] w-full self-center">
