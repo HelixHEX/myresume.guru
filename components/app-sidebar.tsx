@@ -105,7 +105,7 @@ const data = {
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const {open} = useSidebar()
   return (
-    <Sidebar className={`transition-all duration-300 bg-blue-800 ${open &&'p-2 sm:p-3 sm:pr-0 sm:border-l-2 sm:rounded-l-md '}`} collapsible="icon" {...props}>
+    <Sidebar className={`transition-all duration-300 bg-blue-800 ${open &&'p-2 sm:p-3 sm:pr-0 bg-blue-800'}`} collapsible="icon" {...props}>
       {/* <SidebarHeader>
         <TeamSwitcher teams={data.teams} />
       </SidebarHeader> */}
