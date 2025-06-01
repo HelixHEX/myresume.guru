@@ -7,8 +7,6 @@ import { AssistantModal } from "@/components/assistant-ui/assistant-modal";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PDFPreview from "../../_components/editor/preview";
 import Editor from "../../_components/editor";
-import useDimensions from "@/hooks/useDimensions";
-import { useEffect } from "react";
 
 export default async function Page(props: {
 	params: Promise<{ resumeId: string }>;
@@ -19,11 +17,12 @@ export default async function Page(props: {
 	const messages = chat ? await getMessagesFromDB(chat) : ([] as any[]);
 	return (
 		<>
-			<Tabs defaultValue="edit-resume" className="w-full">
+			<Tabs defaultValue='feedback' className="w-full">
 				<TabsList className="bg-white rounded-none w-full">
 					<TabsTrigger
 						className="cursor-pointer text-blue-800 transition-all duration-800 font-bold text-md group data-[state=active]:text-white data-[state=active]:bg-blue-800 bg-white rounded-none border-none"
 						value="edit-resume"
+
 					>
 						<p className="group-hover:translate-y-[-5px] transition-all duration-800">Edit Resume</p>
 					</TabsTrigger>
