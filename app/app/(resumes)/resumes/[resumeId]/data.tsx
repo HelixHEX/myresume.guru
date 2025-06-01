@@ -103,8 +103,7 @@ export default function ResumeDetails({
 			<div className="flex flex-col gap-20 mt-4">
 				{resume?.improvements?.map((improvement, index) => (
 					<div key={index} className="flex w-full flex-col gap-2">
-						<p className="text-2xl font-bold text-white">{index + 1}.</p>
-						<ImprovementCard key={index} {...improvement} />
+						<ImprovementCard key={index} index={index} {...improvement} />
 					</div >
 				))}
 			</div>

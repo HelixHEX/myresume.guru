@@ -8,6 +8,7 @@ interface Props {
   text: string;
   priority: number;
   status: string;
+  index: number;
 }
 
 const getPriorityColor = (priority: number) => {
@@ -25,13 +26,13 @@ const getPriorityColor = (priority: number) => {
   }
 };
 
-export default function ImprovementCard({ title, text, priority }: Props) {
+export default function ImprovementCard({ title, text, priority, index }: Props) {
   return (
-    <Card className="p-0 rounded-none w-full bg-blue-800 border-none shadow-none text-white">
+    <Card className="p-0 rounded-none w-full border-none shadow-none text-blue-800">
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1">
           <div className="flex items-center gap-3 mb-3">
-            <h3 className="text-xl font-bold">{title}</h3>
+            <h3 className="text-xl font-bold">{index + 1}. {title}</h3>
             {/* <Badge 
               className={`${getPriorityColor(priority)} cursor-default`}
               variant="secondary"
@@ -39,7 +40,7 @@ export default function ImprovementCard({ title, text, priority }: Props) {
               Priority {priority}
             </Badge> */}
           </div>
-          <div className=" whitespace-pre-wrap">
+          <div className="text-black whitespace-pre-wrap">
             {text}
           </div>
         </div>

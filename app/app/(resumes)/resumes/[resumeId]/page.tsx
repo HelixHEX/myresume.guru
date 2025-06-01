@@ -20,26 +20,26 @@ export default async function Page(props: {
 	return (
 		<>
 			<Tabs defaultValue="edit-resume" className="w-full">
-				<TabsList className="bg-blue-800 rounded-none w-full">
+				<TabsList className="bg-white rounded-none w-full">
 					<TabsTrigger
-						className="cursor-pointer text-white font-bold text-md data-[state=active]:text-blue-800 data-[state=active]:bg-white bg-blue-800 rounded-none border-none"
+						className="cursor-pointer text-blue-800 transition-all duration-800 font-bold text-md group data-[state=active]:text-white data-[state=active]:bg-blue-800 bg-white rounded-none border-none"
 						value="edit-resume"
 					>
-						Edit Resume
+						<p className="group-hover:translate-y-[-5px] transition-all duration-800">Edit Resume</p>
 					</TabsTrigger>
 					<TabsTrigger
-						className="cursor-pointer text-white font-bold text-md data-[state=active]:text-blue-800 data-[state=active]:bg-white bg-blue-800 rounded-none border-none"
+						className="cursor-pointer text-blue-800 transition-all duration-800 font-bold text-md data-[state=active]:text-white group data-[state=active]:bg-blue-800 bg-white rounded-none border-none"
 						value="feedback"
 					>
-						Feedback
+						<p className="group-hover:translate-y-[-5px] transition-all duration-800">Feedback</p>
 					</TabsTrigger>
 				</TabsList>
 				<div className="w-full bg-white -mt-[8px] h-[1px]" />
-				<div className="flex bg-white md:bg-blue-800 w-full flex-col md:flex-row">
+				<div className="flex bg-white w-full flex-col md:flex-row">
 					<TabsContent className="-mt-2 w-full " value="edit-resume">
-						<div className="p-4 md:px-8 flex w-full md:w-[400px]  h-full md:bg-blue-800">
+						<div className="p-4 md:px-8 flex w-full md:w-[400px]  h-full">
 							<div className="w-full ">
-								<h1 className=" text-4xl font-bold text-blue-800 md:text-white">
+								<h1 className=" text-4xl font-bold text-blue-800 ">
 									Edit Resume
 								</h1>
 								<Editor resumeId={params.resumeId} />
@@ -47,15 +47,15 @@ export default async function Page(props: {
 						</div>
 					</TabsContent>
 					<TabsContent
-						className="-mt-2 bg-blue-800 w-full h-full"
+						className="-mt-2 w-full h-full"
 						value="feedback"
 					>
-						<div className="md:px-8  p-4 flex-col flex w-[400px] h-full bg-blue-800">
-							<h1 className=" text-4xl font-bold text-white">
+						<div className="md:px-8  p-4 flex-col flex w-[400px] h-full">
+							<h1 className=" text-4xl font-bold text-blue-800">
 								Suggested Improvements
 							</h1>
 							<div className="mt-8 md:mt-0 w-full flex flex-col">
-								<p className="mt-2 text-gray-50 text-md font-bold w-full">
+								<p className="mt-2 text-gray-400 text-md font-bold w-full">
 									Get specific, actionable feedback on how to improve your
 									resume. The Al will highlight areas for improvement and
 									provide clear recommendations to help you make your resume

@@ -27,6 +27,7 @@ import {
   SidebarFooter,
   SidebarHeader,
   SidebarRail,
+  useSidebar,
 } from "@/components/ui/sidebar"
 
 // This is sample data.
@@ -102,8 +103,9 @@ const data = {
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const {open} = useSidebar()
   return (
-    <Sidebar className="transition-all duration-300" collapsible="icon" {...props}>
+    <Sidebar className={`transition-all duration-300 bg-blue-800 ${open &&'p-2 sm:p-3 sm:pr-0 sm:border-l-2 sm:rounded-l-md '}`} collapsible="icon" {...props}>
       {/* <SidebarHeader>
         <TeamSwitcher teams={data.teams} />
       </SidebarHeader> */}
@@ -113,7 +115,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarFooter>
         {/* <NavUser user={data.user} /> */}
       </SidebarFooter>
-      <SidebarRail />
+
+      {/* <SidebarRail /> */}
     </Sidebar>
   )
 }
