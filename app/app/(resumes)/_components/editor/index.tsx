@@ -141,7 +141,7 @@ export default function Editor({
           saveResumeEditorData({
             resumeId: resumeId ?? "",
             data: JSON.stringify({
-              name: resume?.name,
+              resumeName: resume?.name,
               firstName: resume?.firstName,
               lastName: resume?.lastName,
               email: resume?.email,
@@ -343,12 +343,16 @@ function EditorForm({
           <EditorInput
             name="resumeName"
             className={`self-end ${user ? "" : "col-span-2"}`}
-            label="Name"
+            label="Resume Name"
             placeholder="Updated resume"
             control={form.control}
           />
           <SignedIn>
-            <SaveResume className="self-end" isSubmitting={isSubmitting} />
+            <SaveResume
+              className="self-end"
+              isSubmitting={isSubmitting}
+              resumeName={form.getValues("resumeName") || ""}
+            />
           </SignedIn>
         </div>
         <div className="grid mt-8 grid-cols-2 gap-4 ">

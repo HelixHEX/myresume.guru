@@ -21,7 +21,7 @@ export default function PDFPreview({ resumeId }: { resumeId?: string }) {
   const { data: resume } = useGetResumeEditorData(resumeId ?? "");
   const containerRef = useRef<HTMLDivElement>(null);
   const { width, height } = useDimensions(containerRef);
-  const [editorBg, setEditorBg] = useState<string | undefined>("bg-[#174BDC]");
+  const [editorBg, setEditorBg] = useState<string | undefined>("bg-blue-800");
   const reactToPrint = useReactToPrint({
     contentRef,
     documentTitle: resume?.title || "Resume",
@@ -29,8 +29,11 @@ export default function PDFPreview({ resumeId }: { resumeId?: string }) {
   const { data: editorColor, isLoading: isLoadingEditorColor } =
     useGetEditorColor(resumeId ?? "");
   return (
-    <div className={"flex flex-col w-full overflow-y-auto p-3 "}>
-      <div className="flex justify-end pb-4">
+    <div className={"flex bg-blue-800 flex-col w-full overflow-y-auto p-3 "}>
+      <div className="flex justify-between pb-4">
+        <h2 className="text-white text-2xl font-bold">
+          {resume?.resumeName}.pdf
+        </h2>
         <Download
           onClick={() =>
             toast.promise(
@@ -50,7 +53,7 @@ export default function PDFPreview({ resumeId }: { resumeId?: string }) {
             )
           }
           className={
-            "text-blue-800 cursor-pointer  hover:text-black hover:translate-y-[-3px] transition-all duration-300"
+            "text-white cursor-pointer  hover:text-gray-300 hover:translate-y-[-3px] transition-all duration-300"
           }
         />
       </div>
