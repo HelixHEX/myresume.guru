@@ -123,8 +123,8 @@ export default function PDFPreview({ resumeId }: { resumeId?: string }) {
 										</h2>
 										<div className="flex flex-col gap-2">
 											{/* biome-ignore lint: */}
-											{resume.workExperience.map((work: any) => (
-												<div key={work.id}>
+											{resume.workExperience.map((work: any, index: number) => (
+												<div key={index}>
 													<div className="flex justify-between">
 														<h3 className="text-[14px] font-bold">
 															{work.title}
@@ -213,8 +213,8 @@ export default function PDFPreview({ resumeId }: { resumeId?: string }) {
 										</h2>
 										<div className="flex flex-col gap-2">
 											{/* biome-ignore lint: */}
-											{resume.projects.map((project: any) => (
-												<div key={project.id}>
+											{resume.projects.map((project: any, index: number) => (
+												<div key={index}>
 													<h3 className="text-[14px] font-bold">
 														{project.name}
 													</h3>
