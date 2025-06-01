@@ -6,7 +6,7 @@ export default function Footer() {
 					&copy; {new Date().getFullYear()} MyResume.<span>Guru</span>{" "}
 					| Suppoort:{" "}
 					<a href="mailto:elias@thenxtcreatives.com" >
-						elias@thenxtcreatives.com
+						elias@thenextcreatives.com
 					</a>
 				</p>
 			</div>
