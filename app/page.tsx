@@ -160,7 +160,7 @@ export default function Home() {
           {/* NEWSLETTER SECTION */}
           <div className="flex flex-col w-full pt-30 sm:pt-60 self-center">
             <Fade delay={300}>
-              <h1 className="text-2xl w-full sm:w-[680px] sm:text-5xl font-bold">
+              <h1 className="text-2xl w-full sm:w-[680  px] sm:text-5xl font-bold">
                 Subscribe to the <span className="text-blue-800">Hiring Scroll</span> newsletter.
               </h1>
             </Fade>
@@ -190,6 +190,9 @@ export default function Home() {
               </p>
               <p className="text-muted-foreground">
                 ✅ Entry-level to senior openings based on your profile
+              </p>
+              <p className="text-muted-foreground">
+                ✅ Job tips and advice
               </p>
               <p className="text-muted-foreground">
                 ✅ No spam — just real opportunities
