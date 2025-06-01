@@ -13,3 +13,7 @@ type GetResumeResponse = {
 type GetResumeAnalysisStatusResponse = {
   status: string
 }
+
+type GetDownloadedResumesResponse = {
+  downloadedResumes: number
+}

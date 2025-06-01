@@ -41,6 +41,7 @@ import { motion } from "framer-motion";
 import axios from "axios";
 import { toast } from "sonner";
 import { useUser } from "@clerk/nextjs";
+import { useGetDownloadedResumes } from "./app/(resumes)/lib/queries";
 
 const text = `The resume currently lacks a personal summary, which is a crucial section that provides a snapshot of your professional identity and career goals. A well-crafted summary can capture the attention of hiring managers and set the tone for the rest of the resume.**Actionable Steps:**1. Write a concise summary (3-4 sentences) that highlights your key skills, experiences, and career objectives.2. Focus on your strengths in software development and project management.3. Mention any unique qualities or achievements that differentiate you from other candidates.**Example:**"Dynamic software engineer with over 5 years of experience in developing scalable web applications and leading project management initiatives. Proven track record in enhancing user engagement and satisfaction through innovative solutions. Passionate about leveraging AI to improve user experiences and drive business growth."`;
 
@@ -49,6 +50,7 @@ export default function Home() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [subscribed, setSubscribed] = useState(false);
+  const { data: downloadedResumes } = useGetDownloadedResumes();
 
   const formSchema = z.object({
     email: z.string().email().min(1, { message: "Email is required" }),
@@ -108,13 +110,23 @@ export default function Home() {
         />
         <div className="pt-4 flex flex-col lg:w-[1000px] w-full self-center">
           {/* EDITOR SECTION */}
-          <div className="flex pt-20 pb-8 gap-4 items-center justify-center">
+          <div className="flex pt-20 pb-2 gap-4 items-center justify-center">
             <Sparkles />
             <h1 className=" text-center font-bold text-4xl">
               Create a <span className="text-blue-800">free</span> resume!
             </h1>
             <Sparkles />
           </div>
+          {/* <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.5 }}
+            className="self-center pb-8"
+          >
+            <div className=" self-center font-bold">
+              Over <span className="text-blue-800">{downloadedResumes?.downloadedResumes}</span> resumes downloaded
+            </div>
+          </motion.div> */}
 
           <div className="w-full shadow-lg bg-[#F6F6F6] rounded-lg flex h-full max-h-screen overflow-y-auto">
             <div className="h-full p-4 px-4 sm:px-8 transition-all duration-300 w-full lg:w-[700px] bg-white ">
@@ -158,10 +170,14 @@ export default function Home() {
             </div>
           </div>
           {/* NEWSLETTER SECTION */}
-          <div id="newsletter" className="flex flex-col w-full pt-30 sm:pt-60 self-center">
+          <div
+            id="newsletter"
+            className="flex flex-col w-full pt-30 sm:pt-60 self-center"
+          >
             <Fade delay={300}>
               <h1 className="text-2xl w-full sm:w-[680px] sm:text-5xl font-bold">
-                Subscribe to the <span className="text-blue-800">Hiring Scroll</span> newsletter.
+                Subscribe to the{" "}
+                <span className="text-blue-800">Hiring Scroll</span> newsletter.
               </h1>
             </Fade>
             <Fade delay={600}>
@@ -173,7 +189,8 @@ export default function Home() {
             <Fade delay={900}>
               <p className="mt-4 max-w-[600px] text-muted-foreground">
                 {" "}
-                That&apos;s why I launched the Hiring Scroll, a <span className="text-blue-800 font-bold">free</span> (for now)
+                That&apos;s why I launched the Hiring Scroll, a{" "}
+                <span className="text-blue-800 font-bold">free</span> (for now)
                 weekly job listings newsletter, curated specifically for users
                 like you.
               </p>
@@ -191,9 +208,7 @@ export default function Home() {
               <p className="text-muted-foreground">
                 ✅ Entry-level to senior openings based on your profile
               </p>
-              <p className="text-muted-foreground">
-                ✅ Job tips and advice
-              </p>
+              <p className="text-muted-foreground">✅ Job tips and advice</p>
               <p className="text-muted-foreground">
                 ✅ No spam — just real opportunities
               </p>
@@ -203,44 +218,44 @@ export default function Home() {
                 <Form {...form}>
                   <form
                     onSubmit={form.handleSubmit(onSubmit)}
-                  className="space-y-4 pt-4 flex flex-col sm:flex-row w-auto sm:gap-4"
-                >
-                  <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                      <FormItem className="flex flex-col gap-2">
-                        <FormControl>
-                          <Input
-                            className="rounded-md w-[400px]"
-                            placeholder="Enter your email"
-                            {...field}
-                          />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="mailingLists"
-                    render={({ field }) => (
-                      <FormItem className="flex flex-col gap-2">
-                        <FormControl>
-                          <Input
-                            className="rounded-md w-[400px] hidden"
-                            {...field}
-                          />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-                  <Button
-                    type="submit"
-                    variant="outline"
-                    className="rounded-md px-8 bg-linear-to-b from-white to-gray-300/30 hover:from-blue-800/50 hover:to-blue-900 text-blue-800 cursor-pointer hover:bg-blue-800 hover:text-white"
+                    className="space-y-4 pt-4 flex flex-col sm:flex-row w-auto sm:gap-4"
                   >
-                    Subscribe
-                  </Button>
+                    <FormField
+                      control={form.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-col gap-2">
+                          <FormControl>
+                            <Input
+                              className="rounded-md w-[400px]"
+                              placeholder="Enter your email"
+                              {...field}
+                            />
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="mailingLists"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-col gap-2">
+                          <FormControl>
+                            <Input
+                              className="rounded-md w-[400px] hidden"
+                              {...field}
+                            />
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+                    <Button
+                      type="submit"
+                      variant="outline"
+                      className="rounded-md px-8 bg-linear-to-b from-white to-gray-300/30 hover:from-blue-800/50 hover:to-blue-900 text-blue-800 cursor-pointer hover:bg-blue-800 hover:text-white"
+                    >
+                      Subscribe
+                    </Button>
                   </form>
                 </Form>
               ) : (
@@ -288,7 +303,7 @@ export default function Home() {
                     <FileEdit className="h-4 w-4 text-black dark:text-neutral-400" />
                   }
                   title="Resume Builder"
-                  description="The resume builder will help you create a resume that stands out from the crowd."
+                  description="The resume builder will help you cresume that stands out from the crowd."
                 />
                 <GridItem
                   delay={300}

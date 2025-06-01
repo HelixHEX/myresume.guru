@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { RESUME_ANALYSIS_STATUS } from "@/lib/actions/resume";
-
+import { getDownloadedResumes as getDownloadedResumesAction } from "@/app/app/(resumes)/_actions";
 export const getResume = async (resumeId: string) => {
   const res = await axios.get(`/api/resume/${resumeId}`);
   return res.data;
@@ -97,5 +97,17 @@ export const useGetResumeAnalysisStatus = (fileKey?: string) => {
     queryKey: ["resume_analysis_status", fileKey],
     queryFn: () => getResumeAnalysisStatus(fileKey),
     refetchInterval: 2000
+  });
+};
+
+export const getDownloadedResumes = async () => {
+  const res = await getDownloadedResumesAction();
+  return { downloadedResumes: res ?? 0 };
+};
+
+export const useGetDownloadedResumes = () => {
+  return useQuery<GetDownloadedResumesResponse>({
+    queryKey: ["downloaded_resumes"],
+    queryFn: getDownloadedResumes,
   });
 };

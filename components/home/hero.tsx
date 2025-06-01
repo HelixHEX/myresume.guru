@@ -2,6 +2,8 @@ import { Wifi, Zap } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
+import { getDownloadedResumes } from "@/app/app/(resumes)/_actions";
+import { useGetDownloadedResumes } from "@/app/app/(resumes)/lib/queries";
 
 interface Hero115Props {
   icon?: React.ReactNode;
@@ -58,6 +60,7 @@ const Hero115 = ({
                   <div className=" self-center text-blue-800">{trustText}</div>
                 </motion.div>
               )}
+             
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}

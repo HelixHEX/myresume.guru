@@ -13,6 +13,14 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Stats {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  downloadedResumes Int @default(0) @map("downloaded_resumes")
+}
+
 model Subscription {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now()) @map("created_at")
