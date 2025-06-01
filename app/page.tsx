@@ -88,7 +88,7 @@ export default function Home() {
 					</div>
 
 					<div className="w-full shadow-lg bg-[#F6F6F6] rounded-lg flex h-full max-h-screen overflow-y-auto">
-						<div className="h-full p-4 px-4 sm:px-8 transition-all duration-300 w-full lg:w-[700px] bg-white sm:bg-blue-800">
+						<div className="h-full p-4 px-4 sm:px-8 transition-all duration-300 w-full lg:w-[700px] bg-white ">
 							<div className="md:hidden h-full w-full pt-4">
 								<Tabs defaultValue="edit" className="w-full">
 									<div className="flex justify-center gap-4">
