@@ -86,7 +86,7 @@ export default function Home() {
           <div className="flex pb-8 gap-4 items-center justify-center">
             <Sparkles />
             <h1 className=" text-center font-bold text-4xl">
-              Create a free resume!
+              Create a <span className="text-blue-800">free</span> resume!
             </h1>
             <Sparkles />
           </div>
