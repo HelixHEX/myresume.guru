@@ -158,9 +158,9 @@ export default function Home() {
             </div>
           </div>
           {/* NEWSLETTER SECTION */}
-          <div className="flex flex-col w-full pt-30 sm:pt-60 self-center">
+          <div id="newsletter" className="flex flex-col w-full pt-30 sm:pt-60 self-center">
             <Fade delay={300}>
-              <h1 className="text-2xl w-full sm:w-[680  px] sm:text-5xl font-bold">
+              <h1 className="text-2xl w-full sm:w-[680px] sm:text-5xl font-bold">
                 Subscribe to the <span className="text-blue-800">Hiring Scroll</span> newsletter.
               </h1>
             </Fade>
@@ -173,7 +173,7 @@ export default function Home() {
             <Fade delay={900}>
               <p className="mt-4 max-w-[600px] text-muted-foreground">
                 {" "}
-                That&apos;s why I launched the Hiring Scroll, a free (for now)
+                That&apos;s why I launched the Hiring Scroll, a <span className="text-blue-800 font-bold">free</span> (for now)
                 weekly job listings newsletter, curated specifically for users
                 like you.
               </p>
