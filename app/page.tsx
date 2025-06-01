@@ -48,6 +48,7 @@ export default function Home() {
   const { user } = useUser();
   const router = useRouter();
   const [email, setEmail] = useState("");
+  const [subscribed, setSubscribed] = useState(false);
 
   const formSchema = z.object({
     email: z.string().email().min(1, { message: "Email is required" }),
@@ -82,6 +83,7 @@ export default function Home() {
           )
           .then(() => {
             form.reset();
+            setSubscribed(true);
           });
       },
       {
@@ -193,10 +195,11 @@ export default function Home() {
                 ✅ No spam — just real opportunities
               </p>
             </Fade>
-            <Fade delay={1800}>
-              <Form {...form}>
-                <form
-                  onSubmit={form.handleSubmit(onSubmit)}
+            <Fade delay={subscribed ? 0 : 1800}>
+              {!subscribed ? (
+                <Form {...form}>
+                  <form
+                    onSubmit={form.handleSubmit(onSubmit)}
                   className="space-y-4 pt-4 flex flex-col sm:flex-row w-auto sm:gap-4"
                 >
                   <FormField
@@ -235,8 +238,13 @@ export default function Home() {
                   >
                     Subscribe
                   </Button>
-                </form>
-              </Form>
+                  </form>
+                </Form>
+              ) : (
+                <p className="font-bold text-blue-800 mt-4">
+                  Thanks for subscribing!
+                </p>
+              )}
             </Fade>
           </div>
           {/* FEATURES SECTION */}
