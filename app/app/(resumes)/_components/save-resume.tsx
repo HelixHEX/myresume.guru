@@ -13,7 +13,7 @@ export default function SaveResume({
 
 	return (
 		<Button
-			disabled={!resume || isPending || isSubmitting}
+			disabled={!resume || !resume.resumeName || isPending || isSubmitting}
 			type="submit"
 			className={cn(
 				"bg-blue-800 rounded-none md:bg-white md:text-blue-800 md:hover:bg-gray-300 md:hover:text-blue-800 text-white hover:bg-blue-900 font-bold cursor-pointer",

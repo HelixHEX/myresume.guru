@@ -99,7 +99,7 @@ export const editorSchema = z.object({
 		.optional(),
 });
 
-export default function Editor({ resumeId }: { resumeId?: string }) {
+export default function Editor({ resumeId, isHomePage=false }: { resumeId?: string, isHomePage?: boolean }) {
 	const router = useRouter();
 	const pathname = usePathname();
 	const { user } = useUser();
@@ -108,7 +108,6 @@ export default function Editor({ resumeId }: { resumeId?: string }) {
 		resumeId ?? "",
 		refetchInterval,
 	);
-	const isHomePage = pathname === "/" || pathname === "";
 	const isNewResumePage = pathname.includes("/resumes/new");
 	const isEditorPage =
 		pathname.includes("/app/resumes") && pathname !== "/app/resumes/new";
@@ -179,6 +178,7 @@ export default function Editor({ resumeId }: { resumeId?: string }) {
 	if (!resumeData && isEditorPage) router.push("/app/resumes");
 
 	if (resumeData?.message && resumeData.message.length > 0 && !isHomePage) {
+		
 		router.push("/app/resumes");
 	}
 
@@ -473,6 +473,7 @@ function EditorForm({
 							))}
 							<div className="mt-6 w-full flex justify-end">
 								<Button
+									type="button"
 									size="sm"
 									onClick={() =>
 										appendWorkExperience({
@@ -552,6 +553,7 @@ function EditorForm({
 							))}
 							<div className="flex justify-end">
 								<Button
+									type="button"
 									size="sm"
 									onClick={() =>
 										appendEducation({
@@ -631,6 +633,7 @@ function EditorForm({
 							))}
 							<div className="flex justify-end">
 								<Button
+									type="button"
 									size="sm"
 									onClick={() =>
 										appendProjects({
@@ -681,6 +684,7 @@ function EditorForm({
 							))}
 							<div className="flex justify-end">
 								<Button
+									type="button"
 									size="sm"
 									onClick={() =>
 										appendCertifications({
@@ -749,6 +753,7 @@ function EditorWorkExperienceBulletPoints({
 			))}
 			<div className="mt-6 w-full flex justify-end">
 				<Button
+					type="button"
 					size="sm"
 					onClick={() => append({ summaryPoint: "" })}
 					className="sm:bg-white rounded-none h-[30px] sm:text-blue-800 sm:hover:bg-gray-300 sm:hover:text-blue-800 bg-blue-800 text-white hover:bg-blue-900 font-bold cursor-pointer"

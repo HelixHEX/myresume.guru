@@ -108,7 +108,7 @@ export default function Home() {
 										</TabsList>
 									</div>
 									<TabsContent className="h-full  flex w-full" value="edit">
-										<Editor resumeId={""} />
+										<Editor isHomePage={true} resumeId={""} />
 									</TabsContent>
 									<TabsContent className="w-full md:flex" value="preview">
 										<PDFPreview />
