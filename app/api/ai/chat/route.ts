@@ -1,5 +1,5 @@
 import { openai } from "@ai-sdk/openai";
-import { appendClientMessage, appendResponseMessages, generateText, streamText } from "ai";
+import { appendClientMessage, appendResponseMessages, generateText, streamText, tool } from "ai";
 import prisma from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
 import { LanguageModelV1Prompt } from "ai";
@@ -98,10 +98,9 @@ export async function POST(req: Request) {
         content: `You are a resume guru assistant. Here is the resume json format: ${JSON.stringify(resumeData)}. If a user asks for a specific change, update that specific field. Dont say you are going to use the updateResume tool, just update the resume.`
       }, ...formattedPrevMessages, ...newMessages],
       tools: {
-        updateResume: {
-          name: "updateResume",
-          parameters: paramsSchema,
+        updateResume: tool({
           description: "Seamlessly updates an existing resume with new or modified information, such as contact details, summary, skills, work experience, education, and more. Ideal for handling user requests to revise specific sections of their resume through natural language interaction.",
+          parameters: paramsSchema,
           execute: async (args: z.infer<typeof paramsSchema>) => {
             console.log("Updating resume", args);
             await updateResume(args);
@@ -112,8 +111,25 @@ export async function POST(req: Request) {
               resumeId: args.resumeId
             };
           },
-        },
-      }
+        }),
+      },
+      maxSteps: 3
+      // updateResume: {
+      //   name: "updateResume",
+      //   parameters: paramsSchema,
+      //   description: "Seamlessly updates an existing resume with new or modified information, such as contact details, summary, skills, work experience, education, and more. Ideal for handling user requests to revise specific sections of their resume through natural language interaction.",
+      //   execute: async (args: z.infer<typeof paramsSchema>) => {
+      //     console.log("Updating resume", args);
+      //     await updateResume(args);
+      //     return {
+      //       success: true,
+      //       message: "Resume updated successfully",
+      //       event: "resume-updated",
+      //       resumeId: args.resumeId
+      //     };
+      //   },
+      // },
+
     });
 
     return result.toDataStreamResponse();
