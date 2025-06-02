@@ -28,7 +28,7 @@ const Hero115 = ({
     icon: <Zap className="ml-2 size-4" />,
     url: "https://www.shadcnblocks.com",
   },
-  trustText = "Trusted by 120+ users",
+  trustText = "Trusted by 130+ users",
   imageSrc = "/images/app.png",
   imageAlt = "placeholder",
 }: Hero115Props) => {
