@@ -137,6 +137,7 @@ export default function Editor({
     const main = async () => {
       if (user) {
         const localResumeEditorData = await getResumeEditorData(resumeId ?? "");
+        console.log("Saving resume editor data", resume, user);
         if (resume && resume.userId === user.id) {
           saveResumeEditorData({
             resumeId: resumeId ?? "",

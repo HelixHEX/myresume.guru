@@ -1,19 +1,31 @@
+'use client'
 import axios from "axios";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { RESUME_ANALYSIS_STATUS } from "@/lib/actions/resume";
 import { getDownloadedResumes as getDownloadedResumesAction } from "@/app/app/(resumes)/_actions";
+import { useEffect } from "react";
 export const getResume = async (resumeId: string) => {
   const res = await axios.get(`/api/resume/${resumeId}`);
+  localStorage.setItem(`resume:${resumeId}`, JSON.stringify({
+    ...res.data.resume,
+    resumeName: res.data.resume.name
+  }));
+  // queryClient.invalidateQueries({ queryKey: ["resume_editor_data", resumeId] });
   return res.data;
 };
 
 export const useGetResume = (resumeId: string, refetchInterval: number) => {
-  return useQuery<GetResumeResponse>({
+  const queryClient = useQueryClient();
+  const query = useQuery<GetResumeResponse>({
     queryKey: ["resume", resumeId],
     queryFn: () => getResume(resumeId),
     refetchInterval: refetchInterval || 0,
     enabled: !!resumeId,
   });
+  useEffect(() => {
+    queryClient.invalidateQueries({ queryKey: ["resume_editor_data", resumeId] });
+  }, [query]);  
+  return query;
 };
 
 export const getEditorColor = async (resumeId: string) => {

@@ -6,8 +6,34 @@ import { LanguageModelV1Prompt } from "ai";
 import { addMemories } from "@mem0/vercel-ai-provider";
 import { createMem0 } from "@mem0/vercel-ai-provider";
 import { anthropic } from "@ai-sdk/anthropic";
+import { updateResumeTool } from "@/lib/providers/ai/tools/update-resume";
+import { z } from "zod";
+import { Params } from "next/dist/server/request/params";
+import { updateResume } from "@/lib/actions/resume";
+import { QueryClient } from "@tanstack/react-query";
 
 export const maxDuration = 30;
+
+const paramsSchema = z.object({
+  resumeId: z.number(),
+  name: z.string().optional(),
+  firstName: z.string().optional(),
+  lastName: z.string().optional(),
+  email: z.string().optional(),
+  phone: z.string().optional(),
+  location: z.string().optional(),
+  website: z.string(),
+  github: z.string(),
+  linkedin: z.string(),
+  twitter: z.string(),
+  summary: z.string(),
+  skills: z.string(),
+  workExperience: z.string(),
+  education: z.string(),
+  projects: z.string(),
+  certifications: z.string(),
+  achievements: z.string(),
+});
 
 export async function POST(req: Request) {
   try {
@@ -69,8 +95,25 @@ export async function POST(req: Request) {
       model: anthropic("claude-3-5-haiku-latest"),
       messages: [{
         role: "system",
-        content: `You are a resume guru assistant. Here is the resume json format and improvements that have already been recommended. Resume in JSON format: ${JSON.stringify(resumeData)} Improvements generated: ${resume?.improvements?.map((improvement) => `${improvement.title}: ${improvement.text}`).join(", ")}`
+        content: `You are a resume guru assistant. Here is the resume json format: ${JSON.stringify(resumeData)}. If a user asks for a specific change, update that specific field. Dont say you are going to use the updateResume tool, just update the resume.`
       }, ...formattedPrevMessages, ...newMessages],
+      tools: {
+        updateResume: {
+          name: "updateResume",
+          parameters: paramsSchema,
+          description: "Seamlessly updates an existing resume with new or modified information, such as contact details, summary, skills, work experience, education, and more. Ideal for handling user requests to revise specific sections of their resume through natural language interaction.",
+          execute: async (args: z.infer<typeof paramsSchema>) => {
+            console.log("Updating resume", args);
+            await updateResume(args);
+            return {
+              success: true,
+              message: "Resume updated successfully",
+              event: "resume-updated",
+              resumeId: args.resumeId
+            };
+          },
+        },
+      }
     });
 
     return result.toDataStreamResponse();

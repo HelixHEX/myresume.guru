@@ -71,6 +71,7 @@ export default async function Page(props: {
 			</Tabs>
 			{/* biome-ignore lint: */}
 			<AIProvider chatId={chat!} messages={messages}>
+				{/* <UpdateResumeTool /> */}
 				<AssistantModal />
 			</AIProvider>
 		</>
