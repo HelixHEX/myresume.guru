@@ -187,7 +187,7 @@ export default function Home() {
               </p>
             </Fade>
             <Fade delay={900}>
-              <p className="mt-4 max-w-[600px] text-muted-foreground">
+              <p className="mt-4 w-full sm:max-w-[600px] text-muted-foreground">
                 {" "}
                 That&apos;s why I launched the Hiring Scroll, a{" "}
                 <span className="text-blue-800 font-bold">free</span> (for now)
