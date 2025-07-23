@@ -28,7 +28,7 @@ const Hero115 = ({
     icon: <Zap className="ml-2 size-4" />,
     url: "https://www.shadcnblocks.com",
   },
-  trustText = "Trusted by 130+ users",
+  trustText = "Trusted by 160+ users",
   imageSrc = "/images/app.png",
   imageAlt = "placeholder",
 }: Hero115Props) => {
@@ -88,7 +88,7 @@ const Hero115 = ({
               >
                 <Button
                   size="lg"
-                  variant={"ghost"}
+                  variant={"outline"}
                   asChild
                   className=" text-blue-800 hover:bg-blue-800 hover:text-white transition-all duration-400 cursor-pointer"
                 >
