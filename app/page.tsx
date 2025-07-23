@@ -117,16 +117,6 @@ export default function Home() {
             </h1>
             <Sparkles />
           </div>
-          {/* <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.5 }}
-            className="self-center pb-8"
-          >
-            <div className=" self-center font-bold">
-              Over <span className="text-blue-800">{downloadedResumes?.downloadedResumes}</span> resumes downloaded
-            </div>
-          </motion.div> */}
 
           <div className="w-full shadow-lg bg-[#F6F6F6] rounded-lg flex h-full max-h-screen overflow-y-auto">
             <div className="h-full p-4 px-4 sm:px-8 transition-all duration-300 w-full lg:w-[700px] bg-white ">
@@ -170,12 +160,12 @@ export default function Home() {
             </div>
           </div>
           {/* NEWSLETTER SECTION */}
-          <div
+          {/* <div
             id="newsletter"
             className="flex flex-col w-full pt-30 sm:pt-60 self-center"
           >
             <Fade delay={300}>
-              <h1 className="text-2xl w-full sm:w-[680px] sm:text-5xl font-bold">
+              <h1 className="text-2xl max-w-[600px]  sm:text-5xl font-bold">
                 Subscribe to the{" "}
                 <span className="text-blue-800">Hiring Scroll</span> newsletter.
               </h1>
@@ -264,7 +254,7 @@ export default function Home() {
                 </p>
               )}
             </Fade>
-          </div>
+          </div> */}
           {/* FEATURES SECTION */}
           <div className="flex flex-col pt-40 w-full sm:self-center ">
             <h1 className="text-4xl  font-bold">Features</h1>
