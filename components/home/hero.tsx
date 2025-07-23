@@ -33,15 +33,15 @@ const Hero115 = ({
   imageAlt = "placeholder",
 }: Hero115Props) => {
   return (
-    <section className="overflow-hidden py-32">
+    <section className="overflow-hidden flex flex-col items-center justify-center py-32 ">
       <div className="container">
-        <div className="flex flex-col gap-5">
-          <div className="relative flex flex-col gap-5">
+        <div className="flex flex-col gap-5 w-full ">
+          <div className="relative flex  flex-col gap-5">
             <div
               style={{
                 transform: "translate(-50%, -50%)",
               }}
-              className="absolute top-1/2 left-1/2 -z-10 mx-auto size-[800px] rounded-full border p-16 [mask-image:linear-gradient(to_top,transparent,transparent,white,white,white,transparent,transparent)] md:size-[1300px] md:p-32"
+              className="absolute  top-1/2 left-1/2 -z-10 mx-auto size-[800px] rounded-full border p-16 [mask-image:linear-gradient(to_top,transparent,transparent,white,white,white,transparent,transparent)] md:size-[1300px] md:p-32"
             >
               <div className="size-full rounded-full border p-16 md:p-32">
                 <div className="size-full rounded-full border"></div>
@@ -68,8 +68,7 @@ const Hero115 = ({
             >
               <h2 className="mx-auto max-w-5xl text-center text-3xl font-medium text-balance md:text-6xl">
                 {/* add highlight effect to word dream */}
-                Land your <span className="text-blue-800">dream</span> job with
-                MyResume.guru
+                Land your <span className="text-blue-800">dream</span> job
               </h2>
             </motion.div>
             <motion.div
