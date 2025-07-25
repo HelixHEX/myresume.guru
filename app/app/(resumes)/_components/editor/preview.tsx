@@ -29,7 +29,10 @@ export default function PDFPreview({ resumeId }: { resumeId?: string }) {
   const { data: editorColor, isLoading: isLoadingEditorColor } =
     useGetEditorColor(resumeId ?? "");
   return (
-    <div className={"flex bg-blue-800 flex-col w-full overflow-y-auto p-3 "}>
+    <div
+      style={{ backgroundColor: editorColor }}
+      className={`flex flex-col w-full overflow-y-auto p-3 `}
+    >
       <div className="flex justify-between pb-4">
         <h2 className="text-white text-2xl font-bold">
           {resume?.resumeName}.pdf
