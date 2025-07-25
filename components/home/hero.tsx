@@ -90,7 +90,7 @@ const Hero115 = ({
                   size="lg"
                   variant={"outline"}
                   asChild
-                  className=" text-blue-800 hover:bg-blue-800 hover:text-white transition-all duration-400 cursor-pointer"
+                  className=" text-blue-800 hover:border-blue-800 hover:bg-blue-800 hover:text-white transition-all duration-400 cursor-pointer"
                 >
                   <a href={button.url}>
                     {button.text} {button.icon}
