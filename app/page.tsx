@@ -106,7 +106,7 @@ export default function Home() {
           }
           heading="Land your dream job with MyResume.guru"
           description="Craft a resume that stands out."
-          button={{ text: "Try now!", url: "/sign-up" }}
+          button={{ text: "Try it now for free!", url: "/sign-up" }}
         />
         <div className="pt-4 flex flex-col lg:w-[1000px] w-full self-center">
           {/* EDITOR SECTION */}

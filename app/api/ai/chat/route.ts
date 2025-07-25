@@ -2,6 +2,7 @@ import { openai } from "@ai-sdk/openai";
 import { appendClientMessage, appendResponseMessages, generateText, streamText, tool } from "ai";
 import prisma from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
+import { clerkClient } from "@clerk/nextjs/server";
 import { LanguageModelV1Prompt } from "ai";
 import { addMemories } from "@mem0/vercel-ai-provider";
 import { createMem0 } from "@mem0/vercel-ai-provider";
@@ -37,6 +38,7 @@ const paramsSchema = z.object({
 
 export async function POST(req: Request) {
   try {
+    const clerk = await clerkClient()
     const { userId } = await auth();
     const { messages, chatId } = await req.json();
 
@@ -45,6 +47,10 @@ export async function POST(req: Request) {
       where: {
         chatId,
       },
+      take: 10,
+      orderBy: {
+        createdAt: "desc"
+      }
     })
 
 
@@ -89,49 +95,61 @@ export async function POST(req: Request) {
       },
     });
 
+    const user = await clerk.users.updateUserMetadata(userId!, {
+      unsafeMetadata: {
+        plan: "Plus",
+        messageCount: resume.messageCount + 1
+      }
+    })
+
+    // console.log(user.unsafeMetadata.messageCount as number);
+
+
     const { userId: clerkId, fileKey, status, text, analysis, candidateName, candidateEmail, candidatePhone, candidateLocation, technicalSkills, companies, jobTitles, education, ...resumeData } = resume
 
     const result = await streamText({
-      model: anthropic("claude-3-5-haiku-latest"),
+      model: anthropic("claude-3-5-sonnet-20240620"),
       messages: [{
         role: "system",
         content: `You are a resume guru assistant. Here is the resume json format: ${JSON.stringify(resumeData)}. If a user asks for a specific change, update that specific field. Dont say you are going to use the updateResume tool, just update the resume.`
       }, ...formattedPrevMessages, ...newMessages],
-      tools: {
-        updateResume: tool({
-          description: "Seamlessly updates an existing resume with new or modified information, such as contact details, summary, skills, work experience, education, and more. Ideal for handling user requests to revise specific sections of their resume through natural language interaction.",
-          parameters: paramsSchema,
-          execute: async (args: z.infer<typeof paramsSchema>) => {
-            console.log("Updating resume", args);
-            await updateResume(args);
-            return {
-              success: true,
-              message: "Resume updated successfully",
-              event: "resume-updated",
-              resumeId: args.resumeId
-            };
-          },
-        }),
+      // tools: {
+      //   getResume: tool({
+      //     description: "Gets the resume json format",
+      //     parameters: z.object({}),
+      //     execute: async () => {
+      //       return {
+      //         resume: resumeData
+      //       };
+      //     },
+      //   }),
+      //   updateResume: tool({
+      //     description: "Updates the resume with new or modified information, such as contact details, summary, skills, work experience, education, and more. Useful for handling user requests to revise specific sections of their resume through natural language interaction.",
+      //     parameters: paramsSchema,
+      //     execute: async (args: z.infer<typeof paramsSchema>) => {
+      //       // console.log("Updating resume", args);
+      //       await updateResume(args);
+      //       return {
+      //         success: true,
+      //         message: "Resume updated successfully",
+      //         event: "resume-updated",
+      //         resumeId: args.resumeId
+      //       };
+      //     },
+      //   }),
+      // },
+      onFinish: async (message) => {
+        await prisma.message.create({
+          data: {
+            content: message.text,
+            role: "assistant",
+            chatId,
+            userId: userId!,
+          }
+        })
       },
       maxSteps: 3
-      // updateResume: {
-      //   name: "updateResume",
-      //   parameters: paramsSchema,
-      //   description: "Seamlessly updates an existing resume with new or modified information, such as contact details, summary, skills, work experience, education, and more. Ideal for handling user requests to revise specific sections of their resume through natural language interaction.",
-      //   execute: async (args: z.infer<typeof paramsSchema>) => {
-      //     console.log("Updating resume", args);
-      //     await updateResume(args);
-      //     return {
-      //       success: true,
-      //       message: "Resume updated successfully",
-      //       event: "resume-updated",
-      //       resumeId: args.resumeId
-      //     };
-      //   },
-      // },
-
-    });
-
+    })
     return result.toDataStreamResponse();
   } catch (error) {
     console.log(error);

@@ -79,5 +79,11 @@ export const updateDbWithLatestSubscriptionData = async (subscriptionId: string)
 				polarSubscriptionId: subscription.id
 			}
 		})
+
+		await clerk.users.updateUserMetadata(userId, {
+			unsafeMetadata: {
+				plan: 'Free',
+			}
+		})
 	}
 }

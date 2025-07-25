@@ -57,7 +57,7 @@ export async function updateResume(args: {
       };
     }
 
-    const updatedResume = await prisma.resume.update({
+    await prisma.resume.update({
       where: { id: resume.id },
       data: {
         name: args.name,
@@ -79,7 +79,7 @@ export async function updateResume(args: {
       },
     });
 
-    console.log("Updated resume", updatedResume);
+    // console.log("Updated resume", updatedResume);
     return {
       success: true,
       message: "Resume updated successfully",

@@ -46,17 +46,19 @@ model Chat {
 }
 
 model Resume {
-  id           Int      @id @default(autoincrement())
-  createdAt    DateTime @default(now()) @map("created_at")
-  updatedAt    DateTime @updatedAt @map("updated_at")
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
   name         String
   userId       String
-  fileKey      String?  @unique
-  status       String   @default("Not analyzed")
+  fileKey      String? @unique
+  status       String  @default("Not analyzed")
   text         String?
-  analysis     Json?    @map("analysis_json")
-  v2Conversion Boolean  @default(false)
-  v2Started    Boolean  @default(false)
+  analysis     Json?   @map("analysis_json")
+  v2Conversion Boolean @default(false)
+  v2Started    Boolean @default(false)
+  messageCount Int     @default(0) @map("message_count")
 
   candidateName     String?  @map("candidate_name")
   candidateEmail    String?  @map("candidate_email")
