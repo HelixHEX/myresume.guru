@@ -6,6 +6,8 @@ import prisma from "@/lib/prisma";
 import { getFile, getFileUrl, getUrl } from "@/lib/utils";
 import { anthropic } from '@ai-sdk/anthropic';
 import { editorSchema } from "../app/(resumes)/_components/editor";
+import { all } from "axios";
+import { loops } from "@/lib/loops";
 
 // Schema for resume analysis
 const ResumeAnalysisSchema = z.object({
@@ -102,7 +104,7 @@ const FeedbackSchema = z.object({
 // Task 1: Analyze Resume
 export const analyzeResume = task({
   id: "analyze-resume",
-  run: async ({ resumeId, userId, FREE_GEN }: { resumeId: string, userId: string, FREE_GEN?: boolean }) => {
+  run: async ({ resumeId, userId, FREE_GEN, email }: { resumeId: string, userId: string, FREE_GEN?: boolean, email: string }) => {
     logger.info("Starting resume analysis", { resumeId });
 
     // Get the resume from the database
@@ -257,6 +259,7 @@ export const analyzeResume = task({
       userId: resume.userId,
       length: subscription || FREE_GEN ? 5 : 2,
       FREE_GEN,
+      email,
     });
 
 
@@ -267,7 +270,7 @@ export const analyzeResume = task({
 // Task 2: Generate Feedback
 export const generateFeedback = task({
   id: "generate-feedback",
-  run: async ({ resumeId, userId, length, FREE_GEN }: { FREE_GEN?: boolean, resumeId: number; userId: string, length: number }) => {
+  run: async ({ resumeId, userId, length, FREE_GEN, email }: { FREE_GEN?: boolean, resumeId: number; userId: string, length: number, email: string }) => {
     logger.info("Starting feedback generation", { resumeId });
 
     const resume = await prisma.resume.findUnique({
@@ -413,6 +416,17 @@ export const generateFeedback = task({
     });
 
     logger.info("Feedback generation complete", { resumeId });
+
+    const allresumes = await prisma.resume.count({
+      where: {userId}
+    })
+    if (allresumes === 1) {
+      await loops.sendEvent({
+        email,
+        eventName: "First Resume Feedback"
+      })
+    }
+
     return result.object;
   },
 }); 
