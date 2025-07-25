@@ -207,7 +207,12 @@ export default function Editor({
       firstName={firstName || ""}
       lastName={lastName || ""}
       email={user?.emailAddresses[0].emailAddress || ""}
-      github={user?.externalAccounts[0].username || ""}
+      github={
+        user?.externalAccounts.length &&
+        user?.externalAccounts[0].username
+          ? user?.externalAccounts[0].username
+          : ""
+      }
       resumeId={resumeId ?? ""}
       resume={resume}
     />
