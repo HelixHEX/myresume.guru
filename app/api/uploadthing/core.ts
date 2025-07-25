@@ -26,7 +26,7 @@ export const ourFileRouter = {
     })
     .onUploadComplete(async ({ metadata, file }) => {
       // This code RUNS ON YOUR SERVER after upload
-
+      const user = await currentUser();
       try {
         const resume = await prisma.resume.create({
           data: {
@@ -49,7 +49,8 @@ export const ourFileRouter = {
 
         waitUntil(tasks.trigger('analyze-resume', {
           resumeId: resume.id,
-          userId: metadata.userId
+          userId: metadata.userId,
+          email: user?.emailAddresses[0].emailAddress
         }))
 
 
