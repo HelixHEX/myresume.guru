@@ -106,7 +106,6 @@ export const analyzeResume = task({
   id: "analyze-resume",
   run: async ({ resumeId, userId, FREE_GEN, email }: { resumeId: string, userId: string, FREE_GEN?: boolean, email: string }) => {
     logger.info("Starting resume analysis", { resumeId });
-
     // Get the resume from the database
     const resume = await prisma.resume.findUnique({
       where: { id: Number.parseInt(resumeId) },
@@ -420,10 +419,12 @@ export const generateFeedback = task({
     const allresumes = await prisma.resume.count({
       where: {userId}
     })
+    logger.info("allresumes", { allresumes })
     if (allresumes === 1) {
+      logger.info("[LOOPS] sending event", { email })
       await loops.sendEvent({
         email,
-        eventName: "First Resume Feedback"
+        eventName: "first-resume-feedback"
       })
     }
 

@@ -22,11 +22,10 @@ export const ourFileRouter = {
       const user = await currentUser();
       if (!user) throw new UploadThingError("Unauthorized");
 
-      return { userId: user.id };
+      return { userId: user.id, email: user.emailAddresses[0].emailAddress };
     })
     .onUploadComplete(async ({ metadata, file }) => {
       // This code RUNS ON YOUR SERVER after upload
-      const user = await currentUser();
       try {
         const resume = await prisma.resume.create({
           data: {
@@ -46,14 +45,11 @@ export const ourFileRouter = {
         // waitUntil(axios.post("http://localhost:3000/api/resume/generate-feedback"));
 
         // Chain the analysis and feedback tasks
-
         waitUntil(tasks.trigger('analyze-resume', {
           resumeId: resume.id,
           userId: metadata.userId,
-          email: user?.emailAddresses[0].emailAddress
+          email: metadata.email
         }))
-
-
         // const analysisResult = await analyzeResume.run({ fileKey: file.key });
         // await generateFeedback.run(analysisResult);
 
