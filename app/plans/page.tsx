@@ -3,16 +3,14 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 
 import { Check } from "lucide-react";
-import Header from "@/components/header";
 import CheckoutButton from "@/components/checkout-button";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
-import Footer from "@/components/footer";
+
 
 export default function Plans() {
 	return (
 		<>
-			<Header />
-			<div className="flex flex-col gap-10 p-4 sm:p-10 lg:px-30">
+			<div className="flex flex-col gap-10 p-4 sm:p-10">
 				<div className="flex flex-col gap-4 pt-[80px] sm:pt-[30px]">
 					<div className="mx-auto flex w-full flex-col gap-4 md:max-w-[58rem]">
 						<h2 className="font-heading text-3xl leading-[1.1] sm:text-3xl md:text-6xl">
@@ -128,7 +126,6 @@ export default function Plans() {
 					</div>
 				</div>
 			</div>
-			<Footer />
 		</>
 	);
 }

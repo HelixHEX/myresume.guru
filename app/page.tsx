@@ -42,6 +42,7 @@ import axios from "axios";
 import { toast } from "sonner";
 import { useUser } from "@clerk/nextjs";
 import { useGetDownloadedResumes } from "./app/(resumes)/lib/queries";
+import Plans from "./plans/page";
 
 const text = `The resume currently lacks a personal summary, which is a crucial section that provides a snapshot of your professional identity and career goals. A well-crafted summary can capture the attention of hiring managers and set the tone for the rest of the resume.**Actionable Steps:**1. Write a concise summary (3-4 sentences) that highlights your key skills, experiences, and career objectives.2. Focus on your strengths in software development and project management.3. Mention any unique qualities or achievements that differentiate you from other candidates.**Example:**"Dynamic software engineer with over 5 years of experience in developing scalable web applications and leading project management initiatives. Proven track record in enhancing user engagement and satisfaction through innovative solutions. Passionate about leveraging AI to improve user experiences and drive business growth."`;
 
@@ -306,6 +307,9 @@ export default function Home() {
                 />
               </ul>
             </div>
+          </div>
+          <div className="mt-44 flex flex-col w-full self-center">
+            <Plans />
           </div>
 
           {/* FEEDBACK SECTION */}
