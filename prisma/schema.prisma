@@ -221,3 +221,28 @@ model Improvement {
   resumeId  Int
   resume    Resume   @relation("ResumeToImprovements", fields: [resumeId], references: [id])
 }
+
+model Job {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  platformId  String 
+  platform    String
+  url         String
+  jobSlug     String?
+  jobTitle    String
+  companyName String
+  companyLogo String?
+  jobIndustry String[]
+  jobType     String[]
+  jobGeo      String?
+  jobLevel    String?
+  jobExcerpt  String?
+  jobDescription String?
+  pubDate       DateTime?
+  salaryMin     Int?
+  salaryMax     Int?
+  salaryCurrency String
+  salaryPeriod String
+}
