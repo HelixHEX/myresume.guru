@@ -25,7 +25,7 @@ export async function continueConversation(input: string) {
     messages: [...history.get(), { role: "user", content: input }],
   })
 
-  return result.toDataStreamResponse();
+  return result.toUIMessageStreamResponse();
 }
 
 //biome-ignore lint:

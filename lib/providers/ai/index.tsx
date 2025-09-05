@@ -17,28 +17,25 @@ export default function AIProvider({
 	//biome-ignore lint:
 }: { children: React.ReactNode; messages: any[]; chatId: number	 }) {
 	const queryClient = useQueryClient();
-	const runtime = useChatRuntime({
-		body: {
-			chatId
-		},
-		api: "/api/ai/chat",
-		initialMessages: messages,
-		onFinish: async (message) => {
-			const contentPart = message.content[0];
-			if (contentPart && 'text' in contentPart) {
-				await saveMessage(contentPart.text, chatId, "assistant");
-				// After saving the message, start polling for resume updates
-				const pollInterval = setInterval(async () => {
-					await queryClient.invalidateQueries({ queryKey: ["resume"] });
-				}, 2000); // Poll every 2 seconds
+	// const runtime = useChatRuntime({
+	// 	api: "/api/ai/chat",
+	// 	initialMessages: messages,
+	// 	onFinish: async (message) => {
+  //     console.log("message-finish: ", message);
 
-				// Stop polling after 10 seconds
-				setTimeout(() => {
-					clearInterval(pollInterval);
-				}, 10000);
-			}
-		}
-	});
+  //     // Find the text content in the message
+  //     const textContent = message.content.find(
+  //       (content) => content.type === "text"
+  //     );
+
+  //     if (textContent && "text" in textContent) {
+  //       await saveMessage(textContent.text, "assistant");
+  //     }
+  //   },
+	// });
+	const runtime = useChatRuntime({
+
+	})
 
 	return (
 		<AssistantRuntimeProvider runtime={runtime}>

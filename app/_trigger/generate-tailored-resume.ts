@@ -164,7 +164,7 @@ export const generateTailoredResume = task({
             {
               type: "file",
               data: pdfData,
-              mimeType: "application/pdf",
+              mediaType: "application/pdf",
             }
           ]
         },

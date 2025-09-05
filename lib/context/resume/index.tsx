@@ -2,7 +2,7 @@
 
 import { api } from "@/lib/api";
 import { useGetResume } from "@/app/app/(resumes)/lib/queries";
-import { useChat } from "ai/react";
+import { useChat } from "@ai-sdk/react";
 import type React from "react";
 import { createContext, useContext, useEffect, useState } from "react";
 
