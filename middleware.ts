@@ -7,7 +7,7 @@ import { NextRequest, NextResponse } from "next/server";
 // See https://clerk.com/docs/references /nextjs/auth-middleware for more information about configuring your Middleware
 
 const isProtectedRouteClient = createRouteMatcher(["/app(.*)"]);
-
+const publicRoutes = createRouteMatcher(["/jobs(.*)"]);
 const postHogMiddleware = (request: NextRequest) => {
   let url = request.nextUrl.clone();
   const hostname = url.pathname.startsWith("/ingest/static/")
@@ -27,7 +27,7 @@ const postHogMiddleware = (request: NextRequest) => {
   });
 };
 export default clerkMiddleware((auth, req) => {
-  if (isProtectedRouteClient(req) && !req.url.includes("/api/uploadthing"))
+  if (isProtectedRouteClient(req) && !req.url.includes("/api/uploadthing") && !publicRoutes(req))
     auth.protect();
 
   // return 

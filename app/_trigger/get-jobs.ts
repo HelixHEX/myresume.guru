@@ -9,7 +9,7 @@ export const getJobs = schedules.task({
    timezone: 'America/Los_Angeles',
   },
   run: async () => {
-    const res = await axios.get(`${process.env.JOBS_API_URL}?count=100&geo=usa&industry=engineering`)
+    const res = await axios.get(`${process.env.JOBS_API_URL}?count=100`)
     console.log('before', res.data.jobs.length)
     res.data.jobs = res.data.jobs.filter((job: any) => job.salaryMin && job.salaryMax && job.salaryCurrency)
     console.log('after', res.data.jobs.length)
@@ -27,6 +27,7 @@ export const getJobs = schedules.task({
         }
       })
       if (exists) {
+        console.log('job already exists', job.id)
         continue
       }
       await prisma.job.create({
