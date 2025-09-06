@@ -8,43 +8,24 @@ const nextConfig = {
     serverExternalPackages: ['pdf2json', 'pdf-parse'],
     async rewrites() {
         return [{
-                source: '/',
-                has: [{
-                    type: 'host',
-                    value: 'jobs.myresume.guru',
-                }],
-                destination: '/jobs'
-            },
-            {
-                source: '/:path*',
-                has: [{
-                    type: 'host',
-                    value: 'jobs.myresume.guru',
-                }],
-                destination: '/jobs/:path*'
-            }
-        ]
+            source: '/:path*',
+            has: [{
+                type: 'host',
+                value: 'jobs.myresume.guru',
+            }],
+            destination: '/jobs/:path*'
+        }]
     },
     async redirects() {
         return [{
-                source: '/jobs',
-                has: [{
-                    type: 'host',
-                    value: 'myresume.guru',
-                }],
-                destination: 'https://jobs.myresume.guru',
-                permanent: true,
-            },
-            {
-                source: '/jobs/:path*',
-                has: [{
-                    type: 'host',
-                    value: 'myresume.guru',
-                }],
-                destination: 'https://jobs.myresume.guru/:path*',
-                permanent: true,
-            }
-        ]
+            source: '/jobs/:path*',
+            has: [{
+                type: 'host',
+                value: 'myresume.guru',
+            }],
+            destination: 'https://jobs.myresume.guru/:path*',
+            permanent: true,
+        }]
     }
 };
 
