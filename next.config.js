@@ -8,10 +8,10 @@ const nextConfig = {
     serverExternalPackages: ['pdf2json', 'pdf-parse'],
     async rewrites() {
         return [{
-            source: '/jobs/:path*',
+            source: '/:path*',
             has: [{
                 type: 'host',
-                value: 'jobs.myresumeguru.com',
+                value: 'jobs.myresume.guru',
             }],
             destination: '/jobs/:path*'
         }]
@@ -21,9 +21,9 @@ const nextConfig = {
             source: '/jobs/:path*',
             has: [{
                 type: 'host',
-                value: 'myresumeguru.com',
-            }, ],
-            destination: 'jobs.myresumeguru.com/:path*',
+                value: 'myresume.guru',
+            }],
+            destination: 'https://jobs.myresume.guru/:path*',
             permanent: true,
         }]
     }
