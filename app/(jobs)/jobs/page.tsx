@@ -16,7 +16,7 @@ export default function JobsPage() {
       <div className="md:py-20 py-8 gap-8">
         <Input
           autoFocus
-          placeholder="land your dream job"
+          placeholder="that dream job is a search away"
           className="w-full caret-blue-800 transition-all duration-400 bg-transparent -ml-[12px] border-none focus-visible:ring-0 focus-visible:ring-offset-0 text-2xl md:text-3xl"
         />
         {/* filters */}
