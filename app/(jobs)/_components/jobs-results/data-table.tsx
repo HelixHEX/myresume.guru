@@ -74,7 +74,7 @@ function JobsResultsDataTable<TData, TValue>({
             </TableBody>
           </Table>
         </div>
-        <DialogContent className="max-w-[400px] md:min-h-[600px] rounded-none sm:max-w-xl md:max-w-4xl">
+        <DialogContent className="bg-[#181818] text-white border-none md:min-h-[600px] rounded-none sm:max-w-xl md:max-w-4xl">
           <DialogHeader>
             <DialogTitle>Are you absolutely sure?</DialogTitle>
             <DialogDescription>
