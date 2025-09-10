@@ -8,7 +8,7 @@ import { anthropic } from '@ai-sdk/anthropic';
 import { editorSchema } from "../app/(resumes)/_components/editor";
 import { all } from "axios";
 import { loops } from "@/lib/loops";
-
+import { convertToModelMessages, type UIMessage, type ModelMessage } from "ai";
 // Schema for resume analysis
 const ResumeAnalysisSchema = z.object({
   personalInfo: z.object({
@@ -115,9 +115,7 @@ export const analyzeResume = task({
       throw new Error("Resume not found");
     }
 
-    // Get the PDF data
-
-    const pdfData = resume.fileKey ? await getFile(resume.fileKey) : null;
+    // Get the PDF data (will be fetched later if needed for file attachment)
 
     const { userId: clerkId, fileKey, status, text, analysis, candidateName, candidateEmail, candidatePhone, candidateLocation, technicalSkills, companies, jobTitles, education, chatId, ...resumeData } = resume
 
@@ -126,10 +124,11 @@ export const analyzeResume = task({
       data: { status: "Analyzing resume", v2Started: true },
     });
 
-    const messages = [
+    let messages = [
       {
         role: "system",
-        content: `You are an advanced resume parser that extracts comprehensive information from resume text into structured JSON data.
+        parts: [{
+          type: 'text', text: `You are an advanced resume parser that extracts comprehensive information from resume text into structured JSON data.
         
         IMPORTANT JSON FORMATTING RULES:
         1. Ensure the JSON is properly formatted with no trailing commas
@@ -188,31 +187,35 @@ export const analyzeResume = task({
         
         Certifications:
         - name
-        - date`,
+        - date`}],
       },
-    ] as any
+    ] as UIMessage[]
 
     if (resume.fileKey) {
+      const pdfData = await getFile(resume.fileKey);
       messages.push({
         role: "user",
-        content: [
+        id: `user-message-${messages.length}`,
+        parts: [
           {
             type: 'text',
-            text: 'Here is the url for the resume pdf'
+            text: 'Here is the resume pdf file'
           },
           {
             type: 'file',
-            data: getFileUrl(resume.fileKey),
-            mimeType: "application/pdf",
+            url: getFileUrl(resume.fileKey),
+            mediaType: "application/pdf",
+
           }
         ]
       })
     }
     logger.info('messages', messages as any)
+    const convertedMessages = convertToModelMessages(messages)
     // Analyze the resume
     const result = await generateObject({
       model: anthropic("claude-3-5-haiku-latest"),
-      messages,
+      messages: convertedMessages,
       schema: editorSchema.required().strict(),
     }).catch((error) => {
       logger.error("Error analyzing resume", { error });
@@ -411,13 +414,13 @@ export const generateFeedback = task({
     await prisma.resume.update({
       where: { id: resumeId },
       data: { status: "Analyzed", v2Conversion: true, v2Started: false },
-      
+
     });
 
     logger.info("Feedback generation complete", { resumeId });
 
     const allresumes = await prisma.resume.count({
-      where: {userId}
+      where: { userId }
     })
     logger.info("allresumes", { allresumes })
     if (allresumes === 1) {
