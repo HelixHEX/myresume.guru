@@ -57,3 +57,57 @@ export const useSaveResumeEditorData = (resumeId: string) => {
     }
   })
 }
+
+const patchResume = async ({
+  fileKeyOrId,
+  data,
+}: {
+  fileKeyOrId: string;
+  data: { pinned?: boolean; name?: string; tags?: string[] };
+}) => {
+  const response = await axios.patch(`/api/resume/${encodeURIComponent(fileKeyOrId)}`, data);
+  return response.data;
+};
+
+export const usePatchResume = (fileKeyOrId: string) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: ["patch_resume", fileKeyOrId],
+    mutationFn: patchResume,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["resumes"] });
+      queryClient.invalidateQueries({ queryKey: ["resume", fileKeyOrId] });
+    },
+  });
+};
+
+const duplicateResume = async (fileKeyOrId: string) => {
+  const response = await axios.post(`/api/resume/${encodeURIComponent(fileKeyOrId)}/duplicate`);
+  return response.data as { resume: Resume; id: number };
+};
+
+export const useDuplicateResume = (fileKeyOrId: string) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: ["duplicate_resume", fileKeyOrId],
+    mutationFn: () => duplicateResume(fileKeyOrId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["resumes"] });
+    },
+  });
+}
+
+const reorderResumes = async (orderedIds: number[]) => {
+  await axios.patch("/api/resume/reorder", { orderedIds });
+};
+
+export const useReorderResumes = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: ["reorder_resumes"],
+    mutationFn: reorderResumes,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["resumes"] });
+    },
+  });
+}

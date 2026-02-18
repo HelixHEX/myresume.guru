@@ -125,6 +125,12 @@ export default function Editor({
   );
 
   const resume = resumeData?.resume;
+  const hasLocalEditorData =
+    resumeEditorData &&
+    typeof resumeEditorData === "object" &&
+    Object.keys(resumeEditorData).length > 0;
+  const showLoading =
+    !hasLocalEditorData && (resumeLoading || resumeEditorLoading);
 
   useEffect(() => {
     if (resume?.status !== "Analyzed" && refetchInterval === 0) {
@@ -175,14 +181,14 @@ export default function Editor({
     main();
   }, [user, saveResumeEditorData, resumeId, resume]);
 
-  if (resumeLoading || resumeEditorLoading)
+  if (showLoading)
     return (
       <div className="flex text-blue-800 sm:text-white mt-2 font-bold justify-center items-center w-full">
         Loading <Loader2 className="ml-2 animate-spin" />
       </div>
     );
 
-  if (!resumeData && isEditorPage) router.push("/app/resumes");
+  if (!resumeLoading && !resumeData && isEditorPage) router.push("/app/resumes");
 
   if (resumeData?.message && resumeData.message.length > 0 && !isHomePage) {
     router.push("/app/resumes");
@@ -242,29 +248,35 @@ function EditorForm({
   const router = useRouter();
   const { user } = useUser();
 
+  const nextDefaultValues = {
+    resumeName: resume?.name ?? resumeData?.resumeName,
+    firstName: resume?.firstName || resumeData?.firstName || firstName,
+    lastName: resume?.lastName || resumeData?.lastName || lastName,
+    phone: resume?.phone || resumeData?.phone || "",
+    email: resume?.email || resumeData?.email || email,
+    github: resume?.github || resumeData?.github || github,
+    linkedin: resume?.linkedin || resumeData?.linkedin || "",
+    website: resume?.website || resumeData?.website || "",
+    twitter: resume?.twitter || resumeData?.twitter || "",
+    location: resume?.location || resumeData?.location || "",
+    summary: resume?.summary || resumeData?.summary || "",
+    workExperience:
+      resume?.workExperience || resumeData?.workExperience || [],
+    education: resume?.education_new || resumeData?.education || [],
+    skills: resume?.skills || resumeData?.skills || "",
+    certifications:
+      resume?.certifications || resumeData?.certifications || [],
+    projects: resume?.projects || resumeData?.projects || [],
+  };
+
   const form = useForm<z.infer<typeof editorSchema>>({
     resolver: zodResolver(editorSchema),
-    defaultValues: {
-      resumeName: resume?.name,
-      firstName: resume?.firstName || resumeData?.firstName || firstName,
-      lastName: resume?.lastName || resumeData?.lastName || lastName,
-      phone: resume?.phone || resumeData?.phone || "",
-      email: resume?.email || resumeData?.email || email,
-      github: resume?.github || resumeData?.github || github,
-      linkedin: resume?.linkedin || resumeData?.linkedin || "",
-      website: resume?.website || resumeData?.website || "",
-      twitter: resume?.twitter || resumeData?.twitter || "",
-      location: resume?.location || resumeData?.location || "",
-      summary: resume?.summary || resumeData?.summary || "",
-      workExperience:
-        resume?.workExperience || resumeData?.workExperience || [],
-      education: resume?.education_new || resumeData?.education || [],
-      skills: resume?.skills || resumeData?.skills || "",
-      certifications:
-        resume?.certifications || resumeData?.certifications || [],
-      projects: resume?.projects || resumeData?.projects || [],
-    },
+    defaultValues: nextDefaultValues,
   });
+
+  useEffect(() => {
+    form.reset(nextDefaultValues);
+  }, [resume?.updatedAt]);
 
   const {
     fields: workExperienceFields,

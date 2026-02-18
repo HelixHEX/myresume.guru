@@ -26,8 +26,8 @@ export default function UploadButton({
       onClientUploadComplete={(res) => {
         // Do something with the response
         toast("File uploaded successfully!");
-
-        router.push(`/app/resumes/${res[0].serverData.resumeId.toString()}`);
+        const fileKey = res[0].serverData.fileKey ?? res[0].serverData.resumeId?.toString();
+        if (fileKey) router.push(`/app/resumes/${encodeURIComponent(fileKey)}`);
       }}
       onUploadError={(error: Error ) => {
         // Do something with the error.

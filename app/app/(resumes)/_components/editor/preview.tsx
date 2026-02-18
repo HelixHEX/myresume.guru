@@ -4,6 +4,7 @@ import {
   useGetEditorColor,
   useGetEditorBg,
   useGetResumeEditorData,
+  useGetResume,
 } from "../../lib/queries";
 import { useEffect, useRef, useState } from "react";
 import useDimensions from "@/hooks/useDimensions";
@@ -15,19 +16,20 @@ import { toast } from "sonner";
 import { incrementDownloadedResumes } from "../../_actions";
 import { useQueryClient } from "@tanstack/react-query";
 
-export default function PDFPreview({ resumeId }: { resumeId?: string }) {
+export default function PDFPreview({ fileKey }: { fileKey?: string }) {
   const contentRef = useRef<HTMLDivElement>(null);
   const queryClient = useQueryClient();
-  const { data: resume } = useGetResumeEditorData(resumeId ?? "");
+  const { data } = useGetResume(fileKey ?? "", 0);
+  const resume = data?.resume;
   const containerRef = useRef<HTMLDivElement>(null);
   const { width, height } = useDimensions(containerRef);
   const [editorBg, setEditorBg] = useState<string | undefined>("bg-blue-800");
   const reactToPrint = useReactToPrint({
     contentRef,
-    documentTitle: resume?.title || "Resume",
+    documentTitle: resume?.name ?? "Resume",
   });
   const { data: editorColor, isLoading: isLoadingEditorColor } =
-    useGetEditorColor(resumeId ?? "");
+    useGetEditorColor(fileKey ?? "");
   return (
     <div
       style={{ backgroundColor: editorColor }}
@@ -35,7 +37,7 @@ export default function PDFPreview({ resumeId }: { resumeId?: string }) {
     >
       <div className="flex justify-between pb-4">
         <h2 className="text-white text-2xl font-bold">
-          {resume?.resumeName}.pdf
+          {resume?.name ?? "Resume"}
         </h2>
         <Download
           onClick={() =>
@@ -207,8 +209,8 @@ export default function PDFPreview({ resumeId }: { resumeId?: string }) {
                     </h2>
                     <div className="flex flex-col gap-2">
                       {/* biome-ignore lint: */}
-                      {resume.education.map((education: any) => (
-                        <div className="flex flex-col " key={education.id}>
+                      {resume.education.map((education: any, index:number) => (
+                        <div className="flex flex-col " key={index}>
                           <div className="flex justify-between">
                             <h3 className="text-[14px] font-bold">
                               {education.school}

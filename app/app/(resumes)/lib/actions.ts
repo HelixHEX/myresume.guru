@@ -4,13 +4,23 @@ import type { editorSchema } from "../_components/editor/index";
 import prisma from "@/lib/prisma";
 import { currentUser } from "@clerk/nextjs/server";
 
+function findResumeByIdOrFileKey(idOrFileKey: string) {
+	const id = Number(idOrFileKey);
+	if (Number.isInteger(id) && String(id) === idOrFileKey) {
+		return prisma.resume.findUnique({ where: { id } });
+	}
+	return prisma.resume.findUnique({ where: { fileKey: idOrFileKey } });
+}
+
 export async function saveResume(resume: z.infer<typeof editorSchema>, resumeId: string) {
 	const user = await currentUser();
 	if (!user) {
 		return { error: "User not found" };
 	}
 
-	if (Number.isNaN(Number.parseInt(resumeId))) {
+	const existing = await findResumeByIdOrFileKey(resumeId);
+
+	if (!existing) {
 		const resumeDB = await prisma.resume.create({
 			data: {
 				name: resume.resumeName ?? "",
@@ -24,31 +34,23 @@ export async function saveResume(resume: z.infer<typeof editorSchema>, resumeId:
 				twitter: resume.twitter,
 				location: resume.location,
 				summary: resume.summary,
-				workExperience: resume.workExperience,
-				education_new: resume.education,
+				workExperience: resume.workExperience ?? [],
+				education_new: resume.education ?? [],
 				skills: resume.skills,
-				certifications: resume.certifications,
-				projects: resume.projects,
+				certifications: resume.certifications ?? [],
+				projects: resume.projects ?? [],
 				userId: user.id,
-			}
-		})
-		return { success: "Resume created", resumeId: resumeDB.id };
+			},
+		});
+		return { success: "Resume created", resumeId: String(resumeDB.id) };
 	}
 
-	const exists = await prisma.resume.findUnique({
-		where: {
-			id: Number.parseInt(resumeId)
-		},
-	})
-
-	if (!exists || exists.userId !== user.id) {
+	if (existing.userId !== user.id) {
 		return { error: "Resume not found" };
 	}
 
-	const resumeDb = await prisma.resume.update({
-		where: {
-			id: Number.parseInt(resumeId)
-		},
+	await prisma.resume.update({
+		where: { id: existing.id },
 		data: {
 			name: resume.resumeName ?? "",
 			firstName: resume.firstName,
@@ -61,17 +63,13 @@ export async function saveResume(resume: z.infer<typeof editorSchema>, resumeId:
 			twitter: resume.twitter,
 			location: resume.location,
 			summary: resume.summary,
-			workExperience: resume.workExperience,
-			education_new: resume.education,
+			workExperience: resume.workExperience ?? [],
+			education_new: resume.education ?? [],
 			skills: resume.skills,
-			certifications: resume.certifications,
-			projects: resume.projects,
-		}
-	})
+			certifications: resume.certifications ?? [],
+			projects: resume.projects ?? [],
+		},
+	});
 
-	if (!resumeDb) {
-		return { error: "Resume not found" };
-	}
-
-	return { success: "Resume created", resumeId };
+	return { success: "Resume created", resumeId: existing.fileKey ?? String(existing.id) };
 }

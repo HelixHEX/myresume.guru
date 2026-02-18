@@ -1,12 +1,10 @@
 import { logger, task } from "@trigger.dev/sdk/v3";
 import { z } from "zod";
 import { generateObject } from "ai";
-import { openai } from "@ai-sdk/openai";
 import prisma from "@/lib/prisma";
-import { getFile, getFileUrl, getUrl } from "@/lib/utils";
-import { anthropic } from '@ai-sdk/anthropic';
+import { getFileUrl } from "@/lib/utils";
+import { anthropic } from "@ai-sdk/anthropic";
 import { editorSchema } from "../app/(resumes)/_components/editor";
-import { all } from "axios";
 import { loops } from "@/lib/loops";
 import { convertToModelMessages, type UIMessage, type ModelMessage } from "ai";
 
@@ -110,114 +108,107 @@ const FeedbackSchema = z.object({
 // Task 1: Analyze Resume
 export const analyzeResume = task({
   id: "analyze-resume",
-  run: async ({ resumeId, userId, FREE_GEN, email }: { resumeId: string, userId: string, FREE_GEN?: boolean, email: string }) => {
-    logger.info("Starting resume analysis", { resumeId });
-    // Get the resume from the database
-    const resume = await prisma.resume.findUnique({
-      where: { id: Number.parseInt(resumeId) },
-    });
+  run: async ({
+    resumeId,
+    fileKey,
+    userId,
+    FREE_GEN,
+    email,
+  }: {
+    resumeId?: number | string;
+    fileKey?: string;
+    userId: string;
+    FREE_GEN?: boolean;
+    email?: string;
+  }) => {
+    if (!resumeId && !fileKey) {
+      throw new Error("Either resumeId or fileKey must be provided");
+    }
+
+    const resume = resumeId != null
+      ? await prisma.resume.findUnique({
+          where: {
+            id: typeof resumeId === "string" ? Number.parseInt(resumeId, 10) : resumeId,
+          },
+        })
+      : await prisma.resume.findUnique({
+          where: { fileKey: fileKey! },
+        });
 
     if (!resume) {
       throw new Error("Resume not found");
     }
 
-    // Get the PDF data (will be fetched later if needed for file attachment)
-
-    const { userId: clerkId, fileKey, status, text, analysis, candidateName, candidateEmail, candidatePhone, candidateLocation, technicalSkills, companies, jobTitles, education, chatId, ...resumeData } = resume
+    logger.info("Starting resume analysis", { resumeId: resume.id });
 
     await prisma.resume.update({
-      where: { id: Number.parseInt(resumeId) },
+      where: { id: resume.id },
       data: { status: "Analyzing resume", v2Started: true },
     });
+
+    const systemPromptText = `You are an advanced resume parser that extracts comprehensive information from resume text (or the attached PDF) into structured JSON data.
+
+IMPORTANT JSON FORMATTING RULES:
+1. Ensure the JSON is properly formatted with no trailing commas.
+2. ALL fields must be included in the response, even if empty.
+3. For missing or unavailable information:
+   - Use empty string ("") for missing text fields
+   - Use empty array ([]) for missing array fields
+   - Use "" for missing URL fields when no URL exists
+   - Use "" for missing date fields (use YYYY-MM format when available)
+4. Never use "Not Provided", "N/A", or null values.
+5. Ensure all arrays are properly terminated without trailing commas.
+6. Output must match the exact field names and types below so it validates against the schema.
+
+Extract the following information. Use these exact field names and types:
+
+Top-level (all optional strings unless noted):
+- resumeName (optional)
+- firstName, lastName, email, phone, location, website, github, linkedin, twitter
+- summary (string)
+- skills (single string, e.g. comma-separated or line-separated)
+
+workExperience (array of objects, each optional):
+- company, title, startDate, endDate, location
+- summary (array of objects with one key: summaryPoint string)
+- current (boolean, optional)
+
+education (array of objects, each optional):
+- school, degree, fieldOfStudy, startDate, endDate, location, achievements
+- current (boolean, optional)
+
+projects (array of objects, each optional):
+- name, description, startDate, endDate, location, url
+
+certifications (array of objects, each optional):
+- name, date`;
 
     let messages = [
       {
         role: "system",
-        parts: [{
-          type: 'text', text: `You are an advanced resume parser that extracts comprehensive information from resume text into structured JSON data.
-        
-        IMPORTANT JSON FORMATTING RULES:
-        1. Ensure the JSON is properly formatted with no trailing commas
-        2. ALL fields must be included in the response, even if empty
-        3. For missing or unavailable information:
-           - Use empty string ("") for missing text fields
-           - Use empty array ([]) for missing array fields
-           - Use "https://" for missing URL fields
-           - Use "" for missing date fields (in YYYY-MM format when available)
-        4. Never use "Not Provided", "N/A", or null values
-        5. Ensure all arrays are properly terminated without trailing commas
-        
-        Extract the following information from the resume:
-        
-        Personal Information:
-        - firstName
-        - lastName
-        - email
-        - phone
-        - location
-        - website
-        - github
-        - linkedin
-        - twitter
-        - summary
-        - skills
-
-        Work Experience:
-        - title
-        - company
-        -location
-        -startDate
-        -endDate
-        -summary
-        -technologies
-
-        Education:
-        - school
-        - degree
-        - fieldOfStudy
-        - startDate
-        - endDate
-        - location
-        - achievements
-
-        Skils:
-        - All skills
-        
-        Projects:
-        - name
-        - description
-        - location
-        - url
-        - startDate
-        - endDate
-        
-        Certifications:
-        - name
-        - date`}],
+        parts: [{ type: "text" as const, text: systemPromptText }],
       },
-    ] as UIMessage[]
+    ] as UIMessage[];
 
     if (resume.fileKey) {
-      const pdfData = await getFile(resume.fileKey);
       messages.push({
         role: "user",
         id: `user-message-${messages.length}`,
         parts: [
           {
-            type: 'text',
-            text: 'Here is the resume pdf file'
+            type: "text",
+            text: "Extract the information from the attached resume PDF into the structured JSON format described above.",
           },
           {
-            type: 'file',
+            type: "file",
             url: getFileUrl(resume.fileKey),
             mediaType: "application/pdf",
-
-          }
-        ]
-      })
+          },
+        ],
+      });
     }
-    logger.info('messages', messages as any)
-    const convertedMessages = convertToModelMessages(messages)
+    logger.info("messages", { count: messages.length });
+    const convertedMessages = await convertToModelMessages(messages);
     // Analyze the resume
     const result = await generateObject({
       model: chosenModels.openai,
@@ -278,7 +269,19 @@ export const analyzeResume = task({
 // Task 2: Generate Feedback
 export const generateFeedback = task({
   id: "generate-feedback",
-  run: async ({ resumeId, userId, length, FREE_GEN, email }: { FREE_GEN?: boolean, resumeId: number; userId: string, length: number, email: string }) => {
+  run: async ({
+    resumeId,
+    userId,
+    length,
+    FREE_GEN,
+    email,
+  }: {
+    resumeId: number;
+    userId: string;
+    length: number;
+    FREE_GEN?: boolean;
+    email?: string;
+  }) => {
     logger.info("Starting feedback generation", { resumeId });
 
     const resume = await prisma.resume.findUnique({
@@ -338,7 +341,7 @@ export const generateFeedback = task({
     const messages = [
       {
         role: "system",
-        content: `You are an expert resume reviewer. Analyze the resume and provide EXACTLY ${length} actionable feedback for improvements.
+        content: `You are an expert resume reviewer. Base your feedback on the structured resume data (JSON) provided by the user. Analyze the resume and provide EXACTLY ${length} actionable feedback for improvements.
 
         IMPORTANT GUIDELINES:
         1. Focus on providing clear, actionable improvements
@@ -426,15 +429,15 @@ export const generateFeedback = task({
     logger.info("Feedback generation complete", { resumeId });
 
     const allresumes = await prisma.resume.count({
-      where: { userId }
-    })
-    logger.info("allresumes", { allresumes })
-    if (allresumes === 1) {
-      logger.info("[LOOPS] sending event", { email })
+      where: { userId },
+    });
+    logger.info("allresumes", { allresumes });
+    if (allresumes === 1 && email?.trim()) {
+      logger.info("[LOOPS] sending event", { email });
       await loops.sendEvent({
-        email,
-        eventName: "first-resume-feedback"
-      })
+        email: email.trim(),
+        eventName: "first-resume-feedback",
+      });
     }
 
     return result.object;

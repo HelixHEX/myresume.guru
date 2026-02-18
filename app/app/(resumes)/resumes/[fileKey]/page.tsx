@@ -1,28 +1,34 @@
-import { api } from "@/lib/api";
-
 import AIProvider from "@/lib/providers/ai";
 import ResumeDetails from "./data";
 import { getChat, getMessagesFromDB } from "@/lib/actions/chat";
 import { AssistantModal } from "@/components/assistant-ui/assistant-modal";
+import RecordRecentResume from "@/components/resumes/RecordRecentResume";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PDFPreview from "../../_components/editor/preview";
 import Editor from "../../_components/editor";
+import { QueryClient } from "@tanstack/react-query";
+import { getResumeEditorData } from "../../lib/queries";
 
 export default async function Page(props: {
-	params: Promise<{ resumeId: string }>;
+	params: Promise<{ fileKey: string }>;
 }) {
 	const params = await props.params;
-	const chat = await getChat(params.resumeId);
+	const chat = await getChat(params.fileKey);
 	//biome-ignore lint:
 	const messages = chat ? await getMessagesFromDB(chat) : ([] as any[]);
+	  const queryClient = new QueryClient()
+		await queryClient.prefetchQuery({
+			queryKey: ['resume_editor_data', params.fileKey],
+			queryFn: () => getResumeEditorData(params.fileKey),
+		})
 	return (
 		<>
-			<Tabs defaultValue='feedback' className="w-full">
+			<RecordRecentResume fileKey={params.fileKey} />
+			<Tabs defaultValue="feedback" className="w-full">
 				<TabsList className="bg-white rounded-none w-full">
 					<TabsTrigger
 						className="cursor-pointer text-blue-800 transition-all duration-800 font-bold text-md group data-[state=active]:text-white data-[state=active]:bg-blue-800 bg-white rounded-none border-none"
 						value="edit-resume"
-
 					>
 						<p className="group-hover:translate-y-[-5px] transition-all duration-800">Edit Resume</p>
 					</TabsTrigger>
@@ -41,7 +47,7 @@ export default async function Page(props: {
 								<h1 className=" text-4xl font-bold text-blue-800 ">
 									Edit Resume
 								</h1>
-								<Editor resumeId={params.resumeId} />
+								<Editor resumeId={params.fileKey} />
 							</div>
 						</div>
 					</TabsContent>
@@ -61,17 +67,15 @@ export default async function Page(props: {
 									stand out for your next job application.
 								</p>
 							</div>
-							<ResumeDetails resumeId={params.resumeId} />
+							<ResumeDetails fileKey={params.fileKey} />
 						</div>
 					</TabsContent>
 					<div className=" bg-gray-50 w-full">
-						<PDFPreview resumeId={params.resumeId} />
+						<PDFPreview fileKey={params.fileKey} />
 					</div>
 				</div>
 			</Tabs>
-			{/* biome-ignore lint: */}
-			<AIProvider chatId={chat!} messages={messages}>
-				{/* <UpdateResumeTool /> */}
+			<AIProvider fileKey={params.fileKey} initialMessages={messages}>
 				<AssistantModal />
 			</AIProvider>
 		</>

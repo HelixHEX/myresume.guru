@@ -143,3 +143,77 @@
     size: A4;
     margin: 0.6cm;
 }
+
+
+/* Job Description Styling */
+
+.job-description-content {
+    @apply text-gray-300 leading-relaxed;
+}
+
+.job-description-content p {
+    @apply mb-4 text-gray-300;
+}
+
+.job-description-content h1,
+.job-description-content h2,
+.job-description-content h3,
+.job-description-content h4,
+.job-description-content h5,
+.job-description-content h6 {
+    @apply text-white font-semibold mb-3 mt-6;
+}
+
+.job-description-content h1 {
+    @apply text-2xl;
+}
+
+.job-description-content h2 {
+    @apply text-xl;
+}
+
+.job-description-content h3 {
+    @apply text-lg;
+}
+
+.job-description-content strong,
+.job-description-content b {
+    @apply text-white font-semibold;
+}
+
+.job-description-content ul,
+.job-description-content ol {
+    @apply mb-4 ml-6 text-gray-300;
+}
+
+.job-description-content li {
+    @apply mb-2 text-gray-300;
+}
+
+.job-description-content ul li {
+    @apply list-disc;
+}
+
+.job-description-content ol li {
+    @apply list-decimal;
+}
+
+.job-description-content a {
+    @apply text-blue-400 underline;
+}
+
+.job-description-content blockquote {
+    @apply border-l-4 border-gray-600 pl-4 italic text-gray-400 my-4;
+}
+
+.job-description-content code {
+    @apply bg-gray-800 text-gray-200 px-2 py-1 rounded text-sm;
+}
+
+.job-description-content pre {
+    @apply bg-gray-800 text-gray-200 p-4 rounded overflow-x-auto my-4;
+}
+
+.job-description-content hr {
+    @apply border-gray-600 my-6;
+}

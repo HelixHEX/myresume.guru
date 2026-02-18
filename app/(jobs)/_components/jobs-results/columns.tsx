@@ -1,7 +1,7 @@
 import { DialogTrigger } from "@/components/ui/dialog";
 import { ColumnDef } from "@tanstack/react-table";
 
-export const columns: ColumnDef<Job>[] = [
+export const columns: (setJob: (job: Job) => void) => ColumnDef<Job>[] = (setJob) => [
   {
     accessorKey: "companyName",
     header: "Company",
@@ -10,6 +10,7 @@ export const columns: ColumnDef<Job>[] = [
         <DialogTrigger
           asChild
           className=" cursor-pointer flex flex-col text-lg sm:text-xl md:text-2xl py-4 font-bold"
+          onClick={() => setJob(row.original)}
         >
           <div>
             <p className="text-muted  group-hover:text-blue-800">

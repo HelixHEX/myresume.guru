@@ -25,6 +25,7 @@ import { useGetJobs } from "../../_lib/queries";
 
 import { columns } from "./columns";
 import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
 
 interface JobsResultsDataTableProps {
   data: Job[];
@@ -33,9 +34,10 @@ interface JobsResultsDataTableProps {
 function JobsResultsDataTable<TData, TValue>({
   data,
 }: JobsResultsDataTableProps) {
+  const [job, setJob] = useState<Job | null>(null);
   const table = useReactTable({
     data,
-    columns,
+    columns: columns(setJob),
     getCoreRowModel: getCoreRowModel(),
   });
 
@@ -74,14 +76,26 @@ function JobsResultsDataTable<TData, TValue>({
             </TableBody>
           </Table>
         </div>
-        <DialogContent className="bg-[#181818] text-white border-none md:min-h-[600px] rounded-none sm:max-w-xl md:max-w-4xl">
+        <DialogContent className="bg-[#111] overflow-y-scroll text-white border-none md:h-[600px] rounded-none sm:max-w-xl md:max-w-4xl">
           <DialogHeader>
-            <DialogTitle>Are you absolutely sure?</DialogTitle>
-            <DialogDescription>
-              This action cannot be undone. This will permanently delete your
-              account and remove your data from our servers.
-            </DialogDescription>
+            <div className="flex  pr-4 justify-between">
+              <DialogTitle className="text-2xl font-bold flex flex-col">
+                {job?.jobTitle}{" "}
+                <span className="text-blue-800 !text-md font-bold">
+                  {job?.companyName}
+                </span>
+              </DialogTitle>
+              <Button onClick={() => window.open(job?.url || "", "_blank")} className="bg-[#111] hover:text-blue-800 hover:[#111010] hover:bg-[#181818]">Apply</Button>
+            </div>
           </DialogHeader>
+          {/* <DialogDescription> */}
+          <div></div>
+
+          <div
+            className="job-description-content"
+            dangerouslySetInnerHTML={{ __html: job?.jobDescription || "" }}
+          />
+          {/* </DialogDescription> */}
         </DialogContent>
       </Dialog>
     </>

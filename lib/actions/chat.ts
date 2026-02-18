@@ -4,7 +4,6 @@ import { openai } from "@ai-sdk/openai";
 import { streamText } from "ai";
 import { getMutableAIState } from "@ai-sdk/rsc";
 import prisma from "@/lib/prisma";
-import type { Chat } from "@prisma/client";
 import { currentUser } from "@clerk/nextjs/server";
 
 export interface ClientMessage {
@@ -31,10 +30,9 @@ export async function continueConversation(input: string) {
 //biome-ignore lint:
 export async function getMessagesFromDB(chatId: number): Promise<any[]> {
   const messages = await prisma.message.findMany({
-    where: {
-      chatId,
-    }
-  })
+    where: { chatId },
+    orderBy: { createdAt: "asc" },
+  });
 
   const formattedMessages = messages.map((message) => ({
     id: message.id,
@@ -46,40 +44,34 @@ export async function getMessagesFromDB(chatId: number): Promise<any[]> {
   return formattedMessages;
 }
 
-export async function getChat(resumeId: string) {
-
-  if (Number.isNaN(Number.parseInt(resumeId))) {
-    return null;
-  }
+/** Returns the primary chat id for the resume (creates a chat and sets resume.primaryChatId if none). */
+export async function getChat(fileKeyOrId: string): Promise<number | null> {
+  const id = Number.parseInt(fileKeyOrId, 10);
+  const byId = /^\d+$/.test(fileKeyOrId) && !Number.isNaN(id);
   const resume = await prisma.resume.findUnique({
-    where: {
-      id: Number.parseInt(resumeId),
-    },
+    where: byId ? { id } : { fileKey: fileKeyOrId },
   });
 
   if (!resume) {
     return null;
   }
 
-  let chat: Chat | null = null;
-  if (!resume.chatId) {
-    chat = await prisma.chat.create({
-      data: {
-        userId: resume.userId,
-      },
-    });
-
-    await prisma.resume.update({
-      where: {
-        id: resume.id,
-      },
-      data: {
-        chatId: chat.id,
-      },
-    });
+  if (resume.primaryChatId != null) {
+    return resume.primaryChatId;
   }
 
-  return resume.chatId;
+  const chat = await prisma.chat.create({
+    data: {
+      userId: resume.userId,
+    },
+  });
+
+  await prisma.resume.update({
+    where: { id: resume.id },
+    data: { primaryChatId: chat.id },
+  });
+
+  return chat.id;
 }
 
 export async function saveMessage(content: string, chatId: number, role: "user" | "assistant") {

@@ -54,7 +54,7 @@ export const ourFileRouter = {
         // await generateFeedback.run(analysisResult);
 
         // !!! Whatever is returned here is sent to the clientside `onClientUploadComplete` callback
-        return { uploadedBy: metadata, resumeId: resume.id };
+        return { uploadedBy: metadata, resumeId: resume.id, fileKey: file.key };
       } catch (e) {
         console.error("Error in upload handler:", e);
         throw new UploadThingError(

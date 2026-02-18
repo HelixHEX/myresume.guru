@@ -4,27 +4,41 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { RESUME_ANALYSIS_STATUS } from "@/lib/actions/resume";
 import { getDownloadedResumes as getDownloadedResumesAction } from "@/app/app/(resumes)/_actions";
 import { useEffect } from "react";
-export const getResume = async (resumeId: string) => {
-  const res = await axios.get(`/api/resume/${resumeId}`);
-  localStorage.setItem(`resume:${resumeId}`, JSON.stringify({
-    ...res.data.resume,
-    resumeName: res.data.resume.name
-  }));
-  // queryClient.invalidateQueries({ queryKey: ["resume_editor_data", resumeId] });
+const isDbResumeNewer = (
+  dbResume: { updatedAt?: string | Date },
+  stored: Record<string, unknown> | null
+): boolean => {
+  if (!stored?.updatedAt) return true;
+  const dbTime = new Date(dbResume.updatedAt ?? 0).getTime();
+  const storedTime = new Date(String(stored.updatedAt)).getTime();
+  return dbTime > storedTime;
+};
+
+export const getResume = async (fileKeyOrId: string) => {
+  const res = await axios.get(`/api/resume/${encodeURIComponent(fileKeyOrId)}`);
+  const dbResume = res.data.resume as Record<string, unknown> & { updatedAt?: string | Date; name?: string };
+  const storedRaw = localStorage.getItem(`resume:${fileKeyOrId}`);
+  const stored = storedRaw ? (JSON.parse(storedRaw) as Record<string, unknown>) : null;
+  if (isDbResumeNewer(dbResume, stored)) {
+    localStorage.setItem(`resume:${fileKeyOrId}`, JSON.stringify({
+      ...dbResume,
+      resumeName: dbResume.name ?? (stored?.resumeName as string),
+    }));
+  }
   return res.data;
 };
 
-export const useGetResume = (resumeId: string, refetchInterval: number) => {
+export const useGetResume = (fileKey: string, refetchInterval?: number | false) => {
   const queryClient = useQueryClient();
   const query = useQuery<GetResumeResponse>({
-    queryKey: ["resume", resumeId],
-    queryFn: () => getResume(resumeId),
+    queryKey: ["resume", fileKey],
+    queryFn: () => getResume(fileKey),
     refetchInterval: refetchInterval || 0,
-    enabled: !!resumeId,
+    enabled: !!fileKey,
   });
   useEffect(() => {
-    queryClient.invalidateQueries({ queryKey: ["resume_editor_data", resumeId] });
-  }, [query]);  
+    queryClient.invalidateQueries({ queryKey: ["resume_editor_data", fileKey] });
+  }, [query, fileKey, queryClient]);  
   return query;
 };
 
@@ -60,18 +74,18 @@ export const useGetEditorBg = (resumeId: string) => {
   });
 }
 
-export const getResumeEditorData = async (resumeId: string) => {
-  const data = localStorage.getItem(`resume:${resumeId}`);
+export const getResumeEditorData = async (fileKey: string) => {
+  const data = localStorage.getItem(`resume:${fileKey}`);
   if (!data) {
     return {};
   }
   return JSON.parse(data || "{}");
 }
 
-export const useGetResumeEditorData = (resumeId: string) => {
+export const useGetResumeEditorData = (fileKey: string) => {
   return useQuery({
-    queryKey: ["resume_editor_data", resumeId],
-    queryFn: () => getResumeEditorData(resumeId),
+    queryKey: ["resume_editor_data", fileKey],
+    queryFn: () => getResumeEditorData(fileKey),
   });
 };
 export const getResumes = async () => {

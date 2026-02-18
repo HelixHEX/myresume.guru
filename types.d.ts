@@ -7,6 +7,10 @@ type Resume = {
   fileKey: string;
   status: string;
   text: string | null;
+  pinned?: boolean;
+  tags?: string[];
+  applicationCount?: number;
+  position?: number;
 
   firstName: string;
   lastName: string;

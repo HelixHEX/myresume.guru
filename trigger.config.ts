@@ -2,6 +2,7 @@ import { defineConfig } from "@trigger.dev/sdk/v3";
 import { OpenAIInstrumentation } from "@traceloop/instrumentation-openai";
 import { PrismaInstrumentation } from "@prisma/instrumentation";
 import { prismaExtension } from "@trigger.dev/build/extensions/prisma";
+import { playwright } from "@trigger.dev/build/extensions/playwright";
 
 export default defineConfig({
   project: "proj_dcvnbcwpxxfckmzqnrhr",
@@ -14,6 +15,9 @@ export default defineConfig({
         version: "5.14.0", // optional, we'll automatically detect the version if not provided
         // update this to the path of your Prisma schema file
         schema: "prisma/schema.prisma",
+      }),
+      playwright({
+        browsers: ["chromium", "webkit"], // optional, will use ["chromium"] if not provided
       }),
     ],
   },

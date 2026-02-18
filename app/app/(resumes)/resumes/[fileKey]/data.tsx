@@ -8,20 +8,19 @@ import { startResumeAnalysis } from "@/lib/actions/resume";
 import { useUser } from "@clerk/nextjs";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Info, Loader2 } from "lucide-react";
 
 export default function ResumeDetails({
-	resumeId,
+	fileKey,
 }: {
-	resumeId: string;
+	fileKey: string;
 }) {
 	const router = useRouter();
 	const { user } = useUser();
 	const [refetchInterval, setRefetchInterval] = useState(0);
 	const { data: resumeData, isLoading } = useGetResume(
-		resumeId.toString(),
+		fileKey,
 		refetchInterval,
 	);
 	const resume = resumeData?.resume;
@@ -41,8 +40,8 @@ export default function ResumeDetails({
 	}, [resume]);
 
 	const handleGenerateFeed = async () => {
-		//biome-ignore lint:
-		const result = await startResumeAnalysis(resume?.fileKey!, user!.id);
+		if (!resume?.fileKey || !user?.id) return;
+		const result = await startResumeAnalysis(resume.fileKey, user.id);
 		setRefetchInterval(1000);
 		if (!result.success) {
 			toast.error(result.error as string);
@@ -78,7 +77,6 @@ export default function ResumeDetails({
 				{resume?.status === "Limit Reached" && !isLoading && (
 					<Alert variant="destructive" className="w-[400px]">
 						<Info className="h-4 w-4]" />
-
 						<AlertDescription className="flex flex-col">
 							<p className="font-bold">
 								You have reached the daily limit of feedbacks you can generate.
@@ -104,7 +102,7 @@ export default function ResumeDetails({
 				{resume?.improvements?.map((improvement, index) => (
 					<div key={index} className="flex w-full flex-col gap-2">
 						<ImprovementCard key={index} index={index} {...improvement} />
-					</div >
+					</div>
 				))}
 			</div>
 		</>

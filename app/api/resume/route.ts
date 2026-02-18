@@ -15,13 +15,21 @@ export async function GET() {
 
   const resumes = await prisma.resume.findMany({
     where: { userId: user.id },
-    orderBy: { createdAt: "desc" },
+    orderBy: [{ position: "asc" }, { createdAt: "desc" }],
     include: {
       chat: true,
+      _count: {
+        select: { applications: true },
+      },
     },
   });
 
-  return NextResponse.json(resumes);
+  const mapped = resumes.map(({ _count, ...r }) => ({
+    ...r,
+    applicationCount: _count.applications,
+  }));
+
+  return NextResponse.json(mapped);
 }
 
 export async function POST() {

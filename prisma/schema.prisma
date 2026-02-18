@@ -59,6 +59,9 @@ model Resume {
   v2Conversion Boolean @default(false)
   v2Started    Boolean @default(false)
   messageCount Int     @default(0) @map("message_count")
+  pinned       Boolean  @default(false)
+  tags         String[] @default([])
+  position     Int      @default(0)
 
   candidateName     String?  @map("candidate_name")
   candidateEmail    String?  @map("candidate_email")
@@ -92,8 +95,8 @@ model Resume {
   actionableFeedbacks ActionableFeedback[]
   messages            Message[]
   improvements        Improvement[]        @relation("ResumeToImprovements")
-  chat                Chat?                @relation(fields: [chatId], references: [id])
-  chatId              Int?
+  primaryChat         Chat?                @relation(fields: [primaryChatId], references: [id])
+  primaryChatId       Int?                 @map("chat_id")
 }
 
 model Company {
