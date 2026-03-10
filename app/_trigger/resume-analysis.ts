@@ -10,6 +10,7 @@ import { all } from "axios";
 import { loops } from "@/lib/loops";
 import { convertToModelMessages, type UIMessage, type ModelMessage } from "ai";
 
+
 // Schema for resume analysis
 const ResumeAnalysisSchema = z.object({
   personalInfo: z.object({
