@@ -9,6 +9,7 @@ import { editorSchema } from "../app/(resumes)/_components/editor";
 import { all } from "axios";
 import { loops } from "@/lib/loops";
 import { convertToModelMessages, type UIMessage, type ModelMessage } from "ai";
+
 // Schema for resume analysis
 const ResumeAnalysisSchema = z.object({
   personalInfo: z.object({
@@ -386,7 +387,7 @@ export const generateFeedback = task({
 
     // Generate feedback
     const result = await generateObject({
-      model: anthropic("claude-3-5-haiku-latest"),
+      model: openai("gpt-4.1-nano"),
       messages,
       schema: FeedbackSchema,
     });
