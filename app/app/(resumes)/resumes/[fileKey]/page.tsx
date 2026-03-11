@@ -22,12 +22,12 @@ export default async function Page(props: {
         fileKey={params.fileKey}
         editResumeContent={<EditResumeTab fileKey={params.fileKey} resumeId={params.fileKey} />}
         feedbackContent={
-          <div className="md:px-8 p-4 flex-col flex w-[400px] h-full">
-            <h1 className="text-4xl font-bold text-blue-800">
+          <div className="flex min-h-0 w-full min-w-0 flex-1 flex-col overflow-y-auto p-4 md:px-8">
+            <h1 className="text-4xl font-bold text-blue-800 shrink-0">
               Suggested Improvements
             </h1>
-            <div className="mt-8 md:mt-0 w-full flex flex-col">
-              <p className="mt-2 text-gray-400 font-bold w-full">
+            <div className="mt-8 flex w-full shrink-0 flex-col md:mt-0">
+              <p className="mt-2 w-full text-gray-400 font-bold">
                 Get specific, actionable feedback on how to improve your
                 resume. The AI will highlight areas for improvement and
                 provide clear recommendations to help you make your resume

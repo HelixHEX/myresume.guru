@@ -47,7 +47,7 @@ export function ResumePageTabs({
         <TabsContent className="-mt-2 w-full flex-1 min-h-0 flex flex-col" value="edit-resume">
           {editResumeContent}
         </TabsContent>
-        <TabsContent className="-mt-2 w-full h-full" value="feedback">
+        <TabsContent className="-mt-2 w-full min-w-0 flex-1 min-h-0 flex flex-col overflow-hidden" value="feedback">
           {feedbackContent}
         </TabsContent>
         <div className="bg-gray-50 flex min-h-0 w-full flex-1 flex-col overflow-hidden min-w-0">
