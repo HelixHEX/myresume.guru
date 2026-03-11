@@ -211,7 +211,7 @@ export async function POST(req: Request) {
 			: ` Current chat title: \"${currentChatTitle.replace(/"/g, '\\"')}\". Based on the conversation so far, decide if the title still fits. If the topic has clearly shifted and a different title would help users find this chat, call setChatTitle with a new short title (max 50 characters). Otherwise do not call setChatTitle.`;
 
 		const result = streamText({
-			model: openai("gpt-5-nano"),
+			model: openai("gpt-5-mini"),
 			messages: [...contextMessages, ...modelMessages],
 			stopWhen: stepCountIs(5),
 			onFinish: async (event) => {

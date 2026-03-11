@@ -217,7 +217,7 @@ certifications (array of objects, each optional):
     const convertedMessages = await convertToModelMessages(messages);
     // Analyze the resume
     const result = await generateObject({
-      model: chosenModels.openai["5-nano"],
+      model: chosenModels.openai["5-mini"],
       messages: convertedMessages,
       schema: editorSchema.required().strict(),
     }).catch((error) => {
@@ -401,7 +401,7 @@ export const generateFeedback = task({
 
     // Generate feedback
     const result = await generateObject({
-      model: chosenModels.openai["5-nano"],
+      model: chosenModels.openai["5-mini"],
       messages,
       schema: FeedbackSchema,
     });
