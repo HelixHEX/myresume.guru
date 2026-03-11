@@ -32,7 +32,7 @@ export default clerkMiddleware((auth, req) => {
   const url = req.nextUrl.clone();
   const host = req.headers.get("host") ?? "";
 
-  if (host === JOBS_SUBDOMAIN) {
+  if (host === JOBS_SUBDOMAIN && !url.pathname.startsWith("/api")) {
     const pathname = url.pathname === "/" ? "/jobs" : `/jobs${url.pathname}`;
     url.pathname = pathname;
     return NextResponse.rewrite(url);
