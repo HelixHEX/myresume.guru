@@ -98,10 +98,10 @@ export default function EditResumeTab({
 
   return (
     <>
-      <div className={cn("p-4 md:px-8 flex w-full h-full min-h-0", showFullScreenThread && "hidden")}>
-        <div className="w-full">
-          <h1 className="text-4xl font-bold text-blue-800">Edit Resume</h1>
-          <div className="mt-3 flex gap-1 rounded-lg bg-neutral-100 p-1 dark:bg-neutral-800" role="tablist" aria-label="Edit mode">
+      <div className={cn("p-4 md:px-8 flex flex-col w-full h-full min-h-0", showFullScreenThread && "hidden")}>
+        <div className="w-full flex flex-col flex-1 min-h-0">
+          <h1 className="text-4xl font-bold text-blue-800 shrink-0">Edit Resume</h1>
+          <div className="mt-3 shrink-0 flex gap-1 rounded-lg bg-neutral-100 p-1 dark:bg-neutral-800" role="tablist" aria-label="Edit mode">
             <button
               type="button"
               role="tab"
@@ -135,7 +135,7 @@ export default function EditResumeTab({
               Editor
             </button>
           </div>
-          <div className="mt-4 min-h-[400px]">
+          <div className="mt-4 flex-1 min-h-0 overflow-y-auto">
             {mode === "editor" ? (
               <Editor resumeId={resumeId} />
             ) : mode === "ai" && !showFullScreenThread ? (
