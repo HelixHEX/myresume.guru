@@ -10,6 +10,10 @@ import { all } from "axios";
 import { loops } from "@/lib/loops";
 import { convertToModelMessages, type UIMessage, type ModelMessage } from "ai";
 
+const chosenModels = {
+  openai: openai("gpt-4.1-nano"),
+  anthropic: anthropic("claude-3-5-haiku-latest"),
+}
 
 // Schema for resume analysis
 const ResumeAnalysisSchema = z.object({
@@ -216,7 +220,7 @@ export const analyzeResume = task({
     const convertedMessages = convertToModelMessages(messages)
     // Analyze the resume
     const result = await generateObject({
-      model: anthropic("claude-3-5-haiku-latest"),
+      model: chosenModels.openai,
       messages: convertedMessages,
       schema: editorSchema.required().strict(),
     }).catch((error) => {
@@ -388,7 +392,7 @@ export const generateFeedback = task({
 
     // Generate feedback
     const result = await generateObject({
-      model: openai("gpt-4.1-nano"),
+      model: chosenModels.openai,
       messages,
       schema: FeedbackSchema,
     });
