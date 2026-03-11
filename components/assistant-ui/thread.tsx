@@ -114,6 +114,16 @@ const ThreadWelcomeSuggestions: FC = () => {
 };
 
 const Composer: FC = () => {
+	const interceptSend = useChatSendInterceptor();
+	const text = useThreadComposer((s) => s.text);
+
+	const handleKeyDown = (e: React.KeyboardEvent) => {
+		if (!interceptSend || e.key !== "Enter" || e.shiftKey) return;
+		if (!text.trim()) return;
+		e.preventDefault();
+		interceptSend(text);
+	};
+
 	return (
 		<ComposerPrimitive.Root className="focus-within:border-neutral-950/20 flex w-full flex-wrap items-end rounded-lg border border-neutral-200 bg-inherit px-2.5 shadow-sm transition-colors ease-in dark:focus-within:border-neutral-300/20 dark:border-neutral-800">
 			<ComposerPrimitive.Input
@@ -121,6 +131,7 @@ const Composer: FC = () => {
 				autoFocus
 				placeholder="Write a message..."
 				className="placeholder:text-neutral-500 max-h-40 flex-grow resize-none border-none bg-transparent px-2 py-4 text-sm outline-none focus:ring-0 disabled:cursor-not-allowed dark:placeholder:text-neutral-400"
+				onKeyDown={handleKeyDown}
 			/>
 			<ComposerAction />
 		</ComposerPrimitive.Root>

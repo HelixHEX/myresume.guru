@@ -28,6 +28,11 @@ export default function AppChatProvider({ children }: { children: React.ReactNod
   const queryClient = useQueryClient();
   const [selectedChatId, setSelectedChatId] = useState<number | null>(null);
   const initialMessagesByChatIdRef = useRef<Record<number, DbMessage[]>>({});
+  /** Route chat id (from URL). Used so SyncMainThreadState only syncs when runtime matches route, preventing loops. */
+  const routeChatIdRef = useRef<number | null>(null);
+  const setRouteChatId = useCallback((id: number | null) => {
+    routeChatIdRef.current = id;
+  }, []);
 
   const setInitialMessagesForChat = useCallback((chatId: number, messages: DbMessage[]) => {
     initialMessagesByChatIdRef.current[chatId] = messages;
@@ -168,6 +173,7 @@ export default function AppChatProvider({ children }: { children: React.ReactNod
   const value = useMemo(
     () => ({
       chats,
+      isChatsLoading: chatsQuery.isLoading,
       selectedChatId,
       selectedChat: selectedChatId != null ? { chatId: selectedChatId, messages: [] } : null,
       loadingChatId: null as number | null,
@@ -176,15 +182,17 @@ export default function AppChatProvider({ children }: { children: React.ReactNod
       ensureChatSelected,
       clearSelectedChat,
     }),
-    [chats, selectedChatId, handleSelectChat, handleNewChat, ensureChatSelected, clearSelectedChat]
+    [chats, chatsQuery.isLoading, selectedChatId, handleSelectChat, handleNewChat, ensureChatSelected, clearSelectedChat]
   );
 
   return (
     <AppChatStateContext.Provider value={value}>
       <AppChatRuntimeConfigProvider value={runtimeConfig}>
         <AssistantRuntimeProvider aui={aui} runtime={runtime}>
-          <SyncMainThreadState setSelectedChatId={setSelectedChatId} />
-          {children}
+          <SyncMainThreadState setSelectedChatId={setSelectedChatId} routeChatIdRef={routeChatIdRef} />
+          <RouteChatIdContext.Provider value={setRouteChatId}>
+            {children}
+          </RouteChatIdContext.Provider>
         </AssistantRuntimeProvider>
       </AppChatRuntimeConfigProvider>
     </AppChatStateContext.Provider>
@@ -193,6 +201,7 @@ export default function AppChatProvider({ children }: { children: React.ReactNod
 
 type AppChatState = {
   chats: UserChatItem[];
+  isChatsLoading: boolean;
   selectedChatId: number | null;
   selectedChat: { chatId: number; messages: DbMessage[] } | null;
   loadingChatId: number | null;
@@ -204,8 +213,16 @@ type AppChatState = {
 
 const AppChatStateContext = React.createContext<AppChatState | null>(null);
 
+/** Set the current route chat id (from URL) so SyncMainThreadState only syncs when runtime matches route. */
+export const RouteChatIdContext = React.createContext<((id: number | null) => void) | null>(null);
+
 export const useAppChatState = () => {
   const ctx = React.useContext(AppChatStateContext);
   if (!ctx) throw new Error("useAppChatState must be used within AppChatProvider");
   return ctx;
+};
+
+export const useSetRouteChatId = () => {
+  const setter = React.useContext(RouteChatIdContext);
+  return setter ?? (() => {});
 };

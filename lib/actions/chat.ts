@@ -115,6 +115,19 @@ export async function getChatMetadata(
   };
 }
 
+/** Returns the resume linked to this chat (Resume.primaryChatId = chatId) for the current user, or null. */
+export async function getResumeForChat(
+  chatId: number
+): Promise<{ id: number; fileKey: string | null } | null> {
+  const user = await currentUser();
+  if (!user) return null;
+  const resume = await prisma.resume.findFirst({
+    where: { primaryChatId: chatId, userId: user.id },
+    select: { id: true, fileKey: true },
+  });
+  return resume ?? null;
+}
+
 /** List all chats for the user, most recently updated first. Uses chat.title when set, else first user message snippet or "New chat". */
 export async function getUserChats(userId: string): Promise<UserChatItem[]> {
   const chats = await prisma.chat.findMany({

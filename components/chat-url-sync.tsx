@@ -23,12 +23,19 @@ export function ChatUrlSync({ isNewChat }: ChatUrlSyncProps) {
   const runtime = useThreadRuntime();
   const sentFromParamRef = useRef(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Capture message param on first render so we only send when we landed with ?message= (e.g. after redirect from new chat), not when the debounce added it while typing
+  const mountedWithMessageParamRef = useRef<string | null | undefined>(undefined);
+  if (mountedWithMessageParamRef.current === undefined) {
+    mountedWithMessageParamRef.current = searchParams.get(MESSAGE_PARAM);
+  }
 
   const messageParam = searchParams.get(MESSAGE_PARAM);
 
-  // On load: if URL has ?message=..., set composer text and send, then remove param
+  // On load: if URL had ?message=... when we mounted (e.g. after redirect from new chat), set composer text and send, then remove param.
+  // Skip when isNewChat. Skip when param was added by our debounce (param !== mounted value).
   useEffect(() => {
-    if (messageParam == null || messageParam === "" || sentFromParamRef.current) return;
+    if (isNewChat || messageParam == null || messageParam === "" || sentFromParamRef.current) return;
+    if (messageParam !== mountedWithMessageParamRef.current) return;
     const decoded = decodeURIComponent(messageParam);
     runtime.composer.setText(decoded);
     runtime.composer.send();
@@ -37,7 +44,7 @@ export function ChatUrlSync({ isNewChat }: ChatUrlSyncProps) {
     next.delete(MESSAGE_PARAM);
     const qs = next.toString();
     router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
-  }, [messageParam, pathname, router, runtime, searchParams]);
+  }, [isNewChat, messageParam, pathname, router, runtime, searchParams]);
 
   // Sync composer text to URL (debounced). Path will be /app/chat/new or /app/chat/{id}.
   useEffect(() => {
