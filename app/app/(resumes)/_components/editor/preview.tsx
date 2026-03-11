@@ -16,11 +16,23 @@ import { toast } from "sonner";
 import { incrementDownloadedResumes } from "../../_actions";
 import { useQueryClient } from "@tanstack/react-query";
 
+/** Normalize editor draft to the resume shape the preview expects (name, education, etc.). */
+function draftToPreviewResume(draft: Record<string, unknown> | null | undefined): Resume | null {
+  if (!draft || typeof draft !== "object" || Object.keys(draft).length === 0) return null;
+  return {
+    ...draft,
+    name: (draft.resumeName ?? draft.name) as string | undefined,
+    education: (draft.education ?? (draft as Record<string, unknown>).education_new) as Resume["education_new"],
+  } as Resume;
+}
+
 export default function PDFPreview({ fileKey }: { fileKey?: string }) {
   const contentRef = useRef<HTMLDivElement>(null);
   const queryClient = useQueryClient();
   const { data } = useGetResume(fileKey ?? "", 0);
-  const resume = data?.resume;
+  const { data: editorData } = useGetResumeEditorData(fileKey ?? "");
+  const serverResume = data?.resume;
+  const resume: Resume | undefined = draftToPreviewResume(editorData as Record<string, unknown>) ?? serverResume;
   const containerRef = useRef<HTMLDivElement>(null);
   const { width, height } = useDimensions(containerRef);
   const [editorBg, setEditorBg] = useState<string | undefined>("bg-blue-800");

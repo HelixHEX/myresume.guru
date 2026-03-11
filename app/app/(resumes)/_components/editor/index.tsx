@@ -307,14 +307,45 @@ function EditorForm({
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const queryClient = useQueryClient();
+
   async function onSubmit(values: z.infer<typeof editorSchema>) {
     setIsSubmitting(true);
     const res = await saveResume(values, resumeId);
+    if ("error" in res) {
+      setIsSubmitting(false);
+      return;
+    }
+    const current = queryClient.getQueryData<{ resume?: Resume }>(["resume", res.resumeId]);
+    const optimisticResume: Resume = {
+      ...(current?.resume ?? ({} as Resume)),
+      name: values.resumeName ?? current?.resume?.name ?? "",
+      firstName: values.firstName ?? "",
+      lastName: values.lastName ?? "",
+      email: values.email ?? "",
+      phone: values.phone ?? "",
+      location: values.location ?? "",
+      website: values.website ?? "",
+      github: values.github ?? "",
+      linkedin: values.linkedin ?? "",
+      twitter: values.twitter ?? "",
+      summary: values.summary ?? "",
+      skills: values.skills ?? "",
+      workExperience: (values.workExperience ?? []) as Resume["workExperience"],
+      education_new: (values.education ?? []) as Resume["education_new"],
+      education: (values.education ?? []) as Resume["education"],
+      projects: (values.projects ?? []) as Resume["projects"],
+      certifications: (values.certifications ?? []) as Resume["certifications"],
+      updatedAt: new Date(),
+    };
+    queryClient.setQueryData(["resume", res.resumeId], { resume: optimisticResume });
     clearResumeDraft(resumeId);
-    router.push(`/app/resumes/${res.resumeId}`);
+    queryClient.invalidateQueries({ queryKey: ["resume", res.resumeId] });
+    queryClient.invalidateQueries({ queryKey: ["resume_editor_data", resumeId] });
+    queryClient.invalidateQueries({ queryKey: ["resumes"] });
+    router.replace(`/app/resumes/${res.resumeId}?tab=edit-resume`, { scroll: false });
     setIsSubmitting(false);
   }
-  const queryClient = useQueryClient();
 
   const { data: editorColor } = useGetEditorColor(resumeId ?? "");
 
