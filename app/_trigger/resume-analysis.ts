@@ -7,6 +7,7 @@ import { anthropic } from "@ai-sdk/anthropic";
 import { editorSchema } from "../app/(resumes)/_components/editor";
 import { loops } from "@/lib/loops";
 import { convertToModelMessages, type UIMessage, type ModelMessage } from "ai";
+import { openai } from "@ai-sdk/openai";
 
 const chosenModels = {
   openai: openai("gpt-4.1-nano"),
