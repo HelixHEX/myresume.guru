@@ -337,7 +337,7 @@ export const generateFeedback = task({
 
     // const pdfData = resume.fileKey ? await getFile(resume.fileKey) : null;
 
-    const { userId: clerkId, fileKey, status, text, analysis, candidateName, candidateEmail, candidatePhone, candidateLocation, technicalSkills, companies, jobTitles, education, chatId, ...resumeData } = resume
+    const { userId: clerkId, fileKey, status, text, analysis, candidateName, candidateEmail, candidatePhone, candidateLocation, technicalSkills, companies, jobTitles, education, primaryChatId, ...resumeData } = resume
 
     const messages = [
       {
