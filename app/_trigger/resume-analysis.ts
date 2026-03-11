@@ -10,7 +10,10 @@ import { convertToModelMessages, type UIMessage, type ModelMessage } from "ai";
 import { openai } from "@ai-sdk/openai";
 
 const chosenModels = {
-  openai: openai("gpt-4.1-nano"),
+  openai: {
+    "4.1-nano": openai("gpt-4.1-nano"),
+    "4o-mini": openai("gpt-4o-mini"),
+  },
   anthropic: anthropic("claude-3-5-haiku-latest"),
 }
 
@@ -212,7 +215,7 @@ certifications (array of objects, each optional):
     const convertedMessages = await convertToModelMessages(messages);
     // Analyze the resume
     const result = await generateObject({
-      model: chosenModels.openai,
+      model: chosenModels.openai["4o-mini"],
       messages: convertedMessages,
       schema: editorSchema.required().strict(),
     }).catch((error) => {
@@ -396,7 +399,7 @@ export const generateFeedback = task({
 
     // Generate feedback
     const result = await generateObject({
-      model: chosenModels.openai,
+      model: chosenModels.openai["4.1-nano"],
       messages,
       schema: FeedbackSchema,
     });

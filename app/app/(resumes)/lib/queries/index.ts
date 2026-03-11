@@ -51,7 +51,7 @@ export const useGetResume = (fileKey: string, refetchInterval?: number | false) 
     if (query.data) {
       queryClient.invalidateQueries({ queryKey: ["resume_editor_data", fileKey] });
     }
-  }, [query.dataUpdatedAt, fileKey, queryClient]);
+  }, [query.data, query.dataUpdatedAt, fileKey, queryClient]);
   return query;
 };
 

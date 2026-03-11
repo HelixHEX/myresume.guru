@@ -33,7 +33,7 @@ export default function PDFPreview({ fileKey }: { fileKey?: string }) {
   return (
     <div
       style={{ backgroundColor: editorColor }}
-      className={`flex flex-col w-full overflow-y-auto p-3 `}
+      className="flex min-h-0 w-full flex-1 flex-col overflow-y-auto p-3"
     >
       <div className="flex justify-between pb-4">
         <h2 className="text-white text-2xl font-bold">

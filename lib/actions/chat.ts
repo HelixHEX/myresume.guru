@@ -1,8 +1,5 @@
 'use server';
 
-import { openai } from "@ai-sdk/openai";
-import { streamText } from "ai";
-import { getMutableAIState } from "@ai-sdk/rsc";
 import prisma from "@/lib/prisma";
 import { currentUser } from "@clerk/nextjs/server";
 
@@ -15,16 +12,6 @@ export interface ClientMessage {
 export interface ServerMessage {
   role: "user" | "assistant";
   content: string;
-}
-
-export async function continueConversation(input: string) {
-  const history = getMutableAIState();
-  const result = await streamText({
-    model: openai("gpt-3.5-turbo"),
-    messages: [...history.get(), { role: "user", content: input }],
-  })
-
-  return result.toUIMessageStreamResponse();
 }
 
 //biome-ignore lint:
@@ -167,11 +154,13 @@ export async function updateChatTitle(chatId: number, title: string): Promise<bo
   return result.count > 0;
 }
 
-/** Create a new chat. If fileKey is provided, set that resume's primaryChatId to the new chat. Returns the new chat id. */
+/**
+ * Create a new chat, or return the existing primary chat when fileKey is provided.
+ * When fileKey is provided and the resume already has primaryChatId, returns that id (idempotent).
+ * When fileKey is provided and the resume has no primary chat, creates one and sets resume.primaryChatId.
+ * When fileKey is not provided, always creates a fresh unlinked chat (e.g. global "New chat").
+ */
 export async function createChat(userId: string, fileKey?: string): Promise<number> {
-  const chat = await prisma.chat.create({
-    data: { userId, title: null },
-  });
   if (fileKey?.trim()) {
     const id = Number.parseInt(fileKey, 10);
     const byId = /^\d+$/.test(fileKey) && !Number.isNaN(id);
@@ -179,11 +168,21 @@ export async function createChat(userId: string, fileKey?: string): Promise<numb
       where: byId ? { id } : { fileKey },
     });
     if (resume && resume.userId === userId) {
+      if (resume.primaryChatId != null) {
+        return resume.primaryChatId;
+      }
+      const chat = await prisma.chat.create({
+        data: { userId, title: null },
+      });
       await prisma.resume.update({
         where: { id: resume.id },
         data: { primaryChatId: chat.id },
       });
+      return chat.id;
     }
   }
+  const chat = await prisma.chat.create({
+    data: { userId, title: null },
+  });
   return chat.id;
 }

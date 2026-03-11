@@ -12,9 +12,9 @@ export default defineConfig({
   build: {
     extensions: [
       prismaExtension({
-        version: "5.14.0", // optional, we'll automatically detect the version if not provided
-        // update this to the path of your Prisma schema file
+        mode: "legacy",
         schema: "prisma/schema.prisma",
+        version: "5.14.0",
       }),
       playwright({
         browsers: ["chromium", "webkit"], // optional, will use ["chromium"] if not provided

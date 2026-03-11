@@ -1,6 +1,6 @@
 "use client";
 
-import { useThreadList } from "@assistant-ui/react";
+import { useAssistantRuntime } from "@assistant-ui/react";
 import { useEffect } from "react";
 
 type SyncMainThreadStateProps = {
@@ -12,10 +12,11 @@ type SyncMainThreadStateProps = {
  * Must be rendered inside AssistantRuntimeProvider with a remote thread list runtime.
  */
 export function SyncMainThreadState({ setSelectedChatId }: SyncMainThreadStateProps) {
-  const mainItem = useThreadList((s) => s.mainItem);
+  const assistantRuntime = useAssistantRuntime({ optional: true });
+
   let remoteId: string | undefined;
   try {
-    remoteId = mainItem?.getState?.().remoteId;
+    remoteId = assistantRuntime?.threads.mainItem.getState().remoteId;
   } catch {
     remoteId = undefined;
   }

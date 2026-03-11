@@ -14,7 +14,7 @@ const getResumeFile = tool({
 	parameters: z.object({
 		fileKey: z.string(),
 	}),
-	execute: async ({ fileKey }) => {
+	execute: async ({ fileKey }: { fileKey: string }) => {
 		const resume = await getFile(fileKey);
 		return { resume };
 	},

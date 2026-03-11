@@ -37,6 +37,7 @@ export function useAppChatRuntime<UI_MESSAGE extends UIMessage = UIMessage>(
           const result = await tool.execute?.(toolCall.input, {
             toolCallId: toolCall.toolCallId,
             abortSignal: new AbortController().signal,
+            human: async () => null,
           });
           chat.addToolResult({
             tool: toolCall.toolName,

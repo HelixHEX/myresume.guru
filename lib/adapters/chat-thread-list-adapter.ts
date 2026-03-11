@@ -1,7 +1,7 @@
 "use client";
 
 import type { unstable_RemoteThreadListAdapter } from "@assistant-ui/react";
-import { createChat, getChatMetadata, getUserChats, updateChatTitle } from "@/lib/actions/chat";
+import { createChat, getChat, getChatMetadata, getUserChats, updateChatTitle } from "@/lib/actions/chat";
 
 export type CreateChatThreadListAdapterOptions = {
   userId: string;
@@ -42,6 +42,12 @@ export function createChatThreadListAdapter(
     },
 
     async initialize(_threadId: string) {
+      if (resumeFileKey?.trim()) {
+        const primaryId = await getChat(resumeFileKey);
+        if (primaryId != null) {
+          return { remoteId: String(primaryId), externalId: undefined };
+        }
+      }
       const newChatId = await createChat(userId, resumeFileKey ?? undefined);
       return { remoteId: String(newChatId), externalId: undefined };
     },

@@ -140,7 +140,11 @@ export default function EditResumeTab({
               <Editor resumeId={resumeId} />
             ) : mode === "ai" && !showFullScreenThread ? (
               <div className="h-[400px] flex items-center justify-center text-neutral-500 dark:text-neutral-400 text-sm rounded-lg border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-950">
-                {isCreatingChat ? "Creating chat…" : isChatPending ? "Loading chat…" : chatId == null ? "No chat available for this resume." : "Loading chat…"}
+                {isChatPending || isCreatingChat
+                  ? "Loading chat…"
+                  : chatId == null
+                  ? "No chat available for this resume."
+                  : "Loading chat…"}
               </div>
             ) : null}
           </div>
@@ -148,7 +152,7 @@ export default function EditResumeTab({
       </div>
 
       {showFullScreenThread && (
-        <div className="flex flex-col flex-1 min-h-0 bg-white dark:bg-neutral-950">
+        <div className="flex flex-col flex-1 min-h-0 overflow-hidden bg-white dark:bg-neutral-950">
           <header className="shrink-0 border-b border-neutral-200 bg-white px-4 py-3 dark:border-neutral-800 dark:bg-neutral-950">
             <h1 className="text-xl font-bold text-blue-800 dark:text-blue-200">Edit Resume</h1>
             <div className="mt-2 flex gap-1 rounded-lg bg-neutral-100 p-1 dark:bg-neutral-800 w-fit" role="tablist" aria-label="Edit mode">
@@ -174,7 +178,7 @@ export default function EditResumeTab({
             </div>
           </header>
           <div className="flex flex-1 min-h-0">
-            <main className="flex-1 min-w-0 flex flex-col bg-white dark:bg-neutral-950">
+            <main className="flex-1 min-w-0 min-h-0 overflow-hidden flex flex-col bg-white dark:bg-neutral-950">
               {isOverTrialLimit ? (
                 <ChatTrialLimitUpgrade />
               ) : (

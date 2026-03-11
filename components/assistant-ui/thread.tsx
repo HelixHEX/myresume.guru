@@ -27,12 +27,12 @@ import { useChatSendInterceptor } from "@/lib/contexts/chat-send-interceptor";
 export const Thread: FC = () => {
 	return (
 		<ThreadPrimitive.Root
-			className="bg-white box-border flex h-full flex-col overflow-hidden dark:bg-neutral-950"
+			className="bg-white box-border flex h-full min-h-0 flex-col overflow-hidden dark:bg-neutral-950"
 			style={{
 				["--thread-max-width" as string]: "42rem",
 			}}
 		>
-			<ThreadPrimitive.Viewport className="flex h-full flex-col items-center overflow-y-scroll scroll-smooth bg-inherit px-4 pt-8">
+			<ThreadPrimitive.Viewport className="flex flex-1 min-h-0 flex-col items-center overflow-y-auto scroll-smooth bg-inherit px-4 pt-8 pb-2">
 				<ThreadWelcome />
 
 				<ThreadPrimitive.Messages
@@ -46,12 +46,11 @@ export const Thread: FC = () => {
 				<ThreadPrimitive.If empty={false}>
 					<div className="min-h-8 flex-grow" />
 				</ThreadPrimitive.If>
-
-				<div className="sticky bottom-0 mt-3 flex w-full max-w-[var(--thread-max-width)] flex-col items-center justify-end rounded-t-lg bg-inherit pb-4">
-					<ThreadScrollToBottom />
-					<Composer />
-				</div>
 			</ThreadPrimitive.Viewport>
+			<div className="shrink-0 flex w-full max-w-[var(--thread-max-width)] flex-col items-center justify-end self-center rounded-t-lg bg-inherit px-4 pb-4 pt-2">
+				<ThreadScrollToBottom />
+				<Composer />
+			</div>
 		</ThreadPrimitive.Root>
 	);
 };
