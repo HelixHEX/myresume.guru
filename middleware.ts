@@ -26,11 +26,20 @@ const postHogMiddleware = (request: NextRequest) => {
     headers: requestHeaders,
   });
 };
+const JOBS_SUBDOMAIN = "jobs.myresume.guru";
+
 export default clerkMiddleware((auth, req) => {
+  const url = req.nextUrl.clone();
+  const host = req.headers.get("host") ?? "";
+
+  if (host === JOBS_SUBDOMAIN) {
+    const pathname = url.pathname === "/" ? "/jobs" : `/jobs${url.pathname}`;
+    url.pathname = pathname;
+    return NextResponse.rewrite(url);
+  }
+
   if (isProtectedRouteClient(req) && !req.url.includes("/api/uploadthing") && !publicRoutes(req))
     auth.protect();
-
-  // return 
 });
 
 // export default clerkMiddleware((auth, req) => {
