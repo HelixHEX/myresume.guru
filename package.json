@@ -7,7 +7,7 @@
         "build": "next build",
         "start": "next start",
         "lint": "next lint",
-        "postinstall": "prisma generate && patch-package"
+        "postinstall": "prisma generate"
     },
     "overrides": {
         "assistant-stream": "0.3.4"
