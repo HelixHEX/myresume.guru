@@ -17,7 +17,10 @@ function findResumeByIdOrFileKey(idOrFileKey: string) {
 type ChatRequestBody = {
 	messages: Array<{ role: string; content?: string; parts?: Array<{ type: string; text?: string }> }>;
 	context?: Array<{ role: string; content: string }>;
-	fileKey: string;
+	/** Resume context (required if chatId not provided). */
+	fileKey?: string;
+	/** When provided, use this chat for persistence; resume is derived from chat's linked resumes for tools. */
+	chatId?: number;
 	applicationId?: string | null;
 	userId: string;
 };
@@ -98,38 +101,76 @@ const modifyResumeSchema = z.object({
 export async function POST(req: Request) {
 	try {
 		const body = (await req.json()) as ChatRequestBody;
-		const { messages, context, fileKey, applicationId } = body;
+		const { messages, context, fileKey, chatId: bodyChatId, applicationId } = body;
 		const userId = await auth().then((a) => a.userId);
 		if (!userId) {
 			return new Response(JSON.stringify({ error: "userId is required" }), { status: 400 });
 		}
-		if (!fileKey || typeof fileKey !== "string" || fileKey.trim() === "") {
-			return new Response(JSON.stringify({ error: "fileKey is required" }), { status: 400 });
-		}
 
-		const resume = await findResumeByIdOrFileKey(fileKey.trim()).then((r) =>
-			r ? prisma.resume.findUnique({ where: { id: r.id }, include: { feedbacks: { include: { actionableFeedbacks: true } } } }) : null
-		);
+		let chatId: number;
+		let resume: (Awaited<ReturnType<typeof findResumeByIdOrFileKey>> & { feedbacks: { actionableFeedbacks: unknown[] }[] }) | null;
 
-		if (!resume) {
-			return new Response("Resume not found", { status: 404 });
-		}
-		if (resume.userId !== userId) {
-			return new Response(JSON.stringify({ error: "Forbidden" }), { status: 403 });
-		}
-
-		// Ensure resume has a primary chat (create one and set primaryChatId if not)
-		let chatId = resume.primaryChatId;
-		if (chatId == null) {
-			const chat = await prisma.chat.create({
-				data: { userId: resume.userId },
+		if (bodyChatId != null && typeof bodyChatId === "number") {
+			// Use existing chat by id
+			const chat = await prisma.chat.findUnique({
+				where: { id: bodyChatId },
+				include: { resumes: { include: { feedbacks: { include: { actionableFeedbacks: true } } } } },
 			});
+
+			if (!chat || chat.userId !== userId) {
+				return new Response(JSON.stringify({ error: "Chat not found or forbidden" }), { status: 404 });
+			}
+			chatId = chat.id;
+			// Use first linked resume for tool context (if any)
+			resume = chat.resumes[0] ?? null;
+			// When on resume page we send fileKey; use it for tool context if chat has no linked resume yet
+			if (!resume && fileKey && typeof fileKey === "string" && fileKey.trim() !== "") {
+				const byFileKey = await findResumeByIdOrFileKey(fileKey.trim()).then((r) =>
+					r ? prisma.resume.findUnique({ where: { id: r.id }, include: { feedbacks: { include: { actionableFeedbacks: true } } } }) : null
+				);
+				if (byFileKey && byFileKey.userId === userId) resume = byFileKey;
+			}
+		} else if (fileKey && typeof fileKey === "string" && fileKey.trim() !== "") {
+			// Legacy: resolve by fileKey and use resume's primary chat
+			resume = await findResumeByIdOrFileKey(fileKey.trim()).then((r) =>
+				r ? prisma.resume.findUnique({ where: { id: r.id }, include: { feedbacks: { include: { actionableFeedbacks: true } } } }) : null
+			);
+			if (!resume) {
+				return new Response("Resume not found", { status: 404 });
+			}
+			if (resume.userId !== userId) {
+				return new Response(JSON.stringify({ error: "Forbidden" }), { status: 403 });
+			}
+			let primaryChatId = resume.primaryChatId;
+			if (primaryChatId == null) {
+				const chat = await prisma.chat.create({
+					data: { userId: resume.userId, title: null },
+				});
+				await prisma.resume.update({
+					where: { id: resume.id },
+					data: { primaryChatId: chat.id },
+				});
+				primaryChatId = chat.id;
+			}
+			chatId = primaryChatId;
+		} else {
+			return new Response(JSON.stringify({ error: "fileKey or chatId is required" }), { status: 400 });
+		}
+
+		// Ensure resume is linked to this chat so getChat(fileKey) returns this chat after refresh
+		if (resume != null && resume.primaryChatId !== chatId) {
 			await prisma.resume.update({
 				where: { id: resume.id },
-				data: { primaryChatId: chat.id },
+				data: { primaryChatId: chatId },
 			});
-			chatId = chat.id;
 		}
+
+		// Current chat title for AI title instructions and setChatTitle tool
+		const chatMeta = await prisma.chat.findUnique({
+			where: { id: chatId },
+			select: { title: true },
+		});
+		const currentChatTitle: string | null = chatMeta?.title?.trim() ?? null;
 
 		// Persist latest user message
 		const lastMessage = messages[messages.length - 1];
@@ -142,7 +183,7 @@ export async function POST(req: Request) {
 						role: "user",
 						userId,
 						chatId,
-						resumeId: resume.id,
+						resumeId: resume?.id ?? undefined,
 						applicationId: applicationId ?? undefined,
 					},
 				});
@@ -164,6 +205,11 @@ export async function POST(req: Request) {
 			role: c.role as "user" | "assistant" | "system",
 			content: c.content,
 		}));
+		const isNewChat = !currentChatTitle || currentChatTitle === "New chat";
+		const titleInstruction = isNewChat
+			? " This is a new chat. After the first user message and your reply, call setChatTitle with a short, descriptive title (e.g. derived from the user's first message or the main topic, max 50 characters)."
+			: ` Current chat title: \"${currentChatTitle.replace(/"/g, '\\"')}\". Based on the conversation so far, decide if the title still fits. If the topic has clearly shifted and a different title would help users find this chat, call setChatTitle with a new short title (max 50 characters). Otherwise do not call setChatTitle.`;
+
 		const result = streamText({
 			model: openai("gpt-4o-mini"),
 			messages: [...contextMessages, ...modelMessages],
@@ -172,13 +218,13 @@ export async function POST(req: Request) {
 				const assistantText = event.text?.trim() ?? "";
 				if (assistantText) {
 					try {
-						await prisma.message.create({
+						const message = await prisma.message.create({
 							data: {
 								content: assistantText,
 								role: "assistant",
 								userId,
 								chatId,
-								resumeId: resume.id,
+								resumeId: resume?.id ?? undefined,
 								applicationId: applicationId ?? undefined,
 							},
 						});
@@ -187,12 +233,35 @@ export async function POST(req: Request) {
 					}
 				}
 			},
-			system: `You are a resume analyzer assistant. Use getMoreMessages when the user asks about earlier parts of the conversation; pass nextCursor from a previous call to get the next page of history. Use getResumeStructured to fetch current workExperience, education, projects, certifications before editing (e.g. to remove an entry or add a bullet). Use modifyResume when the user wants to change their resume. You can update: name, summary, skills, contact info (firstName, lastName, email, phone, location), social links (website, github, linkedin, twitter), workExperience (full array of jobs with company, title, summary array of { summaryPoint }, startDate, endDate, location), education (full array with school, degree, fieldOfStudy, startDate, endDate, location), projects (full array with name, description, startDate, endDate, location, url), certifications (full array with name, date). For array fields pass the complete new array when updating. Only include fields the user asked to change.`,
+			system: `You are a resume analyzer assistant. Use getMoreMessages when the user asks about earlier parts of the conversation; pass nextCursor from a previous call to get the next page of history. Use getResumeStructured to fetch current workExperience, education, projects, certifications before editing (e.g. to remove an entry or add a bullet). Use getSuggestedFeedback to fetch the latest suggested feedback for this resume from the database when the user asks what to improve, what feedback was given, or for improvement suggestions. Use modifyResume when the user wants to change their resume. You can update: name, summary, skills, contact info (firstName, lastName, email, phone, location), social links (website, github, linkedin, twitter), workExperience (full array of jobs with company, title, summary array of { summaryPoint }, startDate, endDate, location), education (full array with school, degree, fieldOfStudy, startDate, endDate, location), projects (full array with name, description, startDate, endDate, location, url), certifications (full array with name, date). For array fields pass the complete new array when updating. Only include fields the user asked to change.${titleInstruction}`,
 			tools: {
+				setChatTitle: tool({
+					description: "Set or update the chat title. Use for new chats after the first exchange, or for existing chats when the topic has clearly shifted and a new title would help.",
+					inputSchema: z.object({
+						title: z.string().min(1).max(100).describe("Short descriptive title for the chat (max 100 characters)."),
+					}),
+					execute: async (args) => {
+						const newTitle = args.title.trim().slice(0, 100);
+						if (!newTitle) return { success: false, message: "Title cannot be empty." };
+						try {
+							await prisma.chat.updateMany({
+								where: { id: chatId, userId },
+								data: { title: newTitle },
+							});
+							return { success: true, message: "Chat title updated." };
+						} catch (err) {
+							console.error("setChatTitle failed:", err);
+							return { success: false, message: err instanceof Error ? err.message : "Update failed." };
+						}
+					},
+				}),
 				getResume: tool({
 					description: "Get the current resume text and a brief summary. Use when the user asks about their resume content.",
 					inputSchema: z.object({}),
 					execute: async () => {
+						if (!resume) {
+							return { resumeText: "", summary: "No resume in context. Open a resume to get resume-specific help." };
+						}
 						const text = resume.text ?? "";
 						return {
 							resumeText: text.slice(0, 15000),
@@ -204,6 +273,9 @@ export async function POST(req: Request) {
 					description: "Get the current resume as structured data (workExperience, education, projects, certifications, and scalar fields). Use before modifyResume when the user wants to edit or remove a specific entry (e.g. remove a job, add a bullet) so you can pass the full updated array.",
 					inputSchema: z.object({}),
 					execute: async () => {
+						if (!resume) {
+							return { workExperience: [], education: [], projects: [], certifications: [], name: "", summary: "", skills: "", firstName: "", lastName: "", email: "", phone: "", location: "", website: "", github: "", linkedin: "", twitter: "", _message: "No resume in context." };
+						}
 						return {
 							workExperience: (resume.workExperience ?? []) as unknown[],
 							education: (resume.education_new ?? []) as unknown[],
@@ -228,15 +300,36 @@ export async function POST(req: Request) {
 					description: "Get the structured feedback list already provided for this resume. Use when the user asks what feedback was given or what to improve.",
 					inputSchema: z.object({}),
 					execute: async () => {
-						const feedbacks = resume.feedbacks ?? [];
+						if (!resume) {
+							return { feedbacks: [], _message: "No resume in context." };
+						}
+						const feedbacks = (resume.feedbacks ?? []) as { title: string; text?: string | null; actionableFeedbacks?: { title: string; text: string }[] }[];
 						return {
 							feedbacks: feedbacks.map((f) => ({
 								title: f.title,
 								text: f.text ?? "",
-								actionableFeedbacks: (f as { actionableFeedbacks?: { title: string; text: string }[] }).actionableFeedbacks?.map((a) => ({
-									title: a.title,
-									text: a.text ?? "",
-								})) ?? [],
+								actionableFeedbacks: f.actionableFeedbacks?.map((a) => ({ title: a.title, text: a.text ?? "" })) ?? [],
+							})),
+						};
+					},
+				}),
+				getSuggestedFeedback: tool({
+					description: "Fetch the latest suggested feedback for this resume from the database. Use when the user asks what to improve, what feedback was given, or for improvement suggestions. Always returns fresh data from the DB.",
+					inputSchema: z.object({}),
+					execute: async () => {
+						if (!resume) {
+							return { feedbacks: [], _message: "No resume in context." };
+						}
+						const fresh = await prisma.resume.findUnique({
+							where: { id: resume.id },
+							include: { feedbacks: { include: { actionableFeedbacks: true } } },
+						});
+						const feedbacks = (fresh?.feedbacks ?? []) as { title: string; text?: string | null; actionableFeedbacks?: { title: string; text: string }[] }[];
+						return {
+							feedbacks: feedbacks.map((f) => ({
+								title: f.title,
+								text: f.text ?? "",
+								actionableFeedbacks: f.actionableFeedbacks?.map((a) => ({ title: a.title, text: a.text ?? "" })) ?? [],
 							})),
 						};
 					},
@@ -245,6 +338,9 @@ export async function POST(req: Request) {
 					description: "Update the resume. Pass any fields to change: name, summary, skills, contact (firstName, lastName, email, phone, location), social links (website, github, linkedin, twitter), workExperience (array of { company, title, summary: [{ summaryPoint }], startDate, endDate, location }), education (array of { school, degree, fieldOfStudy, startDate, endDate, location }), projects (array of { name, description, startDate, endDate, location, url }), certifications (array of { name, date }). For array fields pass the full replacement array.",
 					inputSchema: modifyResumeSchema,
 					execute: async (args) => {
+						if (!resume) {
+							return { success: false, message: "No resume in context. Open a resume to edit it." };
+						}
 						const data: Parameters<typeof prisma.resume.update>[0]["data"] = {};
 						if (args.name !== undefined) data.name = args.name.trim() || resume.name;
 						if (args.summary !== undefined) data.summary = args.summary.trim() || null;

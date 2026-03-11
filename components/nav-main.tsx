@@ -48,7 +48,11 @@ export function NavMain({
 						className="group/collapsible"
 						onClick={() => {
 							if (item.url && !item.items) {
-								window.open(item.url, "_blank");
+								if (item.url.startsWith("/")) {
+									router.push(item.url);
+								} else {
+									window.open(item.url, "_blank");
+								}
 							}
 						}}
 					>

@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Accordion,
   AccordionContent,
@@ -24,9 +24,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { ChevronDown, Loader2, X } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
-import { useSaveResumeEditorData } from "../../lib/mutations";
+import { clearResumeDraft, useSaveResumeEditorData } from "../../lib/mutations";
 import {
-  getResumeEditorData,
   useGetEditorColor,
   useGetResume,
   useGetResumeEditorData,
@@ -139,47 +138,19 @@ export default function Editor({
       setRefetchInterval(0);
     }
   }, [resume, refetchInterval]);
+  // Sync server resume to localStorage "resume" key only (for getResume). Never write to draft
+  // so we don't overwrite the user's in-progress edits when the resume query refetches.
   useEffect(() => {
-    const main = async () => {
-      if (user) {
-        const localResumeEditorData = await getResumeEditorData(resumeId ?? "");
-        console.log("Saving resume editor data", resume, user);
-        if (resume && resume.userId === user.id) {
-          saveResumeEditorData({
-            resumeId: resumeId ?? "",
-            data: JSON.stringify({
-              resumeName: resume?.name,
-              firstName: resume?.firstName,
-              lastName: resume?.lastName,
-              email: resume?.email,
-              phone: resume?.phone,
-              github: resume?.github,
-              linkedin: resume?.linkedin,
-              website: resume?.website,
-              twitter: resume?.twitter,
-              location: resume?.location,
-              summary: resume?.summary,
-              workExperience: resume?.workExperience,
-              education: resume?.education_new,
-              skills: resume?.skills,
-              certifications: resume?.certifications,
-              projects: resume?.projects,
-            }),
-          });
-        } else if (
-          Object.keys(localResumeEditorData).length === 0 &&
-          resume &&
-          resume.userId === user.id
-        ) {
-          saveResumeEditorData({
-            resumeId: resumeId ?? "",
-            data: JSON.stringify({ ...localResumeEditorData }),
-          });
-        }
-      }
+    if (!user || !resume || resume.userId !== user.id || !resumeId) return;
+    const key = `resume:${resumeId}`;
+    const payload = {
+      ...resume,
+      resumeName: resume?.name,
     };
-    main();
-  }, [user, saveResumeEditorData, resumeId, resume]);
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem(key, JSON.stringify(payload));
+    }
+  }, [user, resumeId, resume]);
 
   if (showLoading)
     return (
@@ -274,9 +245,16 @@ function EditorForm({
     defaultValues: nextDefaultValues,
   });
 
+  const lastResetUpdatedAtRef = useRef<string | number | undefined>(undefined);
+  const defaultValuesRef = useRef(nextDefaultValues);
+  defaultValuesRef.current = nextDefaultValues;
+
   useEffect(() => {
-    form.reset(nextDefaultValues);
-  }, [resume?.updatedAt]);
+    const updatedAt = resume?.updatedAt == null ? undefined : String(resume.updatedAt);
+    if (updatedAt === lastResetUpdatedAtRef.current) return;
+    lastResetUpdatedAtRef.current = updatedAt;
+    form.reset(defaultValuesRef.current);
+  }, [form, resume?.updatedAt]);
 
   const {
     fields: workExperienceFields,
@@ -332,7 +310,7 @@ function EditorForm({
   async function onSubmit(values: z.infer<typeof editorSchema>) {
     setIsSubmitting(true);
     const res = await saveResume(values, resumeId);
-    localStorage.removeItem("resume:");
+    clearResumeDraft(resumeId);
     router.push(`/app/resumes/${res.resumeId}`);
     setIsSubmitting(false);
   }

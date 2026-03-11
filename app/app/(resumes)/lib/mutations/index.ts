@@ -43,8 +43,16 @@ export const useUpdateResume = (fileKey: string) => {
   });
 }
 
+const DRAFT_KEY_PREFIX = "resume_draft:";
+
+export const clearResumeDraft = (resumeId: string) => {
+  if (typeof window !== "undefined") {
+    window.localStorage.removeItem(`${DRAFT_KEY_PREFIX}${resumeId}`);
+  }
+};
+
 const saveResumeEditorData = async ({ resumeId, data }: { resumeId: string, data: string }) => {
-  localStorage.setItem(`resume:${resumeId}`, data);
+  localStorage.setItem(`${DRAFT_KEY_PREFIX}${resumeId}`, data);
 }
 
 export const useSaveResumeEditorData = (resumeId: string) => {

@@ -17,7 +17,7 @@ export async function GET() {
     where: { userId: user.id },
     orderBy: [{ position: "asc" }, { createdAt: "desc" }],
     include: {
-      chat: true,
+      primaryChat: true,
       _count: {
         select: { applications: true },
       },

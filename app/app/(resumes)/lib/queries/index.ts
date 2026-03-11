@@ -3,6 +3,8 @@ import axios from "axios";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { RESUME_ANALYSIS_STATUS } from "@/lib/actions/resume";
 import { getDownloadedResumes as getDownloadedResumesAction } from "@/app/app/(resumes)/_actions";
+import { getChat } from "@/lib/actions/chat";
+import { chatQueryKeys } from "@/lib/providers/app-chat-provider";
 import { useEffect } from "react";
 const isDbResumeNewer = (
   dbResume: { updatedAt?: string | Date },
@@ -28,6 +30,15 @@ export const getResume = async (fileKeyOrId: string) => {
   return res.data;
 };
 
+/** Primary chat id for a resume (by fileKey). Uses React Query with key including resumeId. */
+export const useGetResumeChat = (resumeIdOrFileKey: string) => {
+  return useQuery<number | null>({
+    queryKey: chatQueryKeys.resumeChat(resumeIdOrFileKey),
+    queryFn: () => getChat(resumeIdOrFileKey),
+    enabled: !!resumeIdOrFileKey,
+  });
+};
+
 export const useGetResume = (fileKey: string, refetchInterval?: number | false) => {
   const queryClient = useQueryClient();
   const query = useQuery<GetResumeResponse>({
@@ -37,8 +48,10 @@ export const useGetResume = (fileKey: string, refetchInterval?: number | false) 
     enabled: !!fileKey,
   });
   useEffect(() => {
-    queryClient.invalidateQueries({ queryKey: ["resume_editor_data", fileKey] });
-  }, [query, fileKey, queryClient]);  
+    if (query.data) {
+      queryClient.invalidateQueries({ queryKey: ["resume_editor_data", fileKey] });
+    }
+  }, [query.dataUpdatedAt, fileKey, queryClient]);
   return query;
 };
 
@@ -74,7 +87,20 @@ export const useGetEditorBg = (resumeId: string) => {
   });
 }
 
+const DRAFT_KEY_PREFIX = "resume_draft:";
+
 export const getResumeEditorData = async (fileKey: string) => {
+  const draftRaw = localStorage.getItem(`${DRAFT_KEY_PREFIX}${fileKey}`);
+  if (draftRaw) {
+    try {
+      const parsed = JSON.parse(draftRaw);
+      if (parsed && typeof parsed === "object" && Object.keys(parsed).length > 0) {
+        return parsed;
+      }
+    } catch {
+      // fall through to resume key
+    }
+  }
   const data = localStorage.getItem(`resume:${fileKey}`);
   if (!data) {
     return {};

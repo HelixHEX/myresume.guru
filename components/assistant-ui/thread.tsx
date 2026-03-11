@@ -4,6 +4,7 @@ import {
 	ComposerPrimitive,
 	MessagePrimitive,
 	ThreadPrimitive,
+	useThreadComposer,
 } from "@assistant-ui/react";
 import type { FC } from "react";
 import {
@@ -21,6 +22,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { MarkdownText } from "@/components/assistant-ui/markdown-text";
 import { TooltipIconButton } from "@/components/assistant-ui/tooltip-icon-button";
+import { useChatSendInterceptor } from "@/lib/contexts/chat-send-interceptor";
 
 export const Thread: FC = () => {
 	return (
@@ -127,18 +129,34 @@ const Composer: FC = () => {
 };
 
 const ComposerAction: FC = () => {
+	const interceptSend = useChatSendInterceptor();
+	const text = useThreadComposer((s) => s.text);
+
 	return (
 		<>
 			<ThreadPrimitive.If running={false}>
-				<ComposerPrimitive.Send asChild>
+				{interceptSend ? (
 					<TooltipIconButton
 						tooltip="Send"
 						variant="default"
 						className="my-2.5 size-8 p-2 transition-opacity ease-in"
+						onClick={() => interceptSend(text)}
+						disabled={!text.trim()}
+						aria-label="Send"
 					>
 						<SendHorizontalIcon />
 					</TooltipIconButton>
-				</ComposerPrimitive.Send>
+				) : (
+					<ComposerPrimitive.Send asChild>
+						<TooltipIconButton
+							tooltip="Send"
+							variant="default"
+							className="my-2.5 size-8 p-2 transition-opacity ease-in"
+						>
+							<SendHorizontalIcon />
+						</TooltipIconButton>
+					</ComposerPrimitive.Send>
+				)}
 			</ThreadPrimitive.If>
 			<ThreadPrimitive.If running>
 				<ComposerPrimitive.Cancel asChild>

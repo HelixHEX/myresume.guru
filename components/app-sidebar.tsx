@@ -2,31 +2,17 @@
 
 import * as React from "react"
 import {
-  AudioWaveform,
-  BookOpen,
-  Bot,
   BriefcaseBusiness,
-  Command,
   CreditCard,
   FileText,
-  Frame,
-  GalleryVerticalEnd,
-  Map,
-  PieChart,
-  Settings2,
-  SquareTerminal,
+  MessageCircle,
 } from "lucide-react"
 
 import { NavMain } from "@/components/nav-main"
-import { NavProjects } from "@/components/nav-projects"
-import { NavUser } from "@/components/nav-user"
-import { TeamSwitcher } from "@/components/team-switcher"
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
-  SidebarHeader,
-  SidebarRail,
   useSidebar,
 } from "@/components/ui/sidebar"
 
@@ -55,6 +41,11 @@ const data = {
     // },
   ],
   navMain: [
+    {
+      title: "Chat",
+      url: "/app/chat",
+      icon: MessageCircle,
+    },
     {
       title: "Resume",
       url: "/app/resumes",
@@ -92,31 +83,23 @@ const data = {
         },
       ],
     },
+   
     {
-      title: 'Billing',
-      url: 'https://polar.sh/myresumeguru/portal',
+      title: "Billing",
+      url: "https://polar.sh/myresumeguru/portal",
       icon: CreditCard,
-
-    }
+    },
   ],
-  
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const {open} = useSidebar()
+  const { open } = useSidebar()
   return (
-    <Sidebar className={`transition-all duration-300 bg-blue-800 ${open &&'p-2 sm:p-3 sm:pr-0 bg-blue-800'}`} collapsible="icon" {...props}>
-      {/* <SidebarHeader>
-        <TeamSwitcher teams={data.teams} />
-      </SidebarHeader> */}
+    <Sidebar className={`transition-all duration-300 bg-blue-800 ${open && "p-2 sm:p-3 sm:pr-0 bg-blue-800"}`} collapsible="icon" {...props}>
       <SidebarContent>
         <NavMain items={data.navMain} />
       </SidebarContent>
-      <SidebarFooter>
-        {/* <NavUser user={data.user} /> */}
-      </SidebarFooter>
-
-      {/* <SidebarRail /> */}
+      <SidebarFooter />
     </Sidebar>
   )
 }
