@@ -49,7 +49,7 @@ export function InsufficientCreditsMessage() {
 					variant="outline"
 					size="sm"
 					className="mt-2 border-amber-300 dark:border-amber-700"
-					onClick={() => createCreditPackCheckout()}
+					onClick={() => createCreditPackCheckout("small")}
 					aria-label="Buy credits"
 				>
 					Buy credits

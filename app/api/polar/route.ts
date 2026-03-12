@@ -2,8 +2,11 @@ import prisma from "@/lib/prisma";
 import { addCreditTransaction } from "@/lib/credits";
 import { updateDbWithLatestSubscriptionData } from "@/lib/polar";
 import { Webhooks } from "@polar-sh/nextjs";
+import type { WebhooksConfig } from "@polar-sh/adapter-utils";
 import type { Order } from "@polar-sh/sdk/models/components/order.js";
 import { CREDIT_PACKS } from "@/lib/credit-packs";
+
+type PolarWebhookPayload = Parameters<NonNullable<WebhooksConfig["onPayload"]>>[0];
 
 function resolveCreditPack(order: Order) {
 	const packId = order.metadata?.packId as string | undefined;
@@ -15,7 +18,7 @@ function resolveCreditPack(order: Order) {
 	// Fallback: match by productId against env-configured product IDs
 	for (const pack of CREDIT_PACKS) {
 		const productId = process.env[pack.envProductIdKey];
-		if (productId && (order.productId === productId || order.productPriceId === productId)) {
+		if (productId && order.productId === productId) {
 			return pack;
 		}
 	}
@@ -25,7 +28,7 @@ function resolveCreditPack(order: Order) {
 export const POST = Webhooks({
 	webhookSecret: process.env.POLAR_WEBHOOK_SECRET as string,
 	//biome-ignore lint:Will fix later.
-	onPayload: async (payload: { type: string; data: Order }) => {
+	onPayload: async (payload: PolarWebhookPayload) => {
 		console.log("[Polar][Webhook] Payload", payload.type);
 
 		switch (payload.type) {

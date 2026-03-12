@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import { Suspense } from "react"
 import {
   BriefcaseBusiness,
   CreditCard,
@@ -102,7 +103,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarContent>
       <SidebarFooter>
         <div className="text-sidebar-foreground [&_button]:border-sidebar-border [&_button]:text-sidebar-foreground [&_button]:hover:bg-sidebar-accent [&_button]:hover:text-sidebar-accent-foreground">
-          <CreditsBalance />
+          <Suspense fallback={<span className="text-sm text-sidebar-foreground" aria-hidden="true">…</span>}>
+            <CreditsBalance />
+          </Suspense>
         </div>
       </SidebarFooter>
     </Sidebar>

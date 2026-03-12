@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname, useRouter } from "next/navigation";
-import { useCallback, useEffect, useLayoutEffect, useState } from "react";
+import { Suspense, useCallback, useEffect, useLayoutEffect, useState } from "react";
 import { PanelLeftCloseIcon, PanelLeftOpenIcon } from "lucide-react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useUser } from "@clerk/nextjs";
@@ -121,7 +121,9 @@ export function ChatPageContent({ initialChatId, isNewChat = false }: ChatPageCo
           </div>
         ) : selectedChat || isNewChat ? (
           <ChatSendInterceptorContext.Provider value={isNewChat ? handleSendFromNew : null}>
-            <ChatUrlSync isNewChat={isNewChat} />
+            <Suspense fallback={null}>
+              <ChatUrlSync isNewChat={isNewChat} />
+            </Suspense>
             <Thread key={isNewChat ? "new" : selectedChatId!} />
           </ChatSendInterceptorContext.Provider>
         ) : (

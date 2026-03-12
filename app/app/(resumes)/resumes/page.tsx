@@ -5,6 +5,7 @@ import {
 	QueryClient,
 	dehydrate,
 } from "@tanstack/react-query";
+import { Suspense } from "react";
 import { getResumes } from "../lib/queries";
 
 export default async function Page() {
@@ -24,9 +25,11 @@ export default async function Page() {
 				<AddResumeTooltip />
 			</div>
 			<div className="mt-4" />
-			<HydrationBoundary state={dehydrate(queryClient)}>
-				<Resumes />
-			</HydrationBoundary>
+			<Suspense fallback={<div className="p-8 text-sm text-gray-500">Loading resumes…</div>}>
+				<HydrationBoundary state={dehydrate(queryClient)}>
+					<Resumes />
+				</HydrationBoundary>
+			</Suspense>
 		</div>
 	);
 }
