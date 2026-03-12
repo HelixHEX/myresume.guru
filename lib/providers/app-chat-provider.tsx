@@ -19,6 +19,7 @@ export const chatQueryKeys = {
   messages: (chatId: number) => [...chatQueryKeys.all, "messages", chatId] as const,
   /** Primary chat for a resume (by fileKey / resumeId). */
   resumeChat: (resumeIdOrFileKey: string) => [...chatQueryKeys.all, "resume_chat", resumeIdOrFileKey] as const,
+  preferences: (userId: string) => ["user", "preferences", userId] as const,
 };
 
 export default function AppChatProvider({ children }: { children: React.ReactNode }) {
@@ -38,14 +39,28 @@ export default function AppChatProvider({ children }: { children: React.ReactNod
     initialMessagesByChatIdRef.current[chatId] = messages;
   }, []);
 
+  const preferencesQuery = useQuery({
+    queryKey: chatQueryKeys.preferences(userId),
+    queryFn: async () => {
+      const res = await fetch("/api/user/preferences");
+      if (!res.ok) return { modelName: "auto" as const };
+      const data = await res.json();
+      return { modelName: data.modelName ?? "auto" };
+    },
+    enabled: !!userId,
+  });
+
+  const initialModelName = preferencesQuery.data?.modelName ?? "auto";
+
   const runtimeConfig = useMemo(
     () => ({
       userId,
       resumeFileKey: resumeFileKey ?? null,
       initialMessagesByChatIdRef,
       setInitialMessagesForChat,
+      initialModelName,
     }),
-    [userId, resumeFileKey, setInitialMessagesForChat]
+    [userId, resumeFileKey, setInitialMessagesForChat, initialModelName]
   );
 
   const adapter = useMemo(

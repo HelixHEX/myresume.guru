@@ -4,6 +4,15 @@ import type { ModelMessage } from "ai";
 import prisma from "@/lib/prisma";
 import { z } from "zod";
 import { auth } from "@clerk/nextjs/server";
+import {
+	computeCreditsFromUsage,
+	getBalance,
+	recordUsageAndDeduct,
+	type UsageLike,
+} from "@/lib/credits";
+import { selectModel, CHAT_MODEL_IDS } from "@/lib/model-router";
+
+const MIN_CREDITS_TO_CHAT = 1;
 
 function findResumeByIdOrFileKey(idOrFileKey: string) {
 	const id = Number(idOrFileKey);
@@ -23,6 +32,8 @@ type ChatRequestBody = {
 	chatId?: number;
 	applicationId?: string | null;
 	userId: string;
+	/** From assistant-ui ModelContext; "auto" or model id (e.g. gpt-5-mini, gpt-5). */
+	config?: { modelName?: string };
 };
 
 function getMessageText(msg: ChatRequestBody["messages"][number]): string {
@@ -101,7 +112,7 @@ const modifyResumeSchema = z.object({
 export async function POST(req: Request) {
 	try {
 		const body = (await req.json()) as ChatRequestBody;
-		const { messages, context, fileKey, chatId: bodyChatId, applicationId } = body;
+		const { messages, context, fileKey, chatId: bodyChatId, applicationId, config } = body;
 		const userId = await auth().then((a) => a.userId);
 		if (!userId) {
 			return new Response(JSON.stringify({ error: "userId is required" }), { status: 400 });
@@ -210,15 +221,64 @@ export async function POST(req: Request) {
 			? " This is a new chat. After the first user message and your reply, call setChatTitle with a short, descriptive title (e.g. derived from the user's first message or the main topic, max 50 characters)."
 			: ` Current chat title: \"${currentChatTitle.replace(/"/g, '\\"')}\". Based on the conversation so far, decide if the title still fits. If the topic has clearly shifted and a different title would help users find this chat, call setChatTitle with a new short title (max 50 characters). Otherwise do not call setChatTitle.`;
 
+		const effectivePreference = config?.modelName ?? "auto";
+		const lastMessageText = getMessageText(messages[messages.length - 1] ?? {});
+		const resolvedModel = selectModel({
+			userSelectedModel: effectivePreference === "auto" || !effectivePreference ? undefined : effectivePreference,
+			lastMessageText,
+			toolCalls: true,
+		});
+		const modelName = CHAT_MODEL_IDS.includes(resolvedModel as (typeof CHAT_MODEL_IDS)[number])
+			? (resolvedModel as (typeof CHAT_MODEL_IDS)[number])
+			: "gpt-5-mini";
+
+		const balance = await getBalance(userId);
+		if (balance < MIN_CREDITS_TO_CHAT) {
+			return new Response(
+				JSON.stringify({
+					error: "Insufficient credits",
+					code: "INSUFFICIENT_CREDITS",
+					balance,
+				}),
+				{ status: 402, headers: { "Content-Type": "application/json" } }
+			);
+		}
+
 		const result = streamText({
-			model: openai("gpt-5-mini"),
+			model: openai(modelName),
 			messages: [...contextMessages, ...modelMessages],
 			stopWhen: stepCountIs(5),
 			onFinish: async (event) => {
+				const usage = (event.totalUsage ?? event.usage) as UsageLike | undefined;
+				if (usage) {
+					const { costUsd, credits } = computeCreditsFromUsage(usage, modelName);
+					const noCache = usage.inputTokenDetails?.noCacheTokens ?? usage.inputTokens ?? 0;
+					const cacheRead = usage.inputTokenDetails?.cacheReadTokens ?? 0;
+					const cacheWrite = usage.inputTokenDetails?.cacheWriteTokens ?? 0;
+					const output = usage.outputTokens ?? 0;
+					const inputTokens = noCache + cacheWrite;
+					try {
+						await recordUsageAndDeduct({
+							userId,
+							chatId,
+							messageId: null,
+							model: modelName,
+							inputTokens,
+							cachedInputTokens: cacheRead,
+							outputTokens: output,
+							costUsd,
+							creditsDeducted: credits,
+							requestId: null,
+						});
+					} catch (err) {
+						console.error("Failed to record usage / deduct credits:", err);
+					}
+				}
+
 				const assistantText = event.text?.trim() ?? "";
 				if (assistantText) {
 					try {
-await prisma.message.create({
+						await prisma.message.create({
 							data: {
 								content: assistantText,
 								role: "assistant",

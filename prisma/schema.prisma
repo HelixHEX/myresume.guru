@@ -35,6 +35,45 @@ model Subscription {
   endsAt              DateTime?
 }
 
+model UserPreference {
+  id              Int      @id @default(autoincrement())
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+  userId          String   @unique @map("user_id")
+  modelPreference String   @default("auto") @map("model_preference")
+}
+
+model CreditTransaction {
+  id          Int      @id @default(autoincrement())
+  createdAt   DateTime @default(now()) @map("created_at")
+  userId      String   @map("user_id")
+  type        String
+  amount      Int
+  referenceId String?  @map("reference_id")
+  metadata    Json?    @map("metadata")
+
+  @@index([userId, createdAt])
+  @@index([referenceId])
+}
+
+model AiUsage {
+  id                Int      @id @default(autoincrement())
+  createdAt         DateTime @default(now()) @map("created_at")
+  userId            String   @map("user_id")
+  chatId            Int?     @map("chat_id")
+  messageId         String?  @map("message_id")
+  model             String
+  inputTokens       Int      @map("input_tokens")
+  cachedInputTokens Int      @default(0) @map("cached_input_tokens")
+  outputTokens      Int      @map("output_tokens")
+  costUsd           Decimal  @map("cost_usd") @db.Decimal(12, 6)
+  creditsDeducted   Int      @map("credits_deducted")
+  requestId         String?  @map("request_id")
+
+  @@index([userId, createdAt])
+  @@index([requestId])
+}
+
 model Chat {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now()) @map("created_at")

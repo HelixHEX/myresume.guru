@@ -10,6 +10,8 @@ export type AppChatRuntimeConfig = {
   /** Prefetched messages so Chat is created with history (avoids useExternalHistory remoteId timing). */
   initialMessagesByChatIdRef?: React.MutableRefObject<Record<number, DbMessage[]>>;
   setInitialMessagesForChat?: (chatId: number, messages: DbMessage[]) => void;
+  /** Initial model for ModelSelector (from GET /api/user/preferences). */
+  initialModelName?: string;
 };
 
 const AppChatRuntimeConfigContext = React.createContext<AppChatRuntimeConfig | null>(null);

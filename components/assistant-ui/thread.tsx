@@ -6,6 +6,7 @@ import {
 	ThreadPrimitive,
 	useThreadComposer,
 } from "@assistant-ui/react";
+import { InsufficientCreditsMessage } from "@/components/assistant-ui/insufficient-credits-message";
 import type { FC } from "react";
 import {
 	ArrowDownIcon,
@@ -21,8 +22,18 @@ import { cn } from "@/lib/utils";
 
 import { Button } from "@/components/ui/button";
 import { MarkdownText } from "@/components/assistant-ui/markdown-text";
+import { ModelSelector } from "@/components/assistant-ui/model-selector";
 import { TooltipIconButton } from "@/components/assistant-ui/tooltip-icon-button";
+import { useAppChatRuntimeConfig } from "@/lib/contexts/app-chat-runtime-context";
 import { useChatSendInterceptor } from "@/lib/contexts/chat-send-interceptor";
+import { chatQueryKeys } from "@/lib/providers/app-chat-provider";
+import { useQueryClient } from "@tanstack/react-query";
+
+const CHAT_MODELS = [
+	{ id: "auto", name: "Auto", description: "Picks the best model for each message" },
+	{ id: "gpt-5-mini", name: "GPT-5 Mini", description: "Fast and efficient" },
+	{ id: "gpt-5", name: "GPT-5", description: "Most capable" },
+] as const;
 
 export const Thread: FC = () => {
 	return (
@@ -141,9 +152,30 @@ const Composer: FC = () => {
 const ComposerAction: FC = () => {
 	const interceptSend = useChatSendInterceptor();
 	const text = useThreadComposer((s) => s.text);
+	const { initialModelName, userId } = useAppChatRuntimeConfig();
+	const queryClient = useQueryClient();
+
+	const handleModelChange = (value: string) => {
+		fetch("/api/user/preferences", {
+			method: "PATCH",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({ modelName: value }),
+		}).then(() => {
+			if (userId) {
+				queryClient.invalidateQueries({ queryKey: chatQueryKeys.preferences(userId) });
+			}
+		});
+	};
 
 	return (
-		<>
+		<div className="flex items-center gap-1">
+			<ModelSelector
+				key={`model-selector-${initialModelName ?? "auto"}`}
+				models={[...CHAT_MODELS]}
+				defaultValue={initialModelName ?? "auto"}
+				size="sm"
+				onValueChange={handleModelChange}
+			/>
 			<ThreadPrimitive.If running={false}>
 				{interceptSend ? (
 					<TooltipIconButton
@@ -179,7 +211,7 @@ const ComposerAction: FC = () => {
 					</TooltipIconButton>
 				</ComposerPrimitive.Cancel>
 			</ThreadPrimitive.If>
-		</>
+		</div>
 	);
 };
 
@@ -236,6 +268,9 @@ const AssistantMessage: FC = () => {
 			<div className="text-neutral-950 max-w-[calc(var(--thread-max-width)*0.8)] break-words leading-7 col-span-2 col-start-2 row-start-1 my-1.5 dark:text-neutral-50">
 				<MessagePrimitive.Content components={{ Text: MarkdownText }} />
 			</div>
+			<MessagePrimitive.Error>
+				<InsufficientCreditsMessage />
+			</MessagePrimitive.Error>
 
 			<AssistantActionBar />
 

@@ -1,6 +1,6 @@
 import { Redis } from "@upstash/redis";
 
-const redis = Redis.fromEnv();
+const redis = Redis.fromEnv()
 
 export const POLAR_CUSTOMER_ID_KV = {
   generateKey(userId: string) {
