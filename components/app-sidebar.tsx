@@ -8,6 +8,7 @@ import {
   MessageCircle,
 } from "lucide-react"
 
+import { CreditsBalance } from "@/components/credits-balance"
 import { NavMain } from "@/components/nav-main"
 import {
   Sidebar,
@@ -86,7 +87,7 @@ const data = {
    
     {
       title: "Billing",
-      url: "https://polar.sh/myresumeguru/portal",
+      url: "/app/billing",
       icon: CreditCard,
     },
   ],
@@ -99,7 +100,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarContent>
         <NavMain items={data.navMain} />
       </SidebarContent>
-      <SidebarFooter />
+      <SidebarFooter>
+        <div className="text-sidebar-foreground [&_button]:border-sidebar-border [&_button]:text-sidebar-foreground [&_button]:hover:bg-sidebar-accent [&_button]:hover:text-sidebar-accent-foreground">
+          <CreditsBalance />
+        </div>
+      </SidebarFooter>
     </Sidebar>
   )
 }
